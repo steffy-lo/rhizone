@@ -13,8 +13,9 @@ class Login extends React.Component {
           <form class="login-form">
             <input type="text" placeholder="username"/>
             <input type="password" placeholder="password"/>
-            <button>login</button>
-            <p class="message">Not registered? <a href="#">Create an account</a></p>
+            <button class="login">login</button>
+            <p class="message">Not registered? <a>Create an account</a></p><br/>
+            <button class="create">create</button>
           </form>
         </div>
       </div>
