@@ -1,26 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// Importing react-router-dom to use the React Router
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import './App.css';
+
+import Login from './components/Login'
+import Settings from './components/Settings';
+import Threads from './components/Threads';
+import Inbox from './components/Inbox';
+
+
+class App extends React.Component {
+
+  // a 'global' state that you can pass through to any child componenets of App.
+  state = {
+  }
+
+  render() {
+    return (
+      <div>
+        <BrowserRouter>
+            <Switch> { /* Similar to a switch statement - shows the component depending on the URL path */ }
+              { /* Each Route below shows a different component depending on the exact path in the URL  */ }
+              <Route exact path='/' render={() => 
+                              (<Login state={this.state}/>)}/>
+              <Route exact path='/settings' render={() => 
+                              (<Settings state={this.state}/>)}/>
+              <Route exact path='/inbox' render={() => 
+                              (<Inbox state={this.state}/>)}/>
+              <Route exact path='/threads' render={() => 
+                              (<Threads state={this.state}/>)}/>
+            </Switch>
+          </BrowserRouter>
+      </div>
+    );
+  }
 }
 
 export default App;
