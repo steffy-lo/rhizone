@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Post from './Post/component/Post';
 import PostEditor from './PostEditor/PostEditor';
+import LoginMainPage from './LoginMainPage';
 
 class App extends React.Component {
 	constructor (props) {
@@ -33,6 +34,7 @@ class App extends React.Component {
 				})
 			}
 			<PostEditor addPost={this.addPost} />
+			<LoginMainPage/>
 		  </div>
 		);
 	}

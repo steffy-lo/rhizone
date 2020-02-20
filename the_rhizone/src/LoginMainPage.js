@@ -1,14 +1,14 @@
 // Importing react-router-dom to use the React Router
+import React from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import './App.css';
-
 import Login from './components/Login'
 import Settings from './components/Settings';
 import Threads from './components/Threads';
 import Inbox from './components/Inbox';
 
 
-class LoginSwitch extends React.Component {
+class LoginMainPage extends React.Component {
 
   // a 'global' state that you can pass through to any child componenets of App.
   state = {
@@ -34,3 +34,5 @@ class LoginSwitch extends React.Component {
     );
   }
 }
+
+export default LoginMainPage;
