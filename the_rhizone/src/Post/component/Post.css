@@ -1,5 +1,16 @@
 .post-body {
-	margin: 1em 20%;
+}
+
+.preview {
+	overflow: hidden;
+   display: -webkit-box;
+	-webkit-box-orient: vertical;
+   -webkit-line-clamp: 8;
+	
+}
+
+.card-img-top {
+	  opacity: 0.42;
 }
 
 @media(max-width: 900px) {

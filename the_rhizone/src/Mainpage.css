@@ -1,0 +1,47 @@
+.App-link {
+  color: #61dafb;
+}
+
+
+.post-body {
+	margin: 1em 100%;
+}
+
+.postingForm {
+	position: relative;
+	top: 30px;
+}
+
+.ZeldaMeAccount {
+position: absolute;
+  top: 10px;
+  right: 60px;
+  border: 1px;
+}
+
+.LinkMeLogin {
+position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 1px;
+}
+
+.preview {
+	overflow: hidden;
+   display: -webkit-box;
+	-webkit-box-orient: vertical;
+   -webkit-line-clamp: 8;
+	
+}
+
+.card-img-top {
+	  opacity: 0.42;
+}
+
+@media(max-width: 900px) {
+	.post-body {
+		margin: 1em;
+	}
+	
+}
+

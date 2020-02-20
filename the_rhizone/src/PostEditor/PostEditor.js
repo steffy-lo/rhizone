@@ -8,6 +8,7 @@ class PostEditor extends React.Component {
 		
 		this.state = {
 			newPostBody: '',
+			selectedFile: null,
 		};
 		
 		this.handlePostEditorInputChange = this.handlePostEditorInputChange.bind(this);
@@ -21,21 +22,32 @@ class PostEditor extends React.Component {
 	}
 	
 	createPost() {
-		this.props.addPost(this.state.newPostBody);
+		this.props.addPost(this.state.newPostBody, this.state.selectedFile);
 		this.setState({
-			newPostBody: ''
+			newPostBody: '',
+			selectedFile: null
 		});
 	}
+	
+	fileChangedHandler = (e) => {
+		this.setState({ selectedFile: e.target.files[0] })
+	}
+	
+
 
 	render () {
 		return (
+		<div>
 			<div className="panel panel-default post-editor">
 				<div className="panel-body">
 					<textarea className = "form-control post-editor-input" value={this.state.NewPostBody} onChange={this.handlePostEditorInputChange} />
 					<button className = "btn btn-success post-editor-button" onClick={this.createPost}>Post</button>
 				</div>
 			</div>
-		)
+			
+			<input type="file" onChange={this.fileChangedHandler} />
+		</div>
+		);
 	}
 }
 
