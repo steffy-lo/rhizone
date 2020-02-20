@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import 'bootstrap/dist/js/bootstrap.bundle';
+import 'bootstrap/dist/css/bootstrap.css';
+import $ from 'jquery';
+global.jQuery = require('jquery'); // attach jQuery to the global object
+require('bootstrap');
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
