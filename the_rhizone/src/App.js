@@ -1,34 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Post from './Post/component/Post';
 import PostEditor from './PostEditor/PostEditor';
 
 class App extends React.Component {
-	/*
-	 // a 'global' state that you can pass through to any child componenets of App.
-  //   In the Routes below they are passed to each view, to maintain login
-  state = {
-    login: "123"
-  }
-	
-  render() {
-    return (
-        <div>
-        <BrowserRouter> // this renders different urls based off module
-          <Switch> {  }
-            {  }
-            <Route exact path='/' render={() => 
-                            (<Home state={this.state}/>)}/> // Button is in the home page
-            <Route exact path='/queue' render={() => 
-                            (<Queue state={this.state}/>)}/>
-
-          </Switch>
-        </BrowserRouter>
-      </div>
-    );  
-  } */
-  
 	constructor (props) {
 		super(props);
 		
@@ -61,6 +36,42 @@ class App extends React.Component {
 		  </div>
 		);
 	}
+	
+// Importing react-router-dom to use the React Router
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import './App.css';
+
+import Login from './components/Login'
+import Settings from './components/Settings';
+import Threads from './components/Threads';
+import Inbox from './components/Inbox';
+
+
+class LoginSwitch extends React.Component {
+
+  // a 'global' state that you can pass through to any child componenets of App.
+  state = {
+  }
+
+  render() {
+    return (
+      <div>
+        <BrowserRouter>
+            <Switch> { /* Similar to a switch statement - shows the component depending on the URL path */ }
+              { /* Each Route below shows a different component depending on the exact path in the URL  */ }
+              <Route exact path='/' render={() => 
+                              (<Login state={this.state}/>)}/>
+              <Route exact path='/settings' render={() => 
+                              (<Settings state={this.state}/>)}/>
+              <Route exact path='/inbox' render={() => 
+                              (<Inbox state={this.state}/>)}/>
+              <Route exact path='/threads' render={() => 
+                              (<Threads state={this.state}/>)}/>
+            </Switch>
+          </BrowserRouter>
+      </div>
+    );
+  }
 }
 
 export default App;
