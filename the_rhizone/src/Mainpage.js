@@ -14,17 +14,19 @@ class Mainpage extends React.Component {
 		this.state = {
 			posts: [],
 			threadDisplay: 0,
+			images: [],
 		};
 		
 		this.login = {
 		}
-		
+				
 	}
 
 	
 	addPost(newPostBody, newImage) {
 		const newState = Object.assign({}, this.state);
 		newState.posts.push(newPostBody);
+		newState.images.push(newImage);
 		this.setState(newState);
 	}
 	
@@ -34,6 +36,35 @@ class Mainpage extends React.Component {
 			threadDisplay: state.threadDisplay + 9,
 		}));
 	}
+	
+	imageLoad(index) {
+		// null evaluates false 
+		if(this.state.images[index] === null || this.state.images[index] == null){
+			return (<div></div>);
+		} else {
+			return (<img class="card-img-top" src={require('./images/' + this.state.images[index].name)}	 alt="Card image" />);
+		}
+	}
+	
+	contentLoad(index) {
+		return(
+			<Link className='activity-link' to={"./../Thread"}>
+			<p class="preview card-text text-sm-left text-monospace card-img-overlay">
+			{this.state.posts[index]}
+			</p>
+			</Link>
+		);
+	}
+	
+	columnLoad(index) {
+		return (
+			<div class="col-4 card">
+					{this.imageLoad(index)}
+					{this.contentLoad(index)}
+			</div>
+		);
+	}
+	
 		
     render() {
 		return (
@@ -49,69 +80,25 @@ class Mainpage extends React.Component {
 			
 			<div class="container py-3">
 			<div class="row mb-1">
-				<div class="col-4 card">
-					<img class="card-img-top" src={require('./leorangeman.jpg')} alt="Card image" />
-					<p class="preview card-text text-sm-left text-monospace card-img-overlay">
-					{this.state.posts[this.state.threadDisplay]}
-					</p>
-				</div>
-				 <div class="col-4 card">
-				 <img class="card-img-top" src={require('./leorangeman.jpg')} alt="Card image" />
-					<p class="preview card-text text-sm-left text-monospace card-img-overlay">
-					{this.state.posts[this.state.threadDisplay + 1]}
-					</p>
-				</div>
-				 <div class="col-4 card">
-				 <img class="card-img-top" src={require('./leorangeman.jpg')} alt="Card image" />
-					<p class="preview card-text text-sm-left text-monospace card-img-overlay">
-					{this.state.posts[this.state.threadDisplay + 2]}
-					</p>
-				</div>
+				{this.columnLoad(this.state.threadDisplay)}
+				{this.columnLoad(this.state.threadDisplay + 1)}
+				{this.columnLoad(this.state.threadDisplay + 2)}
 			</div>
 			 <div class="row mb-1">
-				<div class="col-4 card">
-				<img class="card-img-top" src={require('./leorangeman.jpg')} alt="Card image" />
-					<p class="preview card-text text-sm-left text-monospace card-img-overlay">
-					{this.state.posts[this.state.threadDisplay + 3]}
-					</p>
-				</div>
-				 <div class="col-4 card">
-				 <img class="card-img-top" src={require('./leorangeman.jpg')} alt="Card image" />
-					<p class="preview card-text text-sm-left text-monospace card-img-overlay">
-					{this.state.posts[this.state.threadDisplay + 4]}
-					</p>
-				</div>
-				 <div class="col-4 card">
-				 <img class="card-img-top" src={require('./leorangeman.jpg')} alt="Card image" />
-					<p class="preview card-text text-sm-left text-monospace card-img-overlay">
-					{this.state.posts[this.state.threadDisplay + 5]}
-					</p>
-				</div>
-				</div>
+				{this.columnLoad(this.state.threadDisplay + 3)}
+				{this.columnLoad(this.state.threadDisplay + 4)}
+				{this.columnLoad(this.state.threadDisplay + 5)}
+			</div>
 				<div class="row mb-1">
-				<div class="col-4 card">
-				<img class="card-img-top" src={require('./leorangeman.jpg')} alt="Card image" />
-					<p class="preview card-text text-sm-left text-monospace card-img-overlay">
-					{this.state.posts[this.state.threadDisplay + 6]}
-					</p>
-				</div>
-				 <div class="col-4 card">
-				 <img class="card-img-top" src={require('./leorangeman.jpg')} alt="Card image" />
-					<p class="preview card-text text-sm-left text-monospace card-img-overlay">
-					{this.state.posts[this.state.threadDisplay + 7]}</p>
-				</div>
-				 <div class="col-4 card">
-				 <img class="card-img-top" src={require('./leorangeman.jpg')} alt="Card image" />
-					<p class="preview card-text text-sm-left text-monospace card-img-overlay">
-					{this.state.posts[this.state.threadDisplay + 8]}
-					</p>
-				</div>
+				{this.columnLoad(this.state.threadDisplay + 6)}
+				{this.columnLoad(this.state.threadDisplay + 7)}
+				{this.columnLoad(this.state.threadDisplay + 8)}
 			</div>
 		 </div>		
-			
-			<button className = "btn btn-success" onClick={() => this.threadMore()}>more</button>
-			
+			<div className = "postingForm">
+			<button className = "btn-default btn-sm center-block" onClick={() => this.threadMore()}> → </button>
 			<PostEditor addPost={this.addPost} />
+			</div>
 			</div>				
 			{ 
 			//this.state.posts.map((postBody, idx) => {

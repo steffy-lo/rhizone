@@ -9,7 +9,6 @@
 
 .postingForm {
 	position: relative;
-	top: 30px;
 }
 
 .ZeldaMeAccount {
@@ -50,5 +49,20 @@ position: absolute;
 		margin: 1em;
 	}
 	
+}
+
+.activity-link {
+  text-decoration: none;
+  color: black;
+}
+
+.row {
+  min-height: 240px;
+}
+
+.center-block {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 

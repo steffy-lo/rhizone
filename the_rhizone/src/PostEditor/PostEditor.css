@@ -1,12 +1,21 @@
 .post-editor {
-	width: 900px;
-	padding-left: 250px;
+	width: 1220px;
+	padding-left: 410px;
+	position: relative;
 }
 
 .post-editor-button {
 	margin-top: 5px;
-	padding-left: 800px;
-	position: float;
+	margin-left: 400px;
+	position:relative;
+}
+
+.center-block {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	padding-left: 200px;
 }
 
 @media(max-width: 1800px) {

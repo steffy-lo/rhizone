@@ -12,6 +12,7 @@ class PostEditor extends React.Component {
 		};
 		
 		this.handlePostEditorInputChange = this.handlePostEditorInputChange.bind(this);
+		this.fileChangedHandler = this.fileChangedHandler.bind(this);
 		this.createPost = this.createPost.bind(this);
 	}
 
@@ -45,7 +46,7 @@ class PostEditor extends React.Component {
 				</div>
 			</div>
 			
-			<input type="file" onChange={this.fileChangedHandler} />
+			<input type="file" name="file" className = "center-block" onChange={this.fileChangedHandler} />
 		</div>
 		);
 	}
