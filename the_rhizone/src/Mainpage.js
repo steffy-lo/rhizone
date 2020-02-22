@@ -43,6 +43,7 @@ class Mainpage extends React.Component {
 			
 			<div className = "LinkMeLogin" ><Link to="/login">Login</Link></div>	
 			<div className = "ZeldaMeAccount" ><Link to="/settings">Account</Link></div>
+			<div className = "LinkMeInbox" ><Link to="/inbox">Inbox</Link></div>
 			
 			<div className = "currentPost">
 			

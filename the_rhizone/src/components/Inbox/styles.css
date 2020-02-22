@@ -1,0 +1,78 @@
+#homebutton {
+
+}
+
+#user {
+    float: right;
+    margin-top: 30px;
+    margin-right: 50px;
+    text-align: center;
+}
+
+#user .username{
+    font-size: 150%;
+    font-weight: bold;
+}
+
+.profileicon img{
+    border-radius: 50%;
+    border: 1px solid grey;
+    width:100px;
+    height:100px;
+}
+
+#newactivity {
+    margin-top: 50px;
+    margin-left: 10px;
+    margin-right: 200px;
+}
+
+#oldactivity {
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 200px;
+}
+
+.actcollection {
+    font-size: 150%;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #5866D1
+}
+
+.activity {
+    border: 1px solid grey;
+}
+
+.activity-link {
+  text-decoration: none;
+  color: black;
+}
+
+.activity-link:hover{
+  text-decoration: none;
+}
+
+#newactivity .activity {
+    background-color: #e4deff;
+}
+
+#oldactivity .activity {
+    background-color: white;
+}
+
+.actheader {
+    margin-left: 10px;
+}
+
+.actauthor {
+    font-style: italic;
+}
+
+.actgenre {
+    font-weight: bold;
+}
+
+.acttitle {
+
+}
