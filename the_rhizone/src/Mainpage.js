@@ -70,7 +70,9 @@ class Mainpage extends React.Component {
 		return (
 		
 		<div>
-			
+			<header className="login-header">
+           <h1>The RhiZone</h1>
+			</header>
 			
 			<div className = "LinkMeLogin" ><Link to="/login">Login</Link></div>	
 			<div className = "ZeldaMeAccount" ><Link to="/settings">Account</Link></div>
@@ -78,7 +80,7 @@ class Mainpage extends React.Component {
 			
 			<div className = "currentPost">
 			
-			<div class="container py-3">
+			<div class="container py-1">
 			<div class="row mb-1">
 				{this.columnLoad(this.state.threadDisplay)}
 				{this.columnLoad(this.state.threadDisplay + 1)}
