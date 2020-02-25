@@ -15,6 +15,7 @@ class Mainpage extends React.Component {
 			posts: [],
 			threadDisplay: 0,
 			images: [],
+			threadNumber: 0,
 		};
 		
 		this.login = {
@@ -25,8 +26,16 @@ class Mainpage extends React.Component {
 	
 	addPost(newPostBody, newImage) {
 		const newState = Object.assign({}, this.state);
+		newState.threadNumber += 1;
 		newState.posts.push(newPostBody);
-		newState.images.push(newImage);
+		
+		if(newImage == null){
+		}else {
+			// rename newImage to be threadNumber
+			var new_file = new File([newImage], newState.threadNumber + '.jpg', {type: 'image/jpeg'});
+		}
+		
+		newState.images.push(new_file);
 		this.setState(newState);
 	}
 	
