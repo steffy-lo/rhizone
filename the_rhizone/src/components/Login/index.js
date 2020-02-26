@@ -1,10 +1,6 @@
 import React from 'react';
 import './styles.css';
 
-let numberOfUsers = 0;
-const users = [{username: 'sunshinegirl100', password: 'password123', userId: 0},
-                {username: 'theonehero', password: '1234567', userId: 1}];
-
 class Login extends React.Component {
 
   constructor(props) {
