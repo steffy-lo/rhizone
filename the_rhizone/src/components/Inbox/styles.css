@@ -9,7 +9,12 @@
     text-align: center;
 }
 
-#user .username{
+.user-link {
+  text-decoration: none;
+  color: black;
+}
+
+#user .user-link .username{
     font-size: 150%;
     font-weight: bold;
 }
