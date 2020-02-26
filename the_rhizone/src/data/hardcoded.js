@@ -1,4 +1,6 @@
 // Hard-coded data bellow
+// example import
+// import * as Data from './../../data/hardcoded.js';
 
 // Currently for 6 datasets
 const userData = [
@@ -207,3 +209,5 @@ const threadData = [
         }
     }
 ]
+
+export {userData,inboxData,threadData,threadCount};
