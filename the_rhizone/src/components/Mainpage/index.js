@@ -1,7 +1,7 @@
 import React from 'react';
-import './Mainpage.css';
-import Post from './Post/component/Post';
-import PostEditor from './PostEditor/PostEditor';
+import './style.css';
+import Post from './../Post/component/Post';
+import PostEditor from './../PostEditor/PostEditor';
 import { Link, Route, Switch, BrowserRouter } from 'react-router-dom';
 
 
@@ -51,7 +51,7 @@ class Mainpage extends React.Component {
 		if(this.state.images[index] === null || this.state.images[index] == null){
 			return (<div></div>);
 		} else {
-			return (<img class="card-img-top" src={require('./images/' + this.state.images[index].name)}	 alt="Card image" />);
+			return (<img class="card-img-top" src={require('./../../images/' + this.state.images[index].name)}	 alt="Card image" />);
 		}
 	}
 	

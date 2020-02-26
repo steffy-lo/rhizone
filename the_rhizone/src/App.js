@@ -1,12 +1,13 @@
 import React from 'react';
 import './App.css';
-import Post from './Post/component/Post';
-import PostEditor from './PostEditor/PostEditor';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
+
+import Post from './components/Post/component/Post';
+import PostEditor from './components/PostEditor/PostEditor';
 import Login from './components/Login'
 import Settings from './components/Settings';
 import Thread from './components/Thread';
-import Mainpage from './Mainpage';
+import Mainpage from './components/Mainpage';
 import Inbox from './components/Inbox';
 
 
