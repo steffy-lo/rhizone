@@ -90,10 +90,12 @@ class Inbox extends React.Component {
         return(
             <div>
                 <div id='user'>
-                    <div className='profileicon'>
-                        <img src={this.getImagePath(this.state.userName)} alt=""/>
-                    </div>
-                    <span className='username'>{this.state.userName} </span>
+                    <Link className='user-link' to={"./../Settings"}>
+                        <div className='profileicon'>
+                            <img src={this.getImagePath(this.state.userName)} alt=""/>
+                        </div>
+                        <span className='username'>{this.state.userName} </span>
+                    </Link>
                 </div>
                 <div id="newactivity">
                     <div className='actcollection'> New Activity ({this.state.newActivity.length}): </div>
