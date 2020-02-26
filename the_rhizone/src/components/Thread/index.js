@@ -77,11 +77,12 @@ class Thread extends React.Component {
       <a href="/settings">My Profile</a>
 
       <div className='rootPost'>
-        <h2>Thread Title</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <p>Category: Film</p>
+        <h2>Some thoughts on the Cats Movie</h2>
+        <p>
+          First of all, who thought this was a good idea?
+          As a fan of the original musical, it saddens me to see how much Hollywood has butchered it.
+          The CGI was only the beginning of the problems.
         </p>
       </div>
 
@@ -96,7 +97,7 @@ class Thread extends React.Component {
             <img src="..." class="mr-3" alt="..."/>
             <div class="media-body">
 
-              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. <br/>
+              The CGI in the movie has definitely entered uncanny valley. I’ve read T.S. Elliot’s poems which inspired the original musical and really I’m skeptical about the means to which they obtained so many high-profile celebrities to be involved in the project. <br/>
               <button type="button" className="btn btn-primary" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
             </div>
           </li>
@@ -104,7 +105,7 @@ class Thread extends React.Component {
             <img src="..." class="mr-3" alt="..."/>
             <div class="media-body">
 
-              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. <br/>
+              Well the director, Tom Hopper, has had an established career. He made King’s Speech, Les Miserables and The Danish Girl. It’s my assumption that many celebrities wanted to be attached to the project given the clout around Hopper’s name. That said, the film is the perfect example of Freud’s essay on the uncanny. <br/>
               <button type="button" className="btn btn-primary" data-toggle="collapse" data-target="#reply" onClick={this.createReply} >Reply</button>
             </div>
           </li>
@@ -112,7 +113,7 @@ class Thread extends React.Component {
             <img src="..." class="mr-3" alt="..."/>
             <div class="media-body">
 
-              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. <br/>
+              Hollywood loves making new works with existing intellectual property. I wish more opportunities were given to emerging screenwriters. <br/>
               <button type="button" className="btn btn-primary" data-toggle="collapse" data-target="#reply" onClick={this.createReply} >Reply</button>
             </div>
           </li>
