@@ -31,8 +31,6 @@ class Inbox extends React.Component {
                 oldActivity: []
             }
         }
-
-
     };
 
     // move activity from newActivity to oldActivity
@@ -64,11 +62,12 @@ class Inbox extends React.Component {
             return;
         }
 
-        const actName = (Data.userData.get(this.state.userName))? "Anonymous" : refContent.author;
+        const actName =
+            (Data.userData.get(this.state.userName))? "Anonymous" : refContent.author;
 
         return (
             <div className='activity' key={idx} atype={aType}>
-                <Link className='activity-link' to={"./../Thread"}
+                <Link className='activity-link' to={"./../Thread#"+activity}
                     onClick={ () => this.read(idx,aType)}>
                     <p>
                         <span className='actauthor'> {actName} </span>.
@@ -82,18 +81,25 @@ class Inbox extends React.Component {
     render() {
         return(
             <div>
+                <div className="jumbotron text-center">
+                        <h1><a href="/">The RhiZone</a></h1>
+                </div>
                 <div id='user'>
                     <Link className='user-link' to={"./../Settings"}>
                         <span className='username'> {this.state.userName} </span>
                     </Link>
                 </div>
                 <div id="newactivity">
-                    <div className='actcollection'> New Activity ({this.state.newActivity.length}): </div>
+                    <div className='actcollection'>
+                        New Activity ({this.state.newActivity.length}):
+                    </div>
                     {this.state.newActivity.map((d,key) => /* d- array data; key- array index*/
                         this.renderOneActivity(d,key, actType.NEW))}
                 </div>
                 <div id="oldactivity">
-                    <div className='actcollection'> Old Activity ({this.state.oldActivity.length}): </div>
+                    <div className='actcollection'>
+                        Old Activity ({this.state.oldActivity.length}):
+                    </div>
                     {this.state.oldActivity.map((d,key) =>
                         this.renderOneActivity(d,key, actType.OLD))}
                 </div>
