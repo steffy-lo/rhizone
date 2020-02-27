@@ -114,7 +114,7 @@ threadData.set(9, {pid:-1, author:"user", replies: [],
     });
  threadData.set(10, {pid:-1, author:"user", replies: [],
         content:{
-            title: "testing",
+            title: "testing2",
             body: "Placeholder for other testings",
             imgRef: "",
         }

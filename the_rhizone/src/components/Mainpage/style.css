@@ -53,6 +53,28 @@ position: absolute;
 	
 }
 
+.card-title {
+	  top: -20px;
+}
+
+.addingPost {	
+	padding-left: 250px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.hidden { display:none; }
+
+.addPostButton{
+		padding-left: 775px;
+}
+
+
+.buttonForPosting {
+
+	
+}
+
 .card-img-top {
 	  opacity: 0.42;
 }

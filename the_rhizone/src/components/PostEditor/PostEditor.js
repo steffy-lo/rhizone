@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {} from 'react';
 import './PostEditor.css'
 
 class PostEditor extends React.Component {
@@ -9,9 +9,11 @@ class PostEditor extends React.Component {
 		this.state = {
 			newPostBody: '',
 			selectedFile: null,
+			postTitle: '',
 		};
 		
 		this.handlePostEditorInputChange = this.handlePostEditorInputChange.bind(this);
+		this.handlePostEditorInputTitleChange = this.handlePostEditorInputTitleChange.bind(this);
 		this.fileChangedHandler = this.fileChangedHandler.bind(this);
 		this.createPost = this.createPost.bind(this);
 	}
@@ -22,11 +24,18 @@ class PostEditor extends React.Component {
 		});
 	}
 	
+	handlePostEditorInputTitleChange(e) {
+		this.setState({
+			postTitle: e.target.value
+		});
+	}
+	
 	createPost() {
-		this.props.addPost(this.state.newPostBody, this.state.selectedFile);
+		this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle);
 		this.setState({
 			newPostBody: '',
-			selectedFile: null
+			selectedFile: null,
+			postTitle: '',
 		});
 	}
 	
@@ -40,13 +49,14 @@ class PostEditor extends React.Component {
 		return (
 		<div>
 			<div className="panel panel-default post-editor">
-				<div className="panel-body">
+				<div className="panel-body form-group">
+					 <input type="text" className="form-control" value={this.state.postTitle} onChange={this.handlePostEditorInputTitleChange} />
 					<textarea className = "form-control post-editor-input" value={this.state.NewPostBody} onChange={this.handlePostEditorInputChange} />
-					<button className = "btn btn-success post-editor-button" onClick={this.createPost}>Post</button>
+					<button className = "btn btn-success post-editor-button" onClick={this.createPost}>Post</button>			
+					<input type="file" name="file" className = "center-block" onChange={this.fileChangedHandler} />
 				</div>
 			</div>
 			
-			<input type="file" name="file" className = "center-block" onChange={this.fileChangedHandler} />
 		</div>
 		);
 	}
