@@ -1,213 +1,144 @@
-// Hard-coded data bellow
-// example import
-// import * as Data from './../../data/hardcoded.js';
+/* Hard-coded data bellow
+ * Example import:
+ *     import * as Data from './../../data/hardcoded.js';
+ * Usage "Data.userData"
+ */
 
-// Currently for 6 datasets
-const userData = [
-    {userName:'user', password:'user', isAdmin: false},
-    {userName:'user1', password:'user2', isAdmin: false},
-    {userName:'user2', password:'user2', isAdmin: false},
-    {userName:'user3', password:'user2', isAdmin: false},
-    {userName:'user4', password:'user2', isAdmin: false},
-    {userName:'admin', password:'admin', isAdmin: true}
-]
+/*
+ *      key: userName
+ *      value: {password:'', isAdmin: false}
+ */
+const userData = new Map();
+userData.set('user', {password:'user', isAdmin: false});
+userData.set('user1', {password:'user1', isAdmin: false});
+userData.set('user2', {password:'user2', isAdmin: false});
+userData.set('user3', {password:'user3', isAdmin: false});
+userData.set('user4', {password:'user4', isAdmin: false});
+userData.set('admin', {password:'admin', isAdmin: true});
 
-const inboxData = [
-    // sample for empty user
-    {
-        userName:'user',
-        newActivity: [3,4],
-        oldActivity: [5]
-    },
-    {
-        userName:'user1',
-        newActivity: [],
-        oldActivity: []
-    },
-    {
-        userName:'user2',
-        newActivity: [],
-        oldActivity: []
-    },
-    {
-        userName:'user3',
-        newActivity: [6],
-        oldActivity: []
-    },
-    {
-        userName:'user4',
-        newActivity: [],
-        oldActivity: []
-    },
-    {
-        userName:'admin',
-        newActivity: [],
-        oldActivity: []
-    },
-]
+/*
+ *      key: userName
+ *      value: {newActivity:[],oldActivity:[]}
+ */
+const inboxData = new Map();
+inboxData.set('user', {newActivity:[3,4], oldActivity:[5]});
+inboxData.set('user1', {newActivity:[],oldActivity:[]});
+inboxData.set('user2', {newActivity:[],oldActivity:[]});
+inboxData.set('user3', {newActivity:[6],oldActivity:[]});
+inboxData.set('user4', {newActivity:[],oldActivity:[]});
+inboxData.set('admin', {newActivity:[],oldActivity: []});
 
-// feel free to modify for thread messages
-// testing thread id 0-7
-// rest of the threads are just placeholders for main page
 
-// total thread count 14 for id 0-13
-let threadCount = 14;
-const threadData = [
-    {
-        id:0,
-        pid:-1,
-        author:"user",
-        replies: [],
+/*
+ * feel free to modify for thread messages
+ * testing thread id 0-7
+ * rest of the threads are just placeholders for the main page
+ */
+
+/*
+ *      key: threadId,
+ *      value: {pid:-1, author:"", replies[],
+ *              content:{title:"", body:"", imgRef:""}}]
+ */
+const threadData = new Map ();
+threadData.set(0, {pid:-1, author:"user", replies: [],
         content:{
             title: "testing1",
-            content: "Testing1 to render root thread",
+            body: "Testing1 to render root thread",
             imgRef: "",
         }
-    },
-    {
-        id:1,
-        pid:-1,
-        author:"user",
-        replies: [],
+    });
+threadData.set(1, {pid:-1, author:"user", replies: [],
         content:{
             title: "testing2",
-            content: "Testing to render root thread with image",
+            body: "Testing to render root thread with image",
             imgRef: "1.jpg",
         }
-    },
-    {
-        id:2,
-        pid:-1,
-        author:"user",
-        replies: [3,4,5],
+    });
+threadData.set(2, {pid:-1, author:"user", replies: [3,4,5],
         content:{
             title: "testing3",
-            content: "Testing to render nested reply ",
+            body: "Testing to render nested reply ",
             imgRef: "1.jpg",
         }
-    },
-    {
-        id:3,
-        pid:2,
-        author:"user1",
-        replies: [],
+    });
+threadData.set(3, {pid:2, author:"user1", replies: [],
         content:{
             title: "testing3",
-            content: "First reply to testing 3, without image",
+            body: "First reply to testing 3, without image",
             imgRef: "",
         }
-    },
-    {
-        id:4,
-        pid:2,
-        author:"user2",
-        replies: [],
+    });
+threadData.set(4, {pid:2, author:"user2", replies: [],
         content:{
             title: "testing3",
-            content: "Second reply to testing 3, with image",
+            body: "Second reply to testing 3, with image",
             imgRef: "firstframeofida.png",
         }
-    },
-    {
-        id:5,
-        pid:2,
-        author:"user3",
-        replies: [6],
+    });
+threadData.set(5, {pid:2, author:"user3", replies: [6],
         content:{
             title: "testing4",
-            content: "Testing for reply of relies",
+            body: "Testing for reply of relies",
             imgRef: "leorangeman.jpg",
         }
-    },
-    {
-        id:6,
-        pid:5,
-        author:"user",
-        replies: [],
+    });
+threadData.set(6, {pid:5, author:"user", replies: [],
         content:{
             title: "testing4",
-            content: "Actual reply to reply 5",
+            body: "Actual reply to reply 5",
             imgRef: "leorangeman.jpg",
         }
-    },
+    });
     // Question: should admin message be the same or different from regular user postings
-    {
-        id:7,
-        pid:-1,
-        author:"admin",
-        replies: [],
+threadData.set(7, {pid:-1, author:"admin", replies: [],
         content:{
             title: "testing",
-            content: "Placeholder for other testings",
+            body: "Placeholder for other testings",
             imgRef: "",
         }
-    },
-    {
-        id:8,
-        pid:-1,
-        author:"user",
-        replies: [],
+    });
+threadData.set(8, {pid:-1, author:"user", replies: [],
         content:{
             title: "testing",
-            content: "Placeholder for other testings",
+            body: "Placeholder for other testings",
             imgRef: "",
         }
-    },
-    {
-        id:9,
-        pid:-1,
-        author:"user",
-        replies: [],
+    });
+threadData.set(9, {pid:-1, author:"user", replies: [],
         content:{
             title: "testing",
-            content: "Placeholder for other testings",
+            body: "Placeholder for other testings",
             imgRef: "",
         }
-    },
-    {
-        id:10,
-        pid:-1,
-        author:"user",
-        replies: [],
+    });
+ threadData.set(10, {pid:-1, author:"user", replies: [],
         content:{
             title: "testing",
-            content: "Placeholder for other testings",
+            body: "Placeholder for other testings",
             imgRef: "",
         }
-    },
-    {
-        id:11,
-        pid:-1,
-        author:"user",
-        replies: [],
+    });
+ threadData.set(11, {pid:-1, author:"user", replies: [],
         content:{
             title: "testing",
-            content: "Placeholder for other testings",
+            body: "Placeholder for other testings",
             imgRef: "",
         }
-    },
-    {
-        id:12,
-        pid:-1,
-        author:"user",
-        replies: [],
+    });
+threadData.set(12, {pid:-1, author:"user", replies: [],
         content:{
             title: "testing",
-            content: "Placeholder for other testings",
+            body: "Placeholder for other testings",
             imgRef: "",
         }
-    },
-    {
-        id:13,
-        pid:-1,
-        author:"user",
-        replies: [],
+    });
+ threadData.set(13, {pid:-1, author:"user", replies: [],
         content:{
             title: "testing",
-            content: "Placeholder for other testings",
+            body: "Placeholder for other testings",
             imgRef: "",
         }
-    }
-]
+    });
 
-export {userData,inboxData,threadData,threadCount};
+export {userData,inboxData,threadData};

@@ -19,13 +19,6 @@
     font-weight: bold;
 }
 
-.profileicon img{
-    border-radius: 50%;
-    border: 1px solid grey;
-    width:100px;
-    height:100px;
-}
-
 #newactivity {
     margin-top: 50px;
     margin-left: 10px;
@@ -66,11 +59,8 @@
     background-color: white;
 }
 
-.actheader {
-    margin-left: 10px;
-}
-
 .actauthor {
+    margin-left: 10px;
     font-style: italic;
 }
 

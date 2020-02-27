@@ -12,7 +12,9 @@ import Inbox from './components/Inbox';
 
 
 class App extends React.Component {
-	state = {}
+	state = {
+	    userName: 'user'
+	}
 
 
     render() {
