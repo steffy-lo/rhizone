@@ -62,8 +62,8 @@ class Inbox extends React.Component {
             return;
         }
 
-        const actName =
-            (Data.userData.get(this.state.userName))? "Anonymous" : refContent.author;
+        const actName = (Data.userData.get(this.state.userName).isAdmin)?
+           refContent.author : "Anonymous";
 
         return (
             <div className='activity' key={idx} atype={aType}>
