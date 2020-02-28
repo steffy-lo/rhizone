@@ -135,10 +135,16 @@ class Mainpage extends React.Component {
 	}
 	
 	displayAddPost(){
-		let element = document.querySelector('.addingPost')
-		element.classList.toggle("hidden");
-		let elementButton = document.querySelector('.addPostButton')
-		elementButton.classList.toggle("hidden");
+		if(this.props.state.loggedIn){
+			let element = document.querySelector('.addingPost')
+			element.classList.toggle("hidden");
+			let elementButton = document.querySelector('.addPostButton')
+			elementButton.classList.toggle("hidden");
+		} else {
+			// ADD CODE TO REDIRECT TO LOG IN SCREEN HERE STEFFY :)!!!
+			
+		}
+		
 	}
 	
     render() {
@@ -151,7 +157,7 @@ class Mainpage extends React.Component {
 			<header className="login-header">
 				<h1>The RhiZone</h1>
 			</header>
-			<div className = "addPostButton"><button className = "buttonForPosting" onClick={() => this.displayAddPost()}>+ Post Thread</button></div>
+			<div className = "addPostButton"><button className = "buttonForPosting" onClick={() => this.displayAddPost()}>+Add Thread</button></div>
 			<div className = "LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/login">{logButton}</Link></div>	
 			<div className = "ZeldaMeAccount" ><Link to="/settings">Settings</Link></div>
 			<div className = "LinkMeInbox" ><Link to="/inbox">Inbox</Link></div>

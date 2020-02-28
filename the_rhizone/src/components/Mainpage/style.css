@@ -7,6 +7,12 @@ h1 {
   font-family: "Trebuchet MS", Helvetica, sans-serif;
   font-size: 50px;
 }
+
+h3 {
+  color: #5866D1;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  padding: 0 1%;
+}
 .login-header {
     text-align: center;
 }
@@ -17,6 +23,11 @@ h1 {
 
 .postingForm {
 	position: relative;
+}
+
+.container {
+	position: relative;
+	right: 10%;
 }
 
 .ZeldaMeAccount {
@@ -59,22 +70,18 @@ h5 {
 }:
 
 .addingPost {	
-	padding-left: 250px;
-	margin-left: auto;
-	margin-right: auto;
+	position: absolute;
+	padding: 0 50%;
+	margin: 0 50%;
 }
 
 .hidden { display:none; }
 
 .addPostButton{
-		padding-left: 775px;
+		padding: 0 47%;
+		height: 40px;
 }
 
-
-.buttonForPosting {
-
-	
-}
 
 .card-img-top {
 	  opacity: 0.42;

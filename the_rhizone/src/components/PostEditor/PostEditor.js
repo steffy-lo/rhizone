@@ -51,7 +51,7 @@ class PostEditor extends React.Component {
 			<div className="panel panel-default post-editor">
 				<div className="panel-body form-group">
 					 <input type="text" className="form-control" value={this.state.postTitle} onChange={this.handlePostEditorInputTitleChange} />
-					<textarea className = "form-control post-editor-input" value={this.state.NewPostBody} onChange={this.handlePostEditorInputChange} />
+					<textarea className = "form-control" value={this.state.NewPostBody} onChange={this.handlePostEditorInputChange} />
 					<button className = "btn btn-success post-editor-button" onClick={this.createPost}>Post</button>			
 					<input type="file" name="file" className = "center-block" onChange={this.fileChangedHandler} />
 				</div>

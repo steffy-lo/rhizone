@@ -1,13 +1,12 @@
 
 .form-group {
-	width: 1000px;
-	padding-left: 150px;
+	width: 60%;
+	margin: 0 20%;
 	position: relative;
 }
 
 .post-editor-button {
-	margin-top: 5px;
-	margin-left: 400px;
+	margin: 1% 45%;
 	position:relative;
 }
 
