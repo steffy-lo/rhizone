@@ -2,15 +2,18 @@ import React from 'react';
 import './styles.css';
 import Mainpage from '../Mainpage';
 import { Redirect} from 'react-router-dom';
+import * as Data from './../../data/hardcoded.js';
 
 class Login extends React.Component {
 
   constructor(props) {
     super(props);
+    const userData = [];
+    for (let [key, value] of Data.userData.entries()) {
+      userData.push({username: key, password: value.password, isAdmin: value.isAdmin})
+    }
     this.state = {
-      users: [{username: 'user', password: 'user', userId: 0},
-              {username: 'user2', password: 'user2', userId: 1},
-              {username: 'user3', password: 'user3', userId: 2}]
+      users: userData
     };
 
     this.authenticate = this.authenticate.bind(this);
@@ -26,7 +29,7 @@ class Login extends React.Component {
 
     for (let i = 0; i < this.state.users.length; i++) {
       if (this.state.users[i].username === username && this.state.users[i].password === password) {
-        this.props.login(true);
+        this.props.login(true, username);
       }
     }
 
@@ -44,7 +47,7 @@ class Login extends React.Component {
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
     this.setState(prevState => ({
-      users: [...prevState.users, { username: username, password: password, userId: prevState.users.length }]
+      users: [...prevState.users, { username: username, password: password, isAdmin: false }]
     }))
   }
 

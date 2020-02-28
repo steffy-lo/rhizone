@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 import PostEditor from './../PostEditor/PostEditor';
-import { Link } from 'react-router-dom';
+import { Link, Redirect} from 'react-router-dom';
 import * as Data from './../../data/hardcoded.js';
 import Login from '../Login';
  
@@ -183,9 +183,7 @@ class Mainpage extends React.Component {
 			</div>
 			);
 		} else {
-			return (
-				<Login state={this.props.state} login={this.props.login}/>
-			);
+			return (<Redirect to = {'/login'} />);
 		}
 	}
 }

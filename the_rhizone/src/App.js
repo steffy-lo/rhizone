@@ -13,12 +13,12 @@ import Inbox from './components/Inbox';
 
 class App extends React.Component {
   state = {
-      userName: 'user',
+      username: null,
       loggedIn: false
   }
   
-  login = (val) => {
-    this.setState({loggedIn: val})
+  login = (val, username) => {
+    this.setState({username: username, loggedIn: val})
   }
 
   render() {

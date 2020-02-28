@@ -16,17 +16,17 @@ const actType = {
 class Inbox extends React.Component {
     constructor(props) {
         super(props);
-        const user = props.state.userName;
+        const user = props.state.username;
 
         if (Data.inboxData.has(user)) {
             this.state = {
-                userName: user,
+                username: user,
                 newActivity: Data.inboxData.get(user).newActivity,
                 oldActivity: Data.inboxData.get(user).oldActivity
             }
         } else {
             this.state = {
-                userName: "",
+                username: "",
                 newActivity: [],
                 oldActivity: []
             }
@@ -62,7 +62,7 @@ class Inbox extends React.Component {
             return;
         }
 
-        const actName = (Data.userData.get(this.state.userName).isAdmin)?
+        const actName = (Data.userData.get(this.state.username).isAdmin)?
            refContent.author : "Anonymous";
 
         return (
@@ -88,7 +88,7 @@ class Inbox extends React.Component {
                 </div>
                 <div id='user'>
                     <Link className='user-link' to={"./../Settings"}>
-                        <span className='username'> {this.state.userName} </span>
+                        <span className='username'> {this.state.username} </span>
                     </Link>
                 </div>
                 <div id="newactivity">
