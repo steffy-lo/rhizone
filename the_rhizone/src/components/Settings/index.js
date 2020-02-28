@@ -6,6 +6,7 @@ import * as Data from './../../data/hardcoded.js';
 class Settings extends React.Component {
   constructor(props) {
     super(props);
+    console.log(props)
     this.updateSettings = this.updateSettings.bind(this);
     this.updateRights = this.updateRights.bind(this);
   }

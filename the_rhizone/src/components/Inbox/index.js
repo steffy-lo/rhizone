@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import './styles.css';
 
 import * as Data from './../../data/hardcoded.js';
@@ -79,34 +79,38 @@ class Inbox extends React.Component {
     }
 
     render() {
-        return(
-            <div>
-                <div className="jumbotron text-center">
-                    <Link className='main-page' to={"/"}>
-                        <h1>The RhiZone</h1>
-                    </Link>
-                </div>
-                <div id='user'>
-                    <Link className='user-link' to={"./../Settings"}>
-                        <span className='username'> {this.state.username} </span>
-                    </Link>
-                </div>
-                <div id="newactivity">
-                    <div className='actcollection'>
-                        New Activity ({this.state.newActivity.length}):
+        if (this.props.state.loggedIn) {
+            return(
+                <div>
+                    <div className="jumbotron text-center">
+                        <Link className='main-page' to={"/"}>
+                            <h1>The RhiZone</h1>
+                        </Link>
                     </div>
-                    {this.state.newActivity.map((d,key) => /* d- array data; key- array index*/
-                        this.renderOneActivity(d,key, actType.NEW))}
-                </div>
-                <div id="oldactivity">
-                    <div className='actcollection'>
-                        Old Activity ({this.state.oldActivity.length}):
+                    <div id='user'>
+                        <Link className='user-link' to={"./../Settings"}>
+                            <span className='username'> {this.state.username} </span>
+                        </Link>
                     </div>
-                    {this.state.oldActivity.map((d,key) =>
-                        this.renderOneActivity(d,key, actType.OLD))}
+                    <div id="newactivity">
+                        <div className='actcollection'>
+                            New Activity ({this.state.newActivity.length}):
+                        </div>
+                        {this.state.newActivity.map((d,key) => /* d- array data; key- array index*/
+                            this.renderOneActivity(d,key, actType.NEW))}
+                    </div>
+                    <div id="oldactivity">
+                        <div className='actcollection'>
+                            Old Activity ({this.state.oldActivity.length}):
+                        </div>
+                        {this.state.oldActivity.map((d,key) =>
+                            this.renderOneActivity(d,key, actType.OLD))}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        } else {
+            return (<Redirect to = {'/login'} />);
+        }
     }
 }
 
