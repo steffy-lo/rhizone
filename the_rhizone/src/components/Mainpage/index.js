@@ -135,56 +135,56 @@ class Mainpage extends React.Component {
 	}
 	
     render() {
+		let logButton = 'Login'
 		if (this.props.state.loggedIn) {
-			return (
-			<div>
-				<header className="login-header">
-					<h1>The RhiZone</h1>
-				</header>
-				<div className = "addPostButton"><button className = "buttonForPosting" onClick={() => this.displayAddPost()}>+ Post Thread</button></div>
-				<div className = "LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/login">Logout</Link></div>	
-				<div className = "ZeldaMeAccount" ><Link to="/settings">Settings</Link></div>
-				<div className = "LinkMeInbox" ><Link to="/inbox">Inbox</Link></div>
-				
-				<div className = "addingPost hidden">
-				<PostEditor addPost={this.addPost} />
-				</div>
-				
-				<div className = "currentPost center-block">
-				<h3>Active Threads:</h3>
-				<div className="container py-1">
-				<div className="row mb-1">
-					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 0])}
-					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 1])}
-					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 2])}
-				</div>
-				<div className="row mb-1">
-					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 3])}
-					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 4])}
-					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 5])}
-				</div>
-					<div className="row mb-1">
-					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 6])}
-					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 7])}
-					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 8])}
-				</div>
-			</div>		
-				<div className = "postingForm">
-				<button className = "btn-default btn-sm center-block" onClick={() => this.threadMore()}> → </button>
-				</div>
-				</div>				
-				{ 
-				//this.state.posts.map((postBody, idx) => {
-				//return (
-					//<Post key={idx} postBody={postBody}/>
-				//)
-			//})
-			}
-			</div>
-			);
-		} else {
-			return (<Redirect to = {'/login'} />);
+			logButton = 'Logout'
 		}
+		return (
+		<div>
+			<header className="login-header">
+				<h1>The RhiZone</h1>
+			</header>
+			<div className = "addPostButton"><button className = "buttonForPosting" onClick={() => this.displayAddPost()}>+ Post Thread</button></div>
+			<div className = "LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/login">{logButton}</Link></div>	
+			<div className = "ZeldaMeAccount" ><Link to="/settings">Settings</Link></div>
+			<div className = "LinkMeInbox" ><Link to="/inbox">Inbox</Link></div>
+			
+			<div className = "addingPost hidden">
+			<PostEditor addPost={this.addPost} />
+			</div>
+			
+			<div className = "currentPost center-block">
+			<h3>Active Threads:</h3>
+			<div className="container py-1">
+			<div className="row mb-1">
+				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 0])}
+				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 1])}
+				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 2])}
+			</div>
+			<div className="row mb-1">
+				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 3])}
+				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 4])}
+				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 5])}
+			</div>
+				<div className="row mb-1">
+				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 6])}
+				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 7])}
+				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 8])}
+			</div>
+		</div>		
+			<div className = "postingForm">
+			<button className = "btn-default btn-sm center-block" onClick={() => this.threadMore()}> → </button>
+			</div>
+			</div>				
+			{ 
+			//this.state.posts.map((postBody, idx) => {
+			//return (
+				//<Post key={idx} postBody={postBody}/>
+			//)
+		//})
+		}
+		</div>
+		);
 	}
 }
 

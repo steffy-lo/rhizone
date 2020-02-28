@@ -3,6 +3,7 @@ import { Redirect, Link } from "react-router-dom";
 import './styles.css';
 
 import * as Data from './../../data/hardcoded.js';
+import ls from 'local-storage';
 
 const inboxType = {
     REPLY: 'reply'
@@ -17,12 +18,12 @@ class Inbox extends React.Component {
     constructor(props) {
         super(props);
         const user = props.state.username;
-
         if (Data.inboxData.has(user)) {
             this.state = {
                 username: user,
                 newActivity: Data.inboxData.get(user).newActivity,
-                oldActivity: Data.inboxData.get(user).oldActivity
+                oldActivity: Data.inboxData.get(user).oldActivity,
+                loggedIn: props.state.loggedIn
             }
         } else {
             this.state = {
@@ -32,6 +33,24 @@ class Inbox extends React.Component {
             }
         }
     };
+
+    componentWillMount() {
+        if (ls.get('loggedIn') !== undefined) {
+            if (ls.get('loggedIn') === true) {
+                this.setState({
+                    username: ls.get('username'),
+                    loggedIn: ls.get('loggedIn'),
+                    newActivity: Data.inboxData.get(ls.get('username')).newActivity,
+                    oldActivity: Data.inboxData.get(ls.get('username')).oldActivity,
+                });
+            } else {
+                this.setState({
+                    username: null,
+                    loggedIn: ls.get('loggedIn')
+                });
+            }
+        }
+      }
 
     // move activity from newActivity to oldActivity
     read(key,type) {
@@ -79,7 +98,7 @@ class Inbox extends React.Component {
     }
 
     render() {
-        if (this.props.state.loggedIn) {
+        if (this.state.loggedIn) {
             return(
                 <div>
                     <div className="jumbotron text-center">

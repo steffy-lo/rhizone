@@ -2,15 +2,27 @@ import React from 'react';
 import './styles.css';
 import { Link, Redirect } from "react-router-dom";
 import * as Data from './../../data/hardcoded.js';
+import ls from 'local-storage';
 
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props)
+    this.state = {
+      username: props.state.username,
+      loggedIn: props.state.loggedIn
+    }
     this.updateSettings = this.updateSettings.bind(this);
     this.updateRights = this.updateRights.bind(this);
   }
 
+  componentWillMount() {
+    if (ls.get('loggedIn') !== undefined) {
+      this.setState({
+        username: ls.get('username'),
+        loggedIn: ls.get('loggedIn')
+      });
+    }
+  }
   updateSettings() {
     const inputCurrPassword = document.querySelector('#inputPassword').value;
     const updateMsg = document.createElement('p');
@@ -53,9 +65,9 @@ class Settings extends React.Component {
   }
 
   render () {
-    if (this.props.state.loggedIn) {
+    if (this.state.loggedIn) {
       let adminView;
-      const user = this.props.state.username;
+      const user = this.state.username;
       if (Data.userData.get(user).isAdmin) {
           adminView = 
           <div className="admin">
@@ -85,7 +97,7 @@ class Settings extends React.Component {
         </div>
       );
     } else {
-      return (<Redirect to = {'/'} />);
+      return (<Redirect to = {'/login'} />);
     }
   }
 }

@@ -9,21 +9,35 @@ import Settings from './components/Settings';
 import Thread from './components/Thread';
 import Mainpage from './components/Mainpage';
 import Inbox from './components/Inbox';
+import ls from 'local-storage';
 
 
 class App extends React.Component {
-  state = {
+
+  constructor(props) {
+    super(props)
+    this.state = {
       username: null,
       loggedIn: false
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      username: ls.get('username'),
+      loggedIn: ls.get('loggedIn')
+    });
   }
   
   login = (val, username) => {
     this.setState({username: username, loggedIn: val})
+    ls.set('username', username)
+    ls.set('loggedIn', val)
   }
 
   render() {
+    console.log(this.state)
 		return (
-
 		<div>
         <BrowserRouter>
             <Switch> { /* Similar to a switch statement - shows the component depending on the URL path */ }

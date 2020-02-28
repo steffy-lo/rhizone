@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap/dist/css/bootstrap.css';
+import ls from 'local-storage';
 
 class Thread extends React.Component {
 
@@ -9,11 +10,22 @@ class Thread extends React.Component {
     super(props);
 
     this.state = {
-      replyNum: 3
+      replyNum: 3,
+      username: props.state.username,
+      loggedIn: props.state.loggedIn
     };
 
     this.createReply = this.createReply.bind(this);
     this.postReply = this.postReply.bind(this);
+  }
+
+  componentWillMount() {
+    if (ls.get('loggedIn') !== undefined) {
+      this.setState({
+        username: ls.get('username'),
+        loggedIn: ls.get('loggedIn')
+      });
+    }
   }
 
   createReply(e) {
@@ -70,7 +82,7 @@ class Thread extends React.Component {
   }
 
   render () {
-    if (this.props.state.loggedIn) {
+    if (this.state.loggedIn) {
       return (
         <div>
         <div className="jumbotron text-center">
