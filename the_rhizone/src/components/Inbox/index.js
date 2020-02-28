@@ -82,7 +82,9 @@ class Inbox extends React.Component {
         return(
             <div>
                 <div className="jumbotron text-center">
-                        <h1><a href="/">The RhiZone</a></h1>
+                    <Link className='main-page' to={"/"}>
+                        <h1>The RhiZone</h1>
+                    </Link>
                 </div>
                 <div id='user'>
                     <Link className='user-link' to={"./../Settings"}>
