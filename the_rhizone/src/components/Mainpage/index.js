@@ -147,9 +147,9 @@ class Mainpage extends React.Component {
 	}
 	
     render() {
-		let logButton = 'Login'
+		let logButton = <Link to="/login">Login</Link>
 		if (this.props.state.loggedIn) {
-			logButton = 'Logout'
+			logButton = <Link to="/">Logout</Link>
 		}
 		return (
 		<div>

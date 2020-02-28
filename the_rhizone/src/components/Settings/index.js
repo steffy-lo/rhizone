@@ -78,7 +78,7 @@ class Settings extends React.Component {
       }
       return(
         <div>
-          <div className="LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/login">Logout</Link></div>	
+          <div className="LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/">Logout</Link></div>	
           <div className="Home" ><Link to="/">Home</Link></div>
           <div className="LinkMeInbox" ><Link to="/inbox">Inbox</Link></div>
           <div className="main">
