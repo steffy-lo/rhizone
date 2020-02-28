@@ -98,17 +98,24 @@ class Mainpage extends React.Component {
 		{
 			return (<div></div>);
 		} else {
-			return (<img className="card-img-top" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />);
+			return (
+			<div className = "view overlay zoom">
+			<img className="card-img-top img-fluid" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
+			<div className = "mask pattern-8">
+			</div>
+			</div>
+			
+			);
 		}
 	}
 	
 	contentLoad(index) {
 		return(
 			<Link className='activity-link' to={"./../Thread#" + index}>
-			<h5 className = "text-sm card-img-overlay card-title">
+			<h5 className = "card-title">
 			{Data.threadData.get(index).content.title}
 			</h5>
-			<p className="preview card-text text-sm-left card-img-overlay">
+			<p className="card-img-overlay d-flex flex-column justify-content-center">
 			{Data.threadData.get(index).content.body}
 			</p>
 			</Link>
@@ -120,8 +127,8 @@ class Mainpage extends React.Component {
 		} else {
 		return (
 			<div className="col-4 card">
-					{this.imageLoad(index)}
 					{this.contentLoad(index)}
+					{this.imageLoad(index)}
 			</div>
 		);
 		}
@@ -151,7 +158,7 @@ class Mainpage extends React.Component {
 				</div>
 				
 				<div className = "currentPost center-block">
-				<h3>Active Threads:</h3>
+				<h3 className = "center-block">Active Threads:</h3>
 				<div className="container py-1">
 				<div className="row mb-1">
 					{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 0])}

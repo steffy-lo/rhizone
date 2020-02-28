@@ -53,9 +53,10 @@ position: absolute;
 	
 }
 
-.card-title {
-	  top: -20px;
-}
+h5 {
+  color: #5866D1;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+}:
 
 .addingPost {	
 	padding-left: 250px;
@@ -77,6 +78,10 @@ position: absolute;
 
 .card-img-top {
 	  opacity: 0.42;
+}
+
+.card-img-overlay {
+  background-color: rgba(#000, 0.4);
 }
 
 @media(max-width: 900px) {
