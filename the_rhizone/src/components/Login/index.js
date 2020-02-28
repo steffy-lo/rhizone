@@ -1,6 +1,7 @@
 import React from 'react';
 import './styles.css';
 import Mainpage from '../Mainpage';
+import { Redirect} from 'react-router-dom';
 
 class Login extends React.Component {
 
@@ -26,7 +27,6 @@ class Login extends React.Component {
     for (let i = 0; i < this.state.users.length; i++) {
       if (this.state.users[i].username === username && this.state.users[i].password === password) {
         this.props.login(true);
-        return;
       }
     }
 
@@ -50,26 +50,24 @@ class Login extends React.Component {
 
   render () {
     if (!this.props.state.loggedIn) {
-    return (
-      <div>
-        <header className="login-header">
-          <h1><a href="/">The RhiZone</a></h1>
-        </header>
-        <div className="form">
-          <form className="login-form">
-            <input id="username" type="username" placeholder="username"/>
-            <input id="password" type="password" placeholder="password"/>
-            <button className="login" onClick={this.authenticate}>login</button>
-            <p className="message">Not registered? <a>Create an account</a></p><br/>
-            <button className="create" onClick={this.createAccount}>create</button>
-          </form>
-        </div>
-      </div>
-    );
-    } else {
       return (
-        <Mainpage state={this.props.state} login={this.props.login} />
+        <div>
+          <header className="login-header">
+            <h1><a href="/">The RhiZone</a></h1>
+          </header>
+          <div className="form">
+            <form className="login-form">
+              <input id="username" type="username" placeholder="username"/>
+              <input id="password" type="password" placeholder="password"/>
+              <button className="login" onClick={this.authenticate}>login</button>
+              <p className="message">Not registered? <a>Create an account</a></p><br/>
+              <button className="create" onClick={this.createAccount}>create</button>
+            </form>
+          </div>
+        </div>
       );
+    } else {
+      return (<Redirect to = {'/'} />);
     }
   }
 }

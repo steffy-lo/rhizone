@@ -143,7 +143,7 @@ class Mainpage extends React.Component {
 				</header>
 				<div className = "addPostButton"><button className = "buttonForPosting" onClick={() => this.displayAddPost()}>+ Post Thread</button></div>
 				<div className = "LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/login">Logout</Link></div>	
-				<div className = "ZeldaMeAccount" ><Link to="/settings">Account</Link></div>
+				<div className = "ZeldaMeAccount" ><Link to="/settings">Settings</Link></div>
 				<div className = "LinkMeInbox" ><Link to="/inbox">Inbox</Link></div>
 				
 				<div className = "addingPost hidden">
