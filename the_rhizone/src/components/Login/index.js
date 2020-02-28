@@ -8,29 +8,21 @@ class Login extends React.Component {
 
   constructor(props) {
     super(props);
-    const userData = [];
-    for (let [key, value] of Data.userData.entries()) {
-      userData.push({username: key, password: value.password, isAdmin: value.isAdmin})
-    }
-    this.state = {
-      users: userData
-    };
-
     this.authenticate = this.authenticate.bind(this);
     this.createAccount = this.createAccount.bind(this);
   }
 
   authenticate(e) {
     e.preventDefault();
-    console.log(this.state.users);
     const form = document.querySelector('.form');
+    if (form.lastChild.className === "loginError" || form.lastChild.className === "createMsg") {
+      form.removeChild(form.lastChild)
+    }
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
 
-    for (let i = 0; i < this.state.users.length; i++) {
-      if (this.state.users[i].username === username && this.state.users[i].password === password) {
-        this.props.login(true, username);
-      }
+    if (Data.userData.get(username) !== undefined && Data.userData.get(username).password === password) {
+      this.props.login(true, username);
     }
 
     if (document.querySelector('.loginError') == null) {
@@ -46,9 +38,22 @@ class Login extends React.Component {
     e.preventDefault();
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
-    this.setState(prevState => ({
-      users: [...prevState.users, { username: username, password: password, isAdmin: false }]
-    }))
+    const form = document.querySelector('.form');
+    if (form.lastChild.className === "loginError" || form.lastChild.className === "createMsg") {
+      form.removeChild(form.lastChild)
+    }
+    let createMsg = document.createElement('p');
+    createMsg.className = 'createMsg';
+    if (Data.userData.get(username) === undefined) {
+      createMsg.appendChild(document.createTextNode('Account successfully created!'));
+      createMsg.style.color = "green";
+      form.appendChild(createMsg);
+      Data.userData.set(username, {password: password, isAdmin: false}) // add to database
+    } else {
+      createMsg.appendChild(document.createTextNode('Account already exists!'));
+      createMsg.style.color = "red";
+      form.appendChild(createMsg);
+    }
   }
 
   render () {
