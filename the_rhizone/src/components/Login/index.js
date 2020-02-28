@@ -1,15 +1,16 @@
 import React from 'react';
 import './styles.css';
+import Mainpage from '../Mainpage';
 
 class Login extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(this.props)
     this.state = {
       users: [{username: 'user', password: 'user', userId: 0},
               {username: 'user2', password: 'user2', userId: 1},
               {username: 'user3', password: 'user3', userId: 2}]
-
     };
 
     this.authenticate = this.authenticate.bind(this);
@@ -24,9 +25,8 @@ class Login extends React.Component {
     const password = document.querySelector('#password').value;
 
     for (let i = 0; i < this.state.users.length; i++) {
-      if (this.state.users[i].username == username && this.state.users[i].password == password) {
-        console.log("yay");
-        document.location.href="/";
+      if (this.state.users[i].username === username && this.state.users[i].password === password) {
+        this.props.login(true);
         return;
       }
     }
@@ -50,22 +50,28 @@ class Login extends React.Component {
   }
 
   render () {
+    if (!this.props.state.loggedIn) {
     return (
       <div>
         <header className="login-header">
           <h1><a href="/">The RhiZone</a></h1>
         </header>
-        <div class="form">
-          <form class="login-form">
+        <div className="form">
+          <form className="login-form">
             <input id="username" type="username" placeholder="username"/>
             <input id="password" type="password" placeholder="password"/>
-            <button class="login" onClick={this.authenticate}>login</button>
-            <p class="message">Not registered? <a>Create an account</a></p><br/>
-            <button class="create" onClick={this.createAccount}>create</button>
+            <button className="login" onClick={this.authenticate}>login</button>
+            <p className="message">Not registered? <a>Create an account</a></p><br/>
+            <button className="create" onClick={this.createAccount}>create</button>
           </form>
         </div>
       </div>
     );
+    } else {
+      return (
+        <Mainpage state={this.props.state} login={this.props.login} />
+      );
+    }
   }
 }
 
