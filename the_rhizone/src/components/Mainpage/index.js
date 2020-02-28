@@ -141,8 +141,7 @@ class Mainpage extends React.Component {
 			let elementButton = document.querySelector('.addPostButton')
 			elementButton.classList.toggle("hidden");
 		} else {
-			// ADD CODE TO REDIRECT TO LOG IN SCREEN HERE STEFFY :)!!!
-			
+			window.location.replace('/login');
 		}
 		
 	}
