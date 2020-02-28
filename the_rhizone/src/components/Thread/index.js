@@ -87,31 +87,31 @@ class Thread extends React.Component {
       </div>
 
       <div className='rootReply'>
-        <textarea class="form-control" rows="5"></textarea>
-        <button class="btn btn-secondary" onClick={this.postReply}>Post Reply To Thread</button>
+        <textarea className="form-control" rows="5"></textarea>
+        <button className="btn btn-secondary" onClick={this.postReply}>Post Reply To Thread</button>
       </div>
 
       <div className="threadBody">
-        <ul class="list-unstyled">
-          <li class="media">
+        <ul className="list-unstyled">
+          <li className="media">
             <img src="..." class="mr-3" alt="..."/>
-            <div class="media-body">
+            <div className="media-body">
 
               The CGI in the movie has definitely entered uncanny valley. I’ve read T.S. Elliot’s poems which inspired the original musical and really I’m skeptical about the means to which they obtained so many high-profile celebrities to be involved in the project. <br/>
               <button type="button" className="btn btn-primary" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
             </div>
           </li>
-          <li class="media my-4">
-            <img src="..." class="mr-3" alt="..."/>
-            <div class="media-body">
+          <li className="media my-4">
+            <img src="..." className="mr-3" alt="..."/>
+            <div className="media-body">
 
               Well the director, Tom Hopper, has had an established career. He made King’s Speech, Les Miserables and The Danish Girl. It’s my assumption that many celebrities wanted to be attached to the project given the clout around Hopper’s name. That said, the film is the perfect example of Freud’s essay on the uncanny. <br/>
               <button type="button" className="btn btn-primary" data-toggle="collapse" data-target="#reply" onClick={this.createReply} >Reply</button>
             </div>
           </li>
-          <li class="media">
-            <img src="..." class="mr-3" alt="..."/>
-            <div class="media-body">
+          <li className="media">
+            <img src="..." className="mr-3" alt="..."/>
+            <div className="media-body">
 
               Hollywood loves making new works with existing intellectual property. I wish more opportunities were given to emerging screenwriters. <br/>
               <button type="button" className="btn btn-primary" data-toggle="collapse" data-target="#reply" onClick={this.createReply} >Reply</button>

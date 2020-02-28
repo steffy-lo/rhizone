@@ -7,6 +7,7 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.updateSettings = this.updateSettings.bind(this);
+    this.updateRights = this.updateRights.bind(this);
   }
 
   updateSettings() {
@@ -30,17 +31,36 @@ class Settings extends React.Component {
     }
   }
 
+  updateRights() {
+    const user = document.querySelector('#username').value;
+    const form = document.querySelector('.admin');
+    if (form.lastChild.className === 'givingRightsMsg') {
+      form.removeChild(form.lastChild);
+    }
+    const givingRightsMsg = document.createElement('p');
+    givingRightsMsg.className = 'givingRightsMsg';
+    if (Data.userData.get(user) === undefined) {
+      givingRightsMsg.appendChild(document.createTextNode("The user doesn't exist!"));
+      givingRightsMsg.style.color = "red";
+      form.appendChild(givingRightsMsg);
+    } else {
+      Data.userData.get(user).isAdmin = true;
+      givingRightsMsg.appendChild(document.createTextNode(user + " has been given admin rights"));
+      givingRightsMsg.style.color = "green";
+      form.appendChild(givingRightsMsg);
+    }
+  }
+
   render () {
     if (this.props.state.loggedIn) {
       let adminView;
       const user = this.props.state.username;
       if (Data.userData.get(user).isAdmin) {
           adminView = 
-          <div>
-            <label htmlFor="username">Give Admin Rights</label>
+          <div className="admin">
+            <label htmlFor="username">Allow Admin Rights</label>
             <input type="text" id="username" placeholder="Username"/>
-            <br/>
-            <br/>
+            <p><button id="give-admin-rights" type="click" onClick={this.updateRights}>Allow</button></p>
           </div>;
       }
       return(
