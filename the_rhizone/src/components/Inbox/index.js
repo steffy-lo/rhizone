@@ -86,7 +86,7 @@ class Inbox extends React.Component {
 
         return (
             <div className='activity' key={idx} atype={aType}>
-                <Link className='activity-link' to={"./../Thread#"+activity}
+                <Link className='activity-link' to={"./../thread#"+activity}
                     onClick={ () => this.read(idx,aType)}>
                     <p>
                         <span className='actauthor'> {actName} </span>.
