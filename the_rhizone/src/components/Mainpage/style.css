@@ -67,7 +67,7 @@ position: absolute;
 h5 {
   color: #5866D1;
   font-family: "Trebuchet MS", Helvetica, sans-serif;
-}:
+}
 
 .addingPost {	
 	position: absolute;
@@ -85,10 +85,6 @@ h5 {
 
 .card-img-top {
 	  opacity: 0.42;
-}
-
-.card-img-overlay {
-  background-color: rgba(#000, 0.4);
 }
 
 @media(max-width: 900px) {
