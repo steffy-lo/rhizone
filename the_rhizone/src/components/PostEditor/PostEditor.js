@@ -1,11 +1,15 @@
 import React, {} from 'react';
 import './PostEditor.css'
+import SimpleReactValidator from 'simple-react-validator';
+
 
 class PostEditor extends React.Component {
 
 	constructor(props) {
 		super(props);
 		
+		this.validator = new SimpleReactValidator();
+
 		this.state = {
 			newPostBody: '',
 			selectedFile: null,
@@ -31,12 +35,17 @@ class PostEditor extends React.Component {
 	}
 	
 	createPost() {
-		this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle);
-		this.setState({
+		 if (this.validator.fieldValid('NewPostBody')) {
+			 this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle);
+			this.setState({
 			newPostBody: '',
 			selectedFile: null,
 			postTitle: '',
-		});
+			});
+		} else {
+		this.validator.showMessages();
+		this.forceUpdate();
+		}
 	}
 	
 	fileChangedHandler = (e) => {
@@ -51,7 +60,8 @@ class PostEditor extends React.Component {
 			<div className="panel panel-default post-editor">
 				<div className="panel-body form-group">
 					 <input type="text" className="form-control" value={this.state.postTitle} onChange={this.handlePostEditorInputTitleChange} />
-					<textarea className = "form-control" value={this.state.NewPostBody} onChange={this.handlePostEditorInputChange} />
+					<textarea className = "form-control" value={this.state.newPostBody} onChange={this.handlePostEditorInputChange} />
+					 {this.validator.message('NewPostBody', this.state.newPostBody, 'required|min:150|max:4000')}
 					<button className = "btn btn-success post-editor-button" onClick={this.createPost}>Post</button>			
 					<input type="file" name="file" className = "center-block" onChange={this.fileChangedHandler} />
 				</div>

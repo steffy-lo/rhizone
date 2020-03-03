@@ -5,6 +5,7 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import * as Data from './../../data/hardcoded.js';
 import ls from 'local-storage';
+import Button from "@material-ui/core/Button";
 
 const inboxType = {
     REPLY: 'reply'
@@ -131,6 +132,11 @@ class Inbox extends React.Component {
                         <Link className='main-page' to={"/"}>
                             <h1>The RhiZone</h1>
                         </Link>
+                        <div className="buttons">
+                            <Link to={{pathname: '/settings'}}>
+                                <Button className="settings">Settings</Button>
+                            </Link>
+                        </div>
                     </div>
                     <div id='user'>
                         <Link className='user-link' to={"./../Settings"}>
