@@ -57,10 +57,17 @@ class Mainpage extends React.Component {
 	}
 	
 	threadMore() {
-		console.log(this.state.threadNumber)
 		return this.setState((state) => ({
 			threadNumber: state.threadNumber + 9,
 		}));
+	}
+	
+	threadLess() {
+		if (this.state.threadNumber >= 9) {
+			return this.setState((state) => ({
+			threadNumber: state.threadNumber - 9,
+		}));
+		}	
 	}
 	
 	getThreadDisplay(){
@@ -111,10 +118,10 @@ class Mainpage extends React.Component {
 	contentLoad(index) {
 		return(
 			<Link className='activity-link' to={"./../thread#" + index}>
-			<h5 className = "card-title">
+			<h5 className = "card-title previewtitle">
 			{Data.threadData.get(index).content.title}
 			</h5>
-			<p className="card-img-overlay d-flex flex-column justify-content-center">
+			<p className="card-img-overlay d-flex flex-column preview">
 			{Data.threadData.get(index).content.body}
 			</p>
 			</Link>
@@ -184,7 +191,9 @@ class Mainpage extends React.Component {
 			</div>
 		</div>		
 			<div className = "postingForm">
-			<button className = "btn-default btn-sm center-block" onClick={() => this.threadMore()}> → </button>
+			<span className ="navButton"><button className = "btn-default btn-sm" onClick={() => this.threadLess()}> ←  </button>
+			<button className = "btn-default btn-sm" onClick={() => this.threadMore()}> → </button></span>
+			
 			</div>
 			</div>				
 			{ 
