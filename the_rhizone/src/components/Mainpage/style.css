@@ -59,9 +59,19 @@ position: absolute;
 .preview {
 	overflow: hidden;
    display: -webkit-box;
+   margin-top: 8%;
 	-webkit-box-orient: vertical;
-   -webkit-line-clamp: 8;
-	
+   -webkit-line-clamp: 9;
+   
+}
+
+.previewtitle {
+	overflow: hidden;
+   display: -webkit-box;
+	-webkit-box-orient: vertical;
+	padding-bottom: 10px;
+   -webkit-line-clamp: 2;
+   
 }
 
 h5 {
@@ -111,5 +121,9 @@ h5 {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.navButton {
+	margin: 10% 35%;
 }
 
