@@ -3,6 +3,8 @@ import { Redirect } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap/dist/css/bootstrap.css';
 import ls from 'local-storage';
+import * as Data from './../../data/hardcoded.js';
+import './style.css';
 
 class Thread extends React.Component {
 
@@ -10,13 +12,23 @@ class Thread extends React.Component {
     super(props);
 
     this.state = {
-      replyNum: 3,
+      replyNum: 0,
       username: props.state.username,
-      loggedIn: props.state.loggedIn
+      loggedIn: props.state.loggedIn,
+      threadId: this.getThreadId()
     };
 
+    this.loadThread = this.loadThread.bind(this);
+    this.loadImage = this.loadImage.bind(this);
+    this.loadReplies = this.loadReplies.bind(this);
     this.createReply = this.createReply.bind(this);
     this.postReply = this.postReply.bind(this);
+    this.loadReply = this.loadReply.bind(this);
+  }
+
+  getThreadId() {
+    // TODO: Add error handling for when there's an invalid or no thread id
+    return parseInt(window.location.hash.substring(1));
   }
 
   componentWillMount() {
@@ -26,6 +38,49 @@ class Thread extends React.Component {
         loggedIn: ls.get('loggedIn')
       });
     }
+  }
+
+  loadThread() {
+    return(
+      <div className='rootPost'>
+        <h2>{Data.threadData.get(this.state.threadId).content.title}</h2>
+        <p>
+          {Data.threadData.get(this.state.threadId).content.body}
+        </p>
+        {this.loadImage(this.state.threadId)}
+      </div>
+    );
+  }
+
+  loadImage(index) {
+    if (Data.threadData.get(index) == null || Data.threadData.get(index) === null ){
+      return (<img/>);
+    } else if (Data.threadData.get(index).content.imgRef == "")
+    {
+      return (<img/>);
+    } else {
+      return (
+        <img className="threadImage" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Thread Image" />
+      );
+    }
+  }
+
+  loadReplies() {
+    let replies = [];
+
+    for (let i = 0; i < Data.threadData.size; i++) {
+      if (Data.threadData.get(i).pid == this.state.threadId) {
+        replies.push(this.loadReply(Data.threadData.get(i).content.body, i));
+      }
+    }
+
+    return(
+      <div className="threadBody">
+        <ul className="list-unstyled">
+          {replies}
+        </ul>
+      </div>
+    );
   }
 
   createReply(e) {
@@ -51,87 +106,41 @@ class Thread extends React.Component {
 
   postReply(e) {
     const replyText = e.target.parentElement.firstElementChild.value;
-    const threadBody = document.querySelector('.threadBody');
+    let test = document.createElement('div');
+    console.log("test", test);
+    console.log(this.loadReply(replyText, null));
+  }
 
-    const listElement = document.createElement('li');
-    listElement.className = 'media'
-
-    const imgElement = document.createElement('img');
-    imgElement.setAttribute('src', "...");
-    imgElement.className = 'mr-3';
-    imgElement.setAttribute('alt', "...");
-
-    const divElement = document.createElement('div');
-    divElement.className = 'media-body';
-    divElement.appendChild(document.createTextNode(replyText));
-    divElement.appendChild(document.createElement('br'));
-
-    const button = document.createElement('button');
-    button.className = 'btn btn-primary';
-    button.onclick = this.createReply;
-    button.appendChild(document.createTextNode('Reply'));
-
-    divElement.appendChild(button);
-
-    listElement.appendChild(imgElement);
-    listElement.appendChild(divElement);
-
-    threadBody.appendChild(listElement);
-
-    this.state.replyNum++;
+  loadReply(replyText, index) {
+    return(
+      <li className="media">
+        <div className="media-body">
+          {replyText} <br/>
+          {this.loadImage(index)} <br/>
+          <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
+        </div>
+      </li>
+    )
   }
 
   render () {
+    const replies = this.loadReplies();
     return (
-      <div>
+      <div className="threadPage">
       <div className="jumbotron text-center">
         <h1><a href="/">The RhiZone</a></h1>
       </div>
-      <a href="/settings">My Profile</a>
+      <a href="/settings">Settings</a><br/>
+      <a href="/inbox">Inbox</a>
 
-      <div className='rootPost'>
-        <p>Category: Film</p>
-        <h2>Some thoughts on the Cats Movie</h2>
-        <p>
-          First of all, who thought this was a good idea?
-          As a fan of the original musical, it saddens me to see how much Hollywood has butchered it.
-          The CGI was only the beginning of the problems.
-        </p>
-      </div>
+      {this.loadThread()}
 
-      <div className='rootReply'>
+      <div className='threadReply'>
         <textarea className="form-control" rows="5"></textarea>
         <button className="btn btn-secondary" onClick={this.postReply}>Post Reply To Thread</button>
       </div>
 
-      <div className="threadBody">
-        <ul className="list-unstyled">
-          <li className="media">
-            <img src="..." class="mr-3" alt="..."/>
-            <div className="media-body">
-
-              The CGI in the movie has definitely entered uncanny valley. I’ve read T.S. Elliot’s poems which inspired the original musical and really I’m skeptical about the means to which they obtained so many high-profile celebrities to be involved in the project. <br/>
-              <button type="button" className="btn btn-primary" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
-            </div>
-          </li>
-          <li className="media my-4">
-            <img src="..." className="mr-3" alt="..."/>
-            <div className="media-body">
-
-              Well the director, Tom Hopper, has had an established career. He made King’s Speech, Les Miserables and The Danish Girl. It’s my assumption that many celebrities wanted to be attached to the project given the clout around Hopper’s name. That said, the film is the perfect example of Freud’s essay on the uncanny. <br/>
-              <button type="button" className="btn btn-primary" data-toggle="collapse" data-target="#reply" onClick={this.createReply} >Reply</button>
-            </div>
-          </li>
-          <li className="media">
-            <img src="..." className="mr-3" alt="..."/>
-            <div className="media-body">
-
-              Hollywood loves making new works with existing intellectual property. I wish more opportunities were given to emerging screenwriters. <br/>
-              <button type="button" className="btn btn-primary" data-toggle="collapse" data-target="#reply" onClick={this.createReply} >Reply</button>
-            </div>
-          </li>
-        </ul>
-      </div>
+      {this.loadReplies()}
 
       </div>
     );

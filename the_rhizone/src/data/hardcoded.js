@@ -79,7 +79,7 @@ threadData.set(4, {pid:2, author:"user2", replies: [],
 threadData.set(5, {pid:2, author:"user3", replies: [6],
         content:{
             title: "testing4",
-            body: "Testing for reply of relies",
+            body: "Testing for reply of replies",
             imgRef: "leorangeman.jpg",
         }
     });
