@@ -1,7 +1,6 @@
 import React from 'react';
 import { Redirect, Link } from "react-router-dom";
 import './styles.css';
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import * as Data from './../../data/hardcoded.js';
 import ls from 'local-storage';
@@ -67,24 +66,28 @@ class Inbox extends React.Component {
         // since state values cannot be directly modified
         // directly push/pop arrays in state
         // create temp value n1, o1
-        const n1 = this.state.newActivity.splice(idx,1);
-        const o1 = this.state.oldActivity.splice(0,0,act);
+        const n1 = this.state.newActivity;
+        n1.splice(idx,1);
+        const o1 = this.state.oldActivity;
+        o1.splice(0,0,act);
         this.setState({newActivity:n1, oldActivity:o1});
     }
 
     removeThread(idx, type){
         switch (type){
             case actType.NEW:
-                const n1 = this.state.newActivity.splice(idx,1);
+                const n1 = this.state.newActivity;
+                n1.splice(idx,1);
                 this.setState({newActivity:n1});
-                console.log(this.state.newActivity);
                 break;
             case actType.OLD:
-                const o1 = this.state.oldActivity.splice(idx,1);
+                const o1 = this.state.oldActivity;
+                o1.splice(idx,1);
                 this.setState({oldActivity:o1});
                 break;
             case actType.PAST:
-                const p1 = this.state.pastPosts.splice(idx,1);
+                const p1 = this.state.pastPosts;
+                p1.splice(idx,1);
                 this.setState({pastPosts:p1});
                 break;
             default:
@@ -119,7 +122,7 @@ class Inbox extends React.Component {
                         <span className='acttitle'> {refContent.content.body} </span>.
                     </p>
                 </Link>
-                {/*<div className='pull-right' onClick={() => this.removeThread(idx,aType)}> delete </div>*/}
+                <button className='pull-right' onClick={() => this.removeThread(idx,aType)}> delete </button>
             </div>
         );
     }
