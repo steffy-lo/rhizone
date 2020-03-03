@@ -3,9 +3,9 @@ import { Redirect, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap/dist/css/bootstrap.css';
 import ls from 'local-storage';
+import PostEditor from './../PostEditor/PostEditor';
 import * as Data from './../../data/hardcoded.js';
 import './style.css';
-import Button from "@material-ui/core/Button";
 
 class Thread extends React.Component {
 
@@ -25,10 +25,10 @@ class Thread extends React.Component {
     this.createReply = this.createReply.bind(this);
     this.postReply = this.postReply.bind(this);
     this.loadReply = this.loadReply.bind(this);
+    this.addReply = this.addReply.bind(this);
   }
 
   getThreadId() {
-    // TODO: Add error handling for when there's an invalid or no thread id
     return parseInt(window.location.hash.substring(1));
   }
 
@@ -76,7 +76,6 @@ class Thread extends React.Component {
         <p> Post #: {tid} </p>
     );
   }
-
 
   loadThread() {
     return(
@@ -145,6 +144,7 @@ class Thread extends React.Component {
   postReply(e) {
     const replyText = e.target.parentElement.firstElementChild.value;
     let test = document.createElement('div');
+    this.addReply(replyText);
     console.log("test", test);
     console.log(this.loadReply(replyText, null));
   }
@@ -161,27 +161,82 @@ class Thread extends React.Component {
     )
   }
 
+  addReply(newPostBody, newImage, postTitle) {
+    console.log(this.state.threadId);
+    const newId = Data.threadData.size;
+
+    if(newImage == null){
+		} else {
+			// rename newImage to be threadNumber
+			// File Upload not supported yet because we need a database to access such files. We only have hardcoded files.
+			var new_file = new File([newImage], newId + '.jpg', {type: 'image/jpeg'});
+		}
+
+		// add Post to archive
+		let imageReference = "";
+
+		if (newImage == null){
+		} else {
+				imageReference = new_file.name;
+		}
+
+    Data.threadData.set(newId, {pid:this.state.threadId, author:"user", replies: [],
+        content:{
+            title: postTitle,
+            body: newPostBody,
+            imgRef: imageReference,
+        }
+    });
+
+    let newReply = Data.threadData.get(newId);
+    const replyText = newReply.content.body;
+    this.manualCreateReply(replyText, newReply.content.imgRef);
+  }
+
+  manualCreateReply(replyText, imgRef) {
+    const threadBody = document.querySelector('.threadBody');
+
+    const listElement = document.createElement('li');
+    listElement.className = 'media'
+
+    if (imgRef != "") {
+      const imgElement = document.createElement('img');
+      imgElement.setAttribute('src', imgRef);
+      imgElement.className = 'mr-3';
+      imgElement.setAttribute('alt', "Reply Image");
+      listElement.appendChild(imgElement);
+    }
+
+    const divElement = document.createElement('div');
+    divElement.className = 'media-body';
+    divElement.appendChild(document.createTextNode(replyText));
+    divElement.appendChild(document.createElement('br'));
+
+    const button = document.createElement('button');
+    button.className = 'replyButton';
+    button.onclick = this.createReply;
+    button.appendChild(document.createTextNode('Reply'));
+
+    divElement.appendChild(button);
+    listElement.appendChild(divElement);
+    threadBody.appendChild(listElement);
+  }
+
   render () {
     const replies = this.loadReplies();
     return (
       <div className="threadPage">
       <div className="jumbotron text-center">
         <h1><a href="/">The RhiZone</a></h1>
-        <div className="buttons">
-          <Link to={{pathname: '/settings'}}>
-            <Button className="settings">Settings</Button>
-          </Link>
-          <Link to={{pathname: '/inbox'}}>
-            <Button className="inbox">Inbox</Button>
-          </Link>
-        </div>
       </div>
+      <a href="/settings">Settings</a><br/>
+      <a href="/inbox">Inbox</a>
 
       {this.loadThread()}
 
       <div className='threadReply'>
-        <textarea className="form-control" rows="5"></textarea>
-        <button className="btn btn-secondary" onClick={this.postReply}>Post Reply To Thread</button>
+        <p>Add reply to thread: </p>
+        <PostEditor className="replyPostEditor" addPost={this.addReply}/>
       </div>
 
       {this.loadReplies()}
