@@ -21,12 +21,12 @@ userData.set('admin', {password:'admin', isAdmin: true});
  *      value: {newActivity:[],oldActivity:[]}
  */
 const inboxData = new Map();
-inboxData.set('user', {newActivity:[3,4], oldActivity:[5], pastPosts[0,1,2,6,8,9,10,11,12]});
-inboxData.set('user1', {newActivity:[],oldActivity:[], pastPosts[3]});
-inboxData.set('user2', {newActivity:[],oldActivity:[], pastPosts[4]});
-inboxData.set('user3', {newActivity:[6],oldActivity:[], pastPosts[5]});
-inboxData.set('user4', {newActivity:[],oldActivity:[], pastPosts[]});
-inboxData.set('admin', {newActivity:[],oldActivity: [], pastPosts[7]});
+inboxData.set('user', {newActivity:[3,4], oldActivity:[5], pastPosts:[0,1,2,6,8,9,10,11,12]});
+inboxData.set('user1', {newActivity:[],oldActivity:[], pastPosts:[3]});
+inboxData.set('user2', {newActivity:[],oldActivity:[], pastPosts:[4]});
+inboxData.set('user3', {newActivity:[6],oldActivity:[], pastPosts:[5]});
+inboxData.set('user4', {newActivity:[],oldActivity:[], pastPosts:[]});
+inboxData.set('admin', {newActivity:[],oldActivity: [], pastPosts:[7]});
 
 
 /*
