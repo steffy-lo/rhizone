@@ -122,23 +122,19 @@ class Thread extends React.Component {
 
   createReply(e) {
     console.log("createReply");
-    console.log(e.target.parentElement);
+    console.log(e.target.parentElement.lastChild);
 
-    const divElement = document.createElement('div');
+    if (this.props.state.loggedIn) {
+			const editor = e.target.parentElement.lastChild;
+			editor.classList.toggle("hidden");
+      editor.previousSibling.classList.toggle("hidden");
+		} else {
+			window.location.replace('/login');
+		}
 
-    const textBox = document.createElement('textarea');
-    textBox.className = 'form-control';
-    textBox.setAttribute('rows', 5);
 
-    const postButton = document.createElement('button');
-    postButton.className = 'btn btn-secondary';
-    postButton.onclick = this.postReply;
-    postButton.appendChild(document.createTextNode('Post Reply'))
 
-    divElement.appendChild(textBox);
-    divElement.appendChild(postButton);
-
-    e.target.parentElement.insertBefore(divElement, e.target.nextSibling);
+    //e.target.parentElement.insertBefore(postEditor, e.target.nextSibling);
   }
 
   postReply(e) {
@@ -156,6 +152,9 @@ class Thread extends React.Component {
           {replyText} <br/>
           {this.loadImage(index)} <br/>
           <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
+          <div className="hidden">
+            <PostEditor className="replyPostEditor" addPost={this.addNestedReply}/>
+          </div>
         </div>
       </li>
     )
