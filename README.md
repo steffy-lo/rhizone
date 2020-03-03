@@ -14,12 +14,16 @@ npm start
 
 ### Login Credentials
 For a regular user
+```
 username: user
 password: user
+```
 
 For an admin
+```
 username: admin
 password: admin
+```
 
 ### About Our App: The RhiZone
 RhiZone is an anonymous social media website that promotes a space for users of the Internet to engage freely in discussions, particularly in topics surrounding the liberal arts that are significant and intellectual. Anonymity is key to our website: it prevents users from feeling judged while posting and allows them to speak their thoughts honestly, thereby avoiding other problems with having a so-called identity.
