@@ -94,7 +94,7 @@ class Thread extends React.Component {
   loadImage(index) {
     if (Data.threadData.get(index) == null || Data.threadData.get(index) === null ){
       return (<img/>);
-    } else if (Data.threadData.get(index).content.imgRef == "")
+    } else if (Data.threadData.get(index).content.imgRef === "")
     {
       return (<img/>);
     } else {
@@ -197,8 +197,10 @@ class Thread extends React.Component {
 
   deleteReply(e) {
     console.log("deleteReply");
-    console.log(e.target.parentElement.parentElement.parentElement);
-    e.target.parentElement.parentElement.parentElement.innerHTML='';
+    console.log(e.target.parentElement.parentElement);
+    const replyToRemove = e.target.parentElement.parentElement;
+    const parentThread = replyToRemove.parentElement;
+    parentThread.removeChild(replyToRemove);
   }
 
   manualCreateReply(replyText, imgRef, pid, newId) {
@@ -206,7 +208,7 @@ class Thread extends React.Component {
     let parentReply;
     let ulElement;
 
-    if (Data.threadData.get(pid).pid == -1) {
+    if (Data.threadData.get(pid).pid === -1) {
       threadBody = document.querySelector('.threadBody');
     } else {
       parentReply = document.getElementById(pid.toString());
@@ -221,7 +223,7 @@ class Thread extends React.Component {
     listElement.className = 'media';
     listElement.setAttribute('id', newId);
 
-    if (imgRef != "") {
+    if (imgRef !== "") {
       const imgElement = document.createElement('img');
       imgElement.setAttribute('src', imgRef);
       imgElement.className = 'mr-3';
@@ -256,7 +258,7 @@ class Thread extends React.Component {
 
     listElement.appendChild(divElement);
 
-    if (Data.threadData.get(pid).pid == -1) {
+    if (Data.threadData.get(pid).pid === -1) {
       threadBody.appendChild(listElement);
     } else {
       ulElement.appendChild(listElement);
