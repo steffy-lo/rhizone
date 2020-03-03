@@ -9,7 +9,6 @@ import Login from '../Login';
 class Mainpage extends React.Component {
 	constructor (props) {
 		super(props);
-		console.log(props)
 		this.addPost = this.addPost.bind(this);
 		this.state = {
 			posts: [],

@@ -6,6 +6,7 @@ import ls from 'local-storage';
 import PostEditor from './../PostEditor/PostEditor';
 import * as Data from './../../data/hardcoded.js';
 import './style.css';
+import Button from "@material-ui/core/Button";
 
 class Thread extends React.Component {
 
@@ -194,6 +195,12 @@ class Thread extends React.Component {
 
   }
 
+  deleteReply(e) {
+    console.log("deleteReply");
+    console.log(e.target.parentElement.parentElement.parentElement);
+    e.target.parentElement.parentElement.parentElement.innerHTML='';
+  }
+
   manualCreateReply(replyText, imgRef, pid, newId) {
     let threadBody;
     let parentReply;
@@ -237,7 +244,16 @@ class Thread extends React.Component {
     editor.className = 'replyPostEditor';
 
     divElement.appendChild(button);
-    divElement.appendChild(editor);
+
+    const userData = Data.userData.get(this.state.username);
+    if (userData.isAdmin){
+        const delButton = document.createElement('button');
+        delButton.className = 'deleteButton';
+        delButton.onclick = this.deleteReply;
+        delButton.appendChild(document.createTextNode('Delete'));
+        divElement.appendChild(delButton);
+    }
+
     listElement.appendChild(divElement);
 
     if (Data.threadData.get(pid).pid == -1) {
@@ -254,9 +270,15 @@ class Thread extends React.Component {
       <div className="threadPage">
       <div className="jumbotron text-center">
         <h1><a href="/">The RhiZone</a></h1>
+        <div className="buttons">
+          <Link to={{pathname: '/settings'}}>
+            <Button className="settings">Settings</Button>
+          </Link>
+          <Link to={{pathname: '/inbox'}}>
+            <Button className="inbox">Inbox</Button>
+          </Link>
+        </div>
       </div>
-      <a href="/settings">Settings</a><br/>
-      <a href="/inbox">Inbox</a>
 
       {this.loadThread()}
 
