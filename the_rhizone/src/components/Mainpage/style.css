@@ -73,12 +73,6 @@ h5 {
   font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
-.addingPost {	
-	position: absolute;
-	padding: 0 50%;
-	margin: 0 50%;
-}
-
 .hidden { display:none; }
 
 .addPostButton{
