@@ -1,6 +1,5 @@
 import React from 'react';
 import './styles.css';
-import Mainpage from '../Mainpage';
 import { Redirect} from 'react-router-dom';
 import * as Data from './../../data/hardcoded.js';
 
@@ -61,7 +60,7 @@ class Login extends React.Component {
       return (
         <div>
           <header className="login-header">
-            <h1><a href="/">The RhiZone</a></h1>
+            <h1 className="title">The RhiZone</h1>
           </header>
           <div className="form">
             <form className="login-form">

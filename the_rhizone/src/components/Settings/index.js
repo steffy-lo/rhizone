@@ -3,7 +3,7 @@ import './styles.css';
 import { Link, Redirect } from "react-router-dom";
 import * as Data from './../../data/hardcoded.js';
 import ls from 'local-storage';
-import Login from '../Login';
+import Button from "@material-ui/core/Button";
 
 class Settings extends React.Component {
   constructor(props) {
@@ -138,9 +138,22 @@ class Settings extends React.Component {
       }
       return(
         <div>
-          <div className="LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/">Logout</Link></div>	
-          <div className="Home" ><Link to="/">Home</Link></div>
-          <div className="LinkMeInbox" ><Link to="/inbox">Inbox</Link></div>
+          <div className="buttons">
+          <div className="LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/">
+            <Button>Logout</Button>
+            </Link>
+          </div>	
+          <div className="LinkMeInbox" >
+            <Link to="/inbox">
+              <Button>Inbox</Button>
+            </Link>
+          </div>
+          <div className="LinkMeHome" >
+            <Link to="/">
+              <Button>Home</Button>
+            </Link>
+          </div>
+          </div>
           <div className="main">
             <dl className="form">
               <label htmlFor="inputPassword">Update Password</label>

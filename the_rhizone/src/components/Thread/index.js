@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap/dist/css/bootstrap.css';
 import ls from 'local-storage';
@@ -243,14 +243,28 @@ class Thread extends React.Component {
     return (
       <div className="threadPage">
       <div className="jumbotron text-center">
-        <h1><a href="/">The RhiZone</a></h1>
+        <h1 className="title">The RhiZone</h1>
         <div className="buttons">
+          <div className="LinkMeLogin" >
+          <Link to={{pathname: '/settings'}}>
+            <Button className="settings">Logout</Button>
+          </Link>
+          </div>
+          <div className="LinkMeSettings" >
           <Link to={{pathname: '/settings'}}>
             <Button className="settings">Settings</Button>
           </Link>
-          <Link to={{pathname: '/inbox'}}>
-            <Button className="inbox">Inbox</Button>
-          </Link>
+          </div>
+          <div className="LinkMeInbox" >
+            <Link to={{pathname: '/inbox'}}>
+              <Button className="inbox">Inbox</Button>
+            </Link>
+          </div>
+          <div className="LinkMeHome" >
+            <Link to="/">
+              <Button>Home</Button>
+            </Link>
+        </div>
         </div>
       </div>
 

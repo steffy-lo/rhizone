@@ -1,9 +1,9 @@
 import React from 'react';
 import './style.css';
 import PostEditor from './../PostEditor/PostEditor';
-import { Link, Redirect} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as Data from './../../data/hardcoded.js';
-import Login from '../Login';
+import Button from "@material-ui/core/Button";
  
 
 class Mainpage extends React.Component {
@@ -153,20 +153,33 @@ class Mainpage extends React.Component {
 	}
 	
     render() {
-		let logButton = <Link to="/login">Login</Link>
+		let logButton = "Login"
 		if (this.props.state.loggedIn) {
-			logButton = <Link to="/">Logout</Link>
+			logButton = "Logout"
 		}
 		return (
 		<div>
 			<header className="login-header">
-				<h1>The RhiZone</h1>
+				<h1 className="title">The RhiZone</h1>
+				<div className = "buttons">
+				<div className = "LinkMeLogin" onClick={() => this.props.login(false)} >
+				<Link to="/login">
+					<Button>{logButton}</Button>
+				</Link>
+				</div>
+				<div className = "LinkMeSettings" >
+					<Link to="/settings">
+						<Button>Settings</Button>
+					</Link>
+				</div>
+				<div className = "LinkMeInbox" >
+					<Link to="/inbox">
+						<Button>Inbox</Button>
+					</Link>
+				</div>
+				</div>
 			</header>
 			<div className = "addPostButton"><button className = "buttonForPosting" onClick={() => this.displayAddPost()}>+Add Thread</button></div>
-			<div className = "LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/login">{logButton}</Link></div>	
-			<div className = "ZeldaMeAccount" ><Link to="/settings">Settings</Link></div>
-			<div className = "LinkMeInbox" ><Link to="/inbox">Inbox</Link></div>
-			
 			<div className = "addingPost hidden">
 			<PostEditor addPost={this.addPost} />
 			</div>

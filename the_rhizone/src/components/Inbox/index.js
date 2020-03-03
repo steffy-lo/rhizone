@@ -134,13 +134,22 @@ class Inbox extends React.Component {
             return(
                 <div>
                     <div className="jumbotron text-center">
-                        <Link className='main-page' to={"/"}>
-                            <h1>The RhiZone</h1>
-                        </Link>
+                        <h1 className="title">The RhiZone</h1>
                         <div className="buttons">
-                            <Link to={{pathname: '/settings'}}>
-                            <Button className="settings">Settings</Button>
-                            </Link>
+                            <div className="LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/">
+                                <Button>Logout</Button>
+                                </Link>
+                            </div>	
+                            <div className="LinkMeSettings" >
+                                <Link to="/settings">
+                                <Button>Settings</Button>
+                                </Link>
+                            </div>
+                            <div className="LinkMeHome" >
+                                <Link to="/">
+                                <Button>Home</Button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                     <div id='user'>
