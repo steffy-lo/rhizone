@@ -21,12 +21,12 @@ userData.set('admin', {password:'admin', isAdmin: true});
  *      value: {newActivity:[],oldActivity:[]}
  */
 const inboxData = new Map();
-inboxData.set('user', {newActivity:[3,4], oldActivity:[5]});
-inboxData.set('user1', {newActivity:[],oldActivity:[]});
-inboxData.set('user2', {newActivity:[],oldActivity:[]});
-inboxData.set('user3', {newActivity:[6],oldActivity:[]});
-inboxData.set('user4', {newActivity:[],oldActivity:[]});
-inboxData.set('admin', {newActivity:[],oldActivity: []});
+inboxData.set('user', {newActivity:[3,4], oldActivity:[5], pastPosts[0,1,2,6,8,9,10,11,12]});
+inboxData.set('user1', {newActivity:[],oldActivity:[], pastPosts[3]});
+inboxData.set('user2', {newActivity:[],oldActivity:[], pastPosts[4]});
+inboxData.set('user3', {newActivity:[6],oldActivity:[], pastPosts[5]});
+inboxData.set('user4', {newActivity:[],oldActivity:[], pastPosts[]});
+inboxData.set('admin', {newActivity:[],oldActivity: [], pastPosts[7]});
 
 
 /*
@@ -43,42 +43,42 @@ inboxData.set('admin', {newActivity:[],oldActivity: []});
 const threadData = new Map ();
 threadData.set(0, {pid:-1, author:"user", replies: [],
         content:{
-            title: "testing1",
-            body: "Testing1 to render root thread",
+            title: "Does RhiZone agree with Adorno on the Culture Industry?",
+            body: "Ultimately in the essay The Culture Industry in the Dialectics of Enlightenments, Adorno claims all works of popular culture can never be art. Do you agree or disagree?",
             imgRef: "",
         }
     });
 threadData.set(1, {pid:-1, author:"user", replies: [],
         content:{
-            title: "testing2",
-            body: "Testing to render root thread with image",
+            title: "What is your opinion of Ida?",
+            body: "2014's Ida for me is one of the best films of the decade. It is a look into post-Holocaust Poland, exploring the angst, anxiety and loss of direction that comes from an event we cannot make sense of.",
             imgRef: "1.jpg",
         }
     });
 threadData.set(2, {pid:-1, author:"user", replies: [3,4,5],
         content:{
-            title: "testing3",
-            body: "Testing to render nested reply ",
+            title: "Ida is a dissapointment",
+            body: "I expected a lot out of this film given all the hype around it, but I found it rather pretentious in its execution and on-the-nose in its messaging. ",
             imgRef: "1.jpg",
         }
     });
 threadData.set(3, {pid:2, author:"user1", replies: [],
         content:{
-            title: "testing3",
-            body: "First reply to testing 3, without image",
+            title: "",
+            body: "You fundamentally misunderstand the movie. @1 gets it. But Pawlikowski is continuing on his work which contemplates the movement image and its dialectical relationship with the time image here.",
             imgRef: "",
         }
     });
 threadData.set(4, {pid:2, author:"user2", replies: [],
         content:{
-            title: "testing3",
-            body: "Second reply to testing 3, with image",
+            title: "",
+            body: "Look at this shot. Just contemplate it. See how it positions Ida off-centered from the Christ statue. In the very first frame of the film, the film communicates Ida's psychological state without saying a word. That's why the film is genius.",
             imgRef: "firstframeofida.png",
         }
     });
 threadData.set(5, {pid:2, author:"user3", replies: [6],
         content:{
-            title: "testing4",
+            title: "",
             body: "Testing for reply of replies",
             imgRef: "leorangeman.jpg",
         }
