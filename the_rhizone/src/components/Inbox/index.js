@@ -4,6 +4,7 @@ import './styles.css';
 
 import * as Data from './../../data/hardcoded.js';
 import ls from 'local-storage';
+import Button from "@material-ui/core/Button";
 
 const inboxType = {
     REPLY: 'reply'
@@ -11,7 +12,8 @@ const inboxType = {
 
 const actType = {
     NEW: 'new',
-    OLD: 'old'
+    OLD: 'old',
+    PAST: 'past'
 }
 
 class Inbox extends React.Component {
@@ -23,17 +25,19 @@ class Inbox extends React.Component {
                 username: user,
                 newActivity: Data.inboxData.get(user).newActivity,
                 oldActivity: Data.inboxData.get(user).oldActivity,
+                pastPosts: Data.inboxData.get(user).pastPosts,
                 loggedIn: props.state.loggedIn
             }
         } else {
             this.state = {
                 username: "",
                 newActivity: [],
-                oldActivity: []
+                oldActivity: [],
+                pastPosts:[]
             }
         }
     };
-
+    
     componentWillMount() {
         if (ls.get('loggedIn') !== undefined) {
             if (ls.get('loggedIn') === true) {
@@ -42,6 +46,7 @@ class Inbox extends React.Component {
                     loggedIn: ls.get('loggedIn'),
                     newActivity: Data.inboxData.get(ls.get('username')).newActivity,
                     oldActivity: Data.inboxData.get(ls.get('username')).oldActivity,
+                    pastPosts: Data.inboxData.get(ls.get('username')).pastPosts,
                 });
             } else {
                 this.setState({
@@ -55,7 +60,7 @@ class Inbox extends React.Component {
     // move activity from newActivity to oldActivity
     read(key,type) {
         // check state if newActivity
-        if (type === actType.OLD) { return; }
+        if (type !== actType.NEW) { return; }
         const idx = key;
         const act = this.state.newActivity[idx];
         // since state values cannot be directly modified
@@ -89,8 +94,8 @@ class Inbox extends React.Component {
                 <Link className='activity-link' to={"./../thread#"+activity}
                     onClick={ () => this.read(idx,aType)}>
                     <p>
-                        <span className='actauthor'> {actName} </span>.
-                        <span className='acttitle'> {refContent.content.title} </span>.
+                        <span className='actauthor'> {actName} </span> replies to your thread:
+                        <span className='acttitle'> {refContent.content.body} </span>.
                     </p>
                 </Link>
             </div>
@@ -105,6 +110,11 @@ class Inbox extends React.Component {
                         <Link className='main-page' to={"/"}>
                             <h1>The RhiZone</h1>
                         </Link>
+                        <div className="buttons">
+                            <Link to={{pathname: '/settings'}}>
+                                <Button className="settings">Settings</Button>
+                            </Link>
+                        </div>
                     </div>
                     <div id='user'>
                         <Link className='user-link' to={"./../Settings"}>
@@ -125,6 +135,13 @@ class Inbox extends React.Component {
                         {this.state.oldActivity.map((d,key) =>
                             this.renderOneActivity(d,key, actType.OLD))}
                     </div>
+                    <div id="pastactivity">
+                         <div className='actcollection'>
+                            Past Posts ({this.state.pastPosts.length}):
+                    </div>
+                          {this.state.pastPosts.map((d,key) =>
+                           this.renderOneActivity(d,key, actType.PAST))}
+                     </div>
                 </div>
             );
         } else {

@@ -30,3 +30,25 @@ li {
   padding: 10px;
   border: 1px solid gray;
 }
+
+button.MuiButtonBase-root {
+    text-align: center;
+    background-color: #535FC1;
+    color: #FFFFFF;
+    margin: 10px;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+.buttons button:hover {
+    background: #5866D1;
+}
+
+.settings {
+    position: absolute;
+    float: right;
+}
+
+.inbox {
+    position: absolute;
+    float: right;
+}
