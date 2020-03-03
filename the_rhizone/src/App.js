@@ -44,14 +44,14 @@ class App extends React.Component {
               { /* Each Route below shows a different component depending on the exact path in the URL  */ }
               <Route exact path='/login' render={() =>
                               (<Login state={this.state} login={this.login}/>)}/>
-			        <Route exact path='/' render={() =>
+			  <Route exact path='/' render={() =>
                               (<Mainpage state={this.state} login={this.login}/>)}/>
               <Route exact path='/settings' render={() =>
                               (<Settings state={this.state} login={this.login}/>)}/>
               <Route exact path='/inbox' render={() =>
                               (<Inbox state={this.state} login={this.login}/>)}/>
-              <Route exact path='/thread' render={() =>
-                              (<Thread state={this.state} login={this.login}/>)}/>
+              <Route path='/thread' render={(location) =>
+                              (<Thread state={this.state} login={this.login} id={location.location.hash}/>)}/>
             </Switch>
           </BrowserRouter>
 		</div>

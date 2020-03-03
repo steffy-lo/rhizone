@@ -111,7 +111,7 @@ class Mainpage extends React.Component {
 	
 	contentLoad(index) {
 		return(
-			<Link className='activity-link' to={"./../Thread#" + index}>
+			<Link className='activity-link' to={"./../thread#" + index}>
 			<h5 className = "card-title">
 			{Data.threadData.get(index).content.title}
 			</h5>

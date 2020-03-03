@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap/dist/css/bootstrap.css';
 import ls from 'local-storage';
@@ -39,6 +39,43 @@ class Thread extends React.Component {
       });
     }
   }
+
+  renderAdminMainThreadInfo() {
+    const userData = Data.userData.get(this.state.username);
+    if (!userData) { return;}
+    if (!userData.isAdmin) { return;}
+
+    let tid = Number(this.props.id.split("#")[1]);
+    let threadInfo = Data.threadData.get(tid);
+    if (!threadInfo) { return; }
+
+    while (threadInfo.pid != -1){
+        tid = threadInfo.pid;
+        threadInfo = Data.threadData.get(tid);
+        if (!threadInfo) { return; }
+    }
+    return (
+        <p>
+            <span>Replies: {threadInfo.replies.length} </span>
+            <span>Author: {threadInfo.author} </span>
+            <span>Post #: {tid}</span>
+        </p>
+    );
+  }
+
+  renderAdminRepliesInfo() {
+    const userData = Data.userData.get(this.state.username);
+    if (!userData) { return;}
+    if (!userData.isAdmin) { return;}
+
+    const tid = Number(this.props.id.split("#")[1]);
+    const threadInfo = Data.threadData.get(tid);
+    if (!threadInfo) { return; }
+    return (
+        <p> Post #: {tid} </p>
+    );
+  }
+
 
   loadThread() {
     return(
