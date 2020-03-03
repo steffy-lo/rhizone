@@ -26,6 +26,7 @@ class Thread extends React.Component {
     this.postReply = this.postReply.bind(this);
     this.loadReply = this.loadReply.bind(this);
     this.addReply = this.addReply.bind(this);
+    //this.addNestedReply = this.addNestedReply.bind(this);
   }
 
   getThreadId() {
@@ -127,14 +128,11 @@ class Thread extends React.Component {
     if (this.props.state.loggedIn) {
 			const editor = e.target.parentElement.lastChild;
 			editor.classList.toggle("hidden");
+      // hides the reply button
       editor.previousSibling.classList.toggle("hidden");
 		} else {
 			window.location.replace('/login');
 		}
-
-
-
-    //e.target.parentElement.insertBefore(postEditor, e.target.nextSibling);
   }
 
   postReply(e) {
@@ -147,24 +145,26 @@ class Thread extends React.Component {
 
   loadReply(replyText, index) {
     return(
-      <li className="media">
+      <li className="media" id={index}>
         <div className="media-body">
           {replyText} <br/>
           {this.loadImage(index)} <br/>
           <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
           <div className="hidden">
-            <PostEditor className="replyPostEditor" addPost={this.addNestedReply}/>
+            <PostEditor className="replyPostEditor" addPost={this.addReply} index={index} isReply={true}/>
           </div>
         </div>
       </li>
     )
   }
 
-  addReply(newPostBody, newImage, postTitle) {
-    console.log(this.state.threadId);
+  addReply(newPostBody, newImage, postTitle, index) {
+    //console(this.props.index);
+    console.log("parent id", index);
+    //console.log(this.state.threadId);
     const newId = Data.threadData.size;
 
-    if(newImage == null){
+    if (newImage == null){
 		} else {
 			// rename newImage to be threadNumber
 			// File Upload not supported yet because we need a database to access such files. We only have hardcoded files.
@@ -189,14 +189,30 @@ class Thread extends React.Component {
 
     let newReply = Data.threadData.get(newId);
     const replyText = newReply.content.body;
-    this.manualCreateReply(replyText, newReply.content.imgRef);
+
+    this.manualCreateReply(replyText, newReply.content.imgRef, index, newId);
+
   }
 
-  manualCreateReply(replyText, imgRef) {
-    const threadBody = document.querySelector('.threadBody');
+  manualCreateReply(replyText, imgRef, pid, newId) {
+    let threadBody;
+    let parentReply;
+    let ulElement;
+
+    if (Data.threadData.get(pid).pid == -1) {
+      threadBody = document.querySelector('.threadBody');
+    } else {
+      parentReply = document.getElementById(pid.toString());
+      console.log(parentReply.querySelector('ul'));
+      ulElement = parentReply.querySelector('ul');
+      if (ulElement === null) {
+        ulElement = document.createElement('ul');
+      }
+    }
 
     const listElement = document.createElement('li');
-    listElement.className = 'media'
+    listElement.className = 'media';
+    listElement.setAttribute('id', newId);
 
     if (imgRef != "") {
       const imgElement = document.createElement('img');
@@ -216,9 +232,20 @@ class Thread extends React.Component {
     button.onclick = this.createReply;
     button.appendChild(document.createTextNode('Reply'));
 
+    // TODO: how to create a class element????
+    const editor = document.createElement('PostEditor');
+    editor.className = 'replyPostEditor';
+
     divElement.appendChild(button);
+    divElement.appendChild(editor);
     listElement.appendChild(divElement);
-    threadBody.appendChild(listElement);
+
+    if (Data.threadData.get(pid).pid == -1) {
+      threadBody.appendChild(listElement);
+    } else {
+      ulElement.appendChild(listElement);
+      parentReply.appendChild(ulElement);
+    }
   }
 
   render () {
@@ -235,7 +262,7 @@ class Thread extends React.Component {
 
       <div className='threadReply'>
         <p>Add reply to thread: </p>
-        <PostEditor className="replyPostEditor" addPost={this.addReply}/>
+        <PostEditor className="replyPostEditor" addPost={this.addReply} index={this.state.threadId} isReply={true}/>
       </div>
 
       {this.loadReplies()}
