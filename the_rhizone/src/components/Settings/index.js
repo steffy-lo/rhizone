@@ -3,6 +3,7 @@ import './styles.css';
 import { Link, Redirect } from "react-router-dom";
 import * as Data from './../../data/hardcoded.js';
 import ls from 'local-storage';
+import Login from '../Login';
 
 class Settings extends React.Component {
   constructor(props) {
@@ -10,9 +11,11 @@ class Settings extends React.Component {
     this.state = {
       username: props.state.username,
       loggedIn: props.state.loggedIn
-    }
+    };
     this.updateSettings = this.updateSettings.bind(this);
     this.updateRights = this.updateRights.bind(this);
+    this.createAccount = this.createAccount.bind(this);
+    this.deleteAccount = this.deleteAccount.bind(this);
   }
 
   componentWillMount() {
@@ -23,6 +26,50 @@ class Settings extends React.Component {
       });
     }
   }
+
+  deleteAccount(e) {
+    const username = document.querySelector('#usernameDel').value;
+    const del = document.querySelector('.deleteAccount');
+    if (del.lastChild.className === "msg") {
+      del.removeChild(del.lastChild)
+    }
+    let msg = document.createElement('p');
+    msg.className = "msg";
+    if (Data.userData.get(username) === undefined) { // get from database
+      msg.appendChild(document.createTextNode("User doesn't exist!"));
+      msg.style.color = "red";
+      del.appendChild(msg);
+    } else {
+      msg.appendChild(document.createTextNode("Account has been successfully deleted!"));
+      msg.style.color = "green";
+      del.appendChild(msg);
+      Data.userData.delete(username) // delete from database
+    }
+
+  }
+
+  createAccount(e) {
+    e.preventDefault();
+    const username = document.querySelector('#usernameCreate').value;
+    const password = document.querySelector('#passwordCreate').value;
+    const create = document.querySelector('.createAccount');
+    if (create.lastChild.className === "msg") {
+      create.removeChild(create.lastChild)
+    }
+    let msg = document.createElement('p');
+    msg.className = "msg";
+    if (Data.userData.get(username) === undefined) { // get from database
+      msg.appendChild(document.createTextNode('Account successfully created!'));
+      msg.style.color = "green";
+      create.appendChild(msg);
+      Data.userData.set(username, {password: password, isAdmin: false}) // add to database
+    } else {
+      msg.appendChild(document.createTextNode('Account already exists!'));
+      msg.style.color = "red";
+      create.appendChild(msg);
+    }
+  }
+
   updateSettings() {
     const inputCurrPassword = document.querySelector('#inputPassword').value;
     const updateMsg = document.createElement('p');
@@ -69,12 +116,25 @@ class Settings extends React.Component {
       let adminView;
       const user = this.state.username;
       if (Data.userData.get(user).isAdmin) {
-          adminView = 
-          <div className="admin">
-            <label htmlFor="username">Allow Admin Rights</label>
-            <input type="text" id="username" placeholder="Username"/>
-            <p><button id="give-admin-rights" type="click" onClick={this.updateRights}>Allow</button></p>
-          </div>;
+          adminView =
+              <dl className="form">
+                <label>Allow Admin Rights</label>
+                <input type="text" id="username" placeholder="Username"/>
+                <p><button id="give-admin-rights" type="click" onClick={this.updateRights}>Allow</button></p>
+                <br/>
+                <div className="createAccount">
+                  <label>Create User Account</label>
+                  <input type="text" id="usernameCreate" placeholder="Username"/>
+                  <input type="text" id="passwordCreate" placeholder="Password"/>
+                  <p><button id="create-account" type="click" onClick={this.createAccount}>Create</button></p>
+                </div>
+                <br/>
+                <div className="deleteAccount">
+                  <label>Delete User Account</label>
+                  <input type="text" id="usernameDel" placeholder="Username"/>
+                  <p><button id="create-account" type="click" onClick={this.deleteAccount}>Delete</button></p>
+                </div>
+              </dl>;
       }
       return(
         <div>
@@ -83,7 +143,6 @@ class Settings extends React.Component {
           <div className="LinkMeInbox" ><Link to="/inbox">Inbox</Link></div>
           <div className="main">
             <dl className="form">
-              {adminView}
               <label htmlFor="inputPassword">Update Password</label>
               <div>
                 <div>
@@ -93,6 +152,7 @@ class Settings extends React.Component {
               </div>
               <p><button id="save-settings" type="click" onClick={this.updateSettings}>Update Settings</button></p>
             </dl>
+            {adminView}
           </div>
         </div>
       );

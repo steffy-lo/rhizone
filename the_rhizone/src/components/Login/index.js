@@ -44,7 +44,7 @@ class Login extends React.Component {
     }
     let createMsg = document.createElement('p');
     createMsg.className = 'createMsg';
-    if (Data.userData.get(username) === undefined) {
+    if (Data.userData.get(username) === undefined) { // get from database
       createMsg.appendChild(document.createTextNode('Account successfully created!'));
       createMsg.style.color = "green";
       form.appendChild(createMsg);
