@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Link } from "react-router-dom";
 import './styles.css';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import * as Data from './../../data/hardcoded.js';
 import ls from 'local-storage';
@@ -36,7 +37,7 @@ class Inbox extends React.Component {
             }
         }
     };
-    
+
     componentWillMount() {
         if (ls.get('loggedIn') !== undefined) {
             if (ls.get('loggedIn') === true) {
@@ -70,6 +71,26 @@ class Inbox extends React.Component {
         this.setState({newActivity:n1, oldActivity:o1});
     }
 
+    removeThread(idx, type){
+        switch (type){
+            case actType.NEW:
+                const n1 = this.state.newActivity.splice(idx,1);
+                this.setState({newActivity:n1});
+                console.log(this.state.newActivity);
+                break;
+            case actType.OLD:
+                const o1 = this.state.oldActivity.splice(idx,1);
+                this.setState({oldActivity:o1});
+                break;
+            case actType.PAST:
+                const p1 = this.state.pastPosts.splice(idx,1);
+                this.setState({pastPosts:p1});
+                break;
+            default:
+                break;
+        }
+    }
+
     /*
      * Render one activity in the list with specs actContent
      * parameters:
@@ -97,6 +118,7 @@ class Inbox extends React.Component {
                         <span className='acttitle'> {refContent.content.body} </span>.
                     </p>
                 </Link>
+                {/*<div className='pull-right' onClick={() => this.removeThread(idx,aType)}> delete </div>*/}
             </div>
         );
     }
@@ -135,7 +157,7 @@ class Inbox extends React.Component {
                     </div>
                           {this.state.pastPosts.map((d,key) =>
                            this.renderOneActivity(d,key, actType.PAST))}
-                     </div>
+                    </div>
                 </div>
             );
         } else {

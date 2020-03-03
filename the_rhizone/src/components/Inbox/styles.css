@@ -46,6 +46,7 @@
 
 .activity {
     border: 1px solid grey;
+    padding-bottom: 20px;
 }
 
 .activity-link {
@@ -76,4 +77,8 @@
 
 .acttitle {
 
+}
+
+.pull-right {
+    float:right;
 }
