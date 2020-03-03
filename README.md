@@ -29,4 +29,4 @@ Regular users can create new threads and post about issues related to literature
 Users are also able to change their passwords if they wish to.
 
 ### Features for Admins
-Admins are able to perform any actions that a regular user is able to do in addition to deleting posts/threads, view all the threads and posts that a user has made, and remove and add user accounts
+Admins are able to perform any actions that a regular user is able to do in addition to deleting posts/threads, remove and add user accounts
