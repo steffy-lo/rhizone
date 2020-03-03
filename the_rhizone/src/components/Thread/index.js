@@ -153,7 +153,7 @@ class Thread extends React.Component {
           {this.loadImage(index)} <br/>
           <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
           <div className="hidden">
-            <PostEditor className="replyPostEditor" addPost={this.addNestedReply}/>
+          <PostEditor className="replyPostEditor" addPost={this.addNestedReply}/>
           </div>
         </div>
       </li>
@@ -192,6 +192,12 @@ class Thread extends React.Component {
     this.manualCreateReply(replyText, newReply.content.imgRef);
   }
 
+  deleteReply(e) {
+    console.log("deleteReply");
+    console.log(e.target.parentElement.parentElement.parentElement);
+    e.target.parentElement.parentElement.parentElement.innerHTML='';
+  }
+
   manualCreateReply(replyText, imgRef) {
     const threadBody = document.querySelector('.threadBody');
 
@@ -217,6 +223,16 @@ class Thread extends React.Component {
     button.appendChild(document.createTextNode('Reply'));
 
     divElement.appendChild(button);
+
+    const userData = Data.userData.get(this.state.username);
+    if (userData.isAdmin){
+        const delButton = document.createElement('button');
+        delButton.className = 'deleteButton';
+        delButton.onclick = this.deleteReply;
+        delButton.appendChild(document.createTextNode('Delete'));
+        divElement.appendChild(delButton);
+    }
+
     listElement.appendChild(divElement);
     threadBody.appendChild(listElement);
   }
