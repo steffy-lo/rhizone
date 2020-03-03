@@ -14,12 +14,16 @@ npm start
 
 ### Login Credentials
 For a regular user
+```
 username: user
 password: user
+```
 
 For an admin
+```
 username: admin
 password: admin
+```
 
 ### About Our App: The RhiZone
 RhiZone is an anonymous social media website that promotes a space for users of the Internet to engage freely in discussions, particularly in topics surrounding the liberal arts that are significant and intellectual. Anonymity is key to our website: it prevents users from feeling judged while posting and allows them to speak their thoughts honestly, thereby avoiding other problems with having a so-called identity.
@@ -29,4 +33,4 @@ Regular users can create new threads and post about issues related to literature
 Users are also able to change their passwords if they wish to.
 
 ### Features for Admins
-Admins are able to perform any actions that a regular user is able to do in addition to deleting posts/threads, view all the threads and posts that a user has made, and remove and add user accounts
+Admins are able to perform any actions that a regular user is able to do in addition to deleting posts/threads, remove and add user accounts
