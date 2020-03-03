@@ -113,12 +113,14 @@ class Inbox extends React.Component {
 
         const actName = (Data.userData.get(this.state.username).isAdmin)? refContent.author : "Anonymous";
 
+        const msg = (aType === actType.PAST)? " created thread: " : " replies to your thread:";
+
         return (
             <div className='activity' key={idx} atype={aType}>
                 <Link className='activity-link' to={"./../thread#"+activity}
                     onClick={ () => this.read(idx,aType)}>
                     <p>
-                    <span className='actauthor'> {actName} </span> replies to your thread:
+                    <span className='actauthor'> {actName} </span> {msg}
                     <span className='acttitle'> {refContent.content.body} </span>.
                     </p>
                 </Link>
