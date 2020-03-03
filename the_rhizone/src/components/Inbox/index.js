@@ -1,7 +1,6 @@
 import React from 'react';
 import { Redirect, Link } from "react-router-dom";
 import './styles.css';
-
 import * as Data from './../../data/hardcoded.js';
 import ls from 'local-storage';
 import Button from "@material-ui/core/Button";
@@ -41,12 +40,13 @@ class Inbox extends React.Component {
     componentWillMount() {
         if (ls.get('loggedIn') !== undefined) {
             if (ls.get('loggedIn') === true) {
+                const user = ls.get('username');
                 this.setState({
-                    username: ls.get('username'),
+                    username: user,
                     loggedIn: ls.get('loggedIn'),
-                    newActivity: Data.inboxData.get(ls.get('username')).newActivity,
-                    oldActivity: Data.inboxData.get(ls.get('username')).oldActivity,
-                    pastPosts: Data.inboxData.get(ls.get('username')).pastPosts,
+                    newActivity: Data.inboxData.get(user).newActivity,
+                    oldActivity: Data.inboxData.get(user).oldActivity,
+                    pastPosts: Data.inboxData.get(user).pastPosts,
                 });
             } else {
                 this.setState({
@@ -73,7 +73,8 @@ class Inbox extends React.Component {
         this.setState({newActivity:n1, oldActivity:o1});
     }
 
-    removeThread(idx, type){
+    removeThread(activity, idx, type){
+        //Data.threadData.delete(activity);
         switch (type){
             case actType.NEW:
                 const n1 = this.state.newActivity;
@@ -110,19 +111,18 @@ class Inbox extends React.Component {
             return;
         }
 
-        const actName = (Data.userData.get(this.state.username).isAdmin)?
-           refContent.author : "Anonymous";
+        const actName = (Data.userData.get(this.state.username).isAdmin)? refContent.author : "Anonymous";
 
         return (
             <div className='activity' key={idx} atype={aType}>
                 <Link className='activity-link' to={"./../thread#"+activity}
                     onClick={ () => this.read(idx,aType)}>
                     <p>
-                        <span className='actauthor'> {actName} </span> replies to your thread:
-                        <span className='acttitle'> {refContent.content.body} </span>.
+                    <span className='actauthor'> {actName} </span> replies to your thread:
+                    <span className='acttitle'> {refContent.content.body} </span>.
                     </p>
                 </Link>
-                <button className='pull-right' onClick={() => this.removeThread(idx,aType)}> delete </button>
+                <button className='pull-right' onClick={() => this.removeThread(activity,idx,aType)}> delete </button>
             </div>
         );
     }
@@ -137,35 +137,26 @@ class Inbox extends React.Component {
                         </Link>
                         <div className="buttons">
                             <Link to={{pathname: '/settings'}}>
-                                <Button className="settings">Settings</Button>
+                            <Button className="settings">Settings</Button>
                             </Link>
                         </div>
                     </div>
                     <div id='user'>
                         <Link className='user-link' to={"./../Settings"}>
-                            <span className='username'> {this.state.username} </span>
+                        <span className='username'> {this.state.username} </span>
                         </Link>
                     </div>
                     <div id="newactivity">
-                        <div className='actcollection'>
-                            New Activity ({this.state.newActivity.length}):
-                        </div>
-                        {this.state.newActivity.map((d,key) => /* d- array data; key- array index*/
-                            this.renderOneActivity(d,key, actType.NEW))}
+                        <div className='actcollection'> New Activity ({this.state.newActivity.length}):</div>
+                        {this.state.newActivity.map((d,key) => this.renderOneActivity(d,key, actType.NEW))}
                     </div>
                     <div id="oldactivity">
-                        <div className='actcollection'>
-                            Old Activity ({this.state.oldActivity.length}):
-                        </div>
-                        {this.state.oldActivity.map((d,key) =>
-                            this.renderOneActivity(d,key, actType.OLD))}
+                        <div className='actcollection'> Old Activity ({this.state.oldActivity.length}):</div>
+                        {this.state.oldActivity.map((d,key) => this.renderOneActivity(d,key, actType.OLD))}
                     </div>
                     <div id="pastactivity">
-                         <div className='actcollection'>
-                            Past Posts ({this.state.pastPosts.length}):
-                    </div>
-                          {this.state.pastPosts.map((d,key) =>
-                           this.renderOneActivity(d,key, actType.PAST))}
+                        <div className='actcollection'> Past Posts ({this.state.pastPosts.length}): </div>
+                        {this.state.pastPosts.map((d,key) =>this.renderOneActivity(d,key, actType.PAST))}
                     </div>
                 </div>
             );
