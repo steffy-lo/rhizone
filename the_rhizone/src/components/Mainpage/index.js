@@ -22,11 +22,14 @@ class Mainpage extends React.Component {
 				
 	}
 
-  
+    // Function to add posts (i.e threads)
 	addPost(newPostBody, newImage, postTitle) {
+		
+		// Makes a state which will be set to the new post data
 		const newState = Object.assign({}, this.state);
 		newState.posts.push(newPostBody);
 		
+		// If there is no image attached to the post do nothing
 		if(newImage == null){
 		}else {
 			// rename newImage to be threadNumber
@@ -34,17 +37,20 @@ class Mainpage extends React.Component {
 			var new_file = new File([newImage], newState.threadNumber + '.jpg', {type: 'image/jpeg'});
 		}
 		
+		// Regardless, push the image in the current state
 		newState.images.push(new_file);
 		this.setState(newState);
 		
 		// add Post to archive
 		let imageReference = "";
 		
+		// Name the image
 		if (newImage == null){
 		}else {
 				imageReference = new_file.name;
 		}
 		
+		// set the data in hardcoded.js to what the post contents are. Because we have not done a back-end, this data will not save on reload.
 		Data.threadData.set(Data.threadData.size, {pid:-1, author:"user", replies: [],
         content:{
             title: postTitle,
@@ -52,16 +58,35 @@ class Mainpage extends React.Component {
 			imgRef: imageReference,
         }
 		});
+		
+		// Reload threads
 		this.setThreadDisplayState();
+		
+		// Hide add thread button
 		this.displayAddPost();
 	}
 	
+	// This function displays or hides the Add Thread section based off whether or not it is clicked or not
+	displayAddPost(){
+		if(this.props.state.loggedIn){
+			let element = document.querySelector('.addingPost')
+			element.classList.toggle("hidden");
+			let elementButton = document.querySelector('.addPostButton')
+			elementButton.classList.toggle("hidden");
+		} else {
+			window.location.replace('/login');
+		}
+		
+	}
+	
+	// Shows archived threads, corresponds with -> arrow
 	threadMore() {
 		return this.setState((state) => ({
 			threadNumber: state.threadNumber + 9,
 		}));
 	}
 	
+	// Shows more current threads, corresponds with <- arrow
 	threadLess() {
 		if (this.state.threadNumber >= 9) {
 			return this.setState((state) => ({
@@ -70,6 +95,7 @@ class Mainpage extends React.Component {
 		}	
 	}
 	
+	// gets current thread display state
 	getThreadDisplay(){
 		let threadDisplayState = [];
 		let count = 0;
@@ -82,6 +108,9 @@ class Mainpage extends React.Component {
 		return threadDisplayState
 	}
 	
+	// makes all threads appear. Call this method whenever we need to reload the page.
+	// Essentially, it goes through all the threadData again and sets which IDs should show 
+	// in which column
 	setThreadDisplayState(){
 		let threadDisplayState = [];
 		let count = 0;
@@ -96,6 +125,7 @@ class Mainpage extends React.Component {
 		}));
 	}
 	
+	// Loads Image in card
 	imageLoad(index) {
 		// null evaluates false 
 		if(Data.threadData.get(index) == null || Data.threadData.get(index) === null ){
@@ -115,6 +145,7 @@ class Mainpage extends React.Component {
 		}
 	}
 	
+	// Loads content (title and body) in card
 	contentLoad(index) {
 		return(
 			<Link className='activity-link' to={"./../thread#" + index}>
@@ -128,6 +159,25 @@ class Mainpage extends React.Component {
 		);
 	}
 	
+	// Loads delete button in card if user is admin
+	adminDelete(index) {
+		const userData = Data.userData.get(this.props.state.username);
+		if (!userData) { return;}
+		if (!userData.isAdmin) { return;}
+		return(
+		<button className = "deleteButton" onClick={() => this.deleteReply(index)}>Delete</button>);
+	}
+	
+	// Actually deletes the post, only the admin can access this function
+	deleteReply(index) {
+		Data.threadData.get(index).content.body = "[deleted]";
+		Data.threadData.get(index).content.imgRef = "";
+		Data.threadData.get(index).content.title = "[deleted]";
+		// Reload threads
+		this.setThreadDisplayState();
+	}
+	
+	// Loads content, image, and delete (if admin) into the card
 	columnLoad(index) {
 		if(index == null || index === null){
 		} else {
@@ -135,21 +185,10 @@ class Mainpage extends React.Component {
 			<div className="col-4 card">
 					{this.contentLoad(index)}
 					{this.imageLoad(index)}
+					{this.adminDelete(index)}
 			</div>
 		);
 		}
-	}
-	
-	displayAddPost(){
-		if(this.props.state.loggedIn){
-			let element = document.querySelector('.addingPost')
-			element.classList.toggle("hidden");
-			let elementButton = document.querySelector('.addPostButton')
-			elementButton.classList.toggle("hidden");
-		} else {
-			window.location.replace('/login');
-		}
-		
 	}
 	
     render() {
@@ -210,11 +249,6 @@ class Mainpage extends React.Component {
 			</div>
 			</div>				
 			{ 
-			//this.state.posts.map((postBody, idx) => {
-			//return (
-				//<Post key={idx} postBody={postBody}/>
-			//)
-		//})
 		}
 		</div>
 		);

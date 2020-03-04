@@ -2,8 +2,6 @@ import React from 'react';
 import './App.css';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
-import Post from './components/Post/component/Post';
-import PostEditor from './components/PostEditor/PostEditor';
 import Login from './components/Login'
 import Settings from './components/Settings';
 import Thread from './components/Thread';

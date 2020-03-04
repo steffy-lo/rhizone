@@ -22,19 +22,9 @@ class PostEditor extends React.Component {
 		this.fileChangedHandler = this.fileChangedHandler.bind(this);
 		this.createPost = this.createPost.bind(this);
 	}
-
-	handlePostEditorInputChange(e) {
-		this.setState({
-			newPostBody: e.target.value
-		});
-	}
-
-	handlePostEditorInputTitleChange(e) {
-		this.setState({
-			postTitle: e.target.value
-		});
-	}
-
+	
+	// To create a post, we check if it is a valid post first (i.e if it is over 150 characters)
+	// Then we set the states the the post's body, title and selected image
 	createPost() {
 		 if (this.validator.fieldValid('NewPostBody')) {
 			 this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle, this.props.index);
@@ -48,13 +38,25 @@ class PostEditor extends React.Component {
 		this.forceUpdate();
 		}
 	}
-
+	
+	// This file handler is for file upload
 	fileChangedHandler = (e) => {
 		this.setState({ selectedFile: e.target.files[0] })
 	}
 
-
-
+	// This file handler is for post titles
+	handlePostEditorInputTitleChange(e) {
+		this.setState({
+			postTitle: e.target.value
+		});
+	}
+	
+	// This handler is for post body changes
+	handlePostEditorInputChange(e) {
+		this.setState({
+			newPostBody: e.target.value
+		});
+	}
 	render () {
 		let hideTitle;
 		if (this.props.isReply) {

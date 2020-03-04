@@ -125,8 +125,6 @@ class Thread extends React.Component {
   }
 
   createReply(e) {
-    console.log("createReply");
-    console.log(e.target.parentElement.lastChild);
 
     if (this.props.state.loggedIn) {
 			const editor = e.target.parentElement.lastChild;
@@ -142,7 +140,6 @@ class Thread extends React.Component {
     const replyText = e.target.parentElement.firstElementChild.value;
     let test = document.createElement('div');
     this.addReply(replyText);
-    console.log("test", test);
     console.log(this.loadReply(replyText, null));
   }
 
@@ -177,7 +174,7 @@ class Thread extends React.Component {
     return(
       <li className="media" id={index}>
         <div className="media-body">
-          {replyText} <br/>
+          <div className ="text-body">{replyText}</div>
           {this.loadImage(index)} <br/>
           {adminButton}
           <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
@@ -191,9 +188,7 @@ class Thread extends React.Component {
   }
 
   addReply(newPostBody, newImage, postTitle, index) {
-    //console(this.props.index);
     console.log("parent id", index);
-    //console.log(this.state.threadId);
     const newId = Data.threadData.size;
 
     if (newImage == null){
@@ -278,7 +273,11 @@ class Thread extends React.Component {
 
     const divElement = document.createElement('div');
     divElement.className = 'media-body';
-    divElement.appendChild(document.createTextNode(replyText));
+	
+	const textElement = document.createElement('div');
+	textElement.className = 'text-body';
+	textElement.appendChild(document.createTextNode(replyText));
+	divElement.appendChild(textElement);
     divElement.appendChild(document.createElement('br'));
 
     const button = document.createElement('button');
@@ -286,7 +285,6 @@ class Thread extends React.Component {
     button.onclick = this.createReply;
     button.appendChild(document.createTextNode('Reply'));
 
-    // TODO: how to create a class element????
     const editor = document.createElement('PostEditor');
     editor.className = 'replyPostEditor';
 

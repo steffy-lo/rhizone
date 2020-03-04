@@ -36,3 +36,11 @@ button.MuiButtonBase-root {
 .buttons button:hover {
     background: #5866D1;
 }
+
+.text-body {
+	word-break: break-word;
+}
+
+.replyButton {
+	word-break: keep-all;
+}
