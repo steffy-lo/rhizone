@@ -148,7 +148,7 @@ class Thread extends React.Component {
     let adminButton;
     const userData = Data.userData.get(this.state.username);
     if (userData !== undefined && userData.isAdmin){
-        adminButton = <button class="deleteButton">Delete</button>;
+        adminButton = <button className="deleteBtn">Delete</button>;
     }
     console.log(this.state.replies[index]);
     console.log(this.state.replies);
@@ -171,6 +171,7 @@ class Thread extends React.Component {
         </ul>
       ));
     }
+    if (Data.threadData.get(index).pid !== -1) {
     return(
       <li className="media" id={index}>
         <div className="media-body">
@@ -185,6 +186,9 @@ class Thread extends React.Component {
         </div>
       </li>
     );
+    } else {
+      return null;
+    }
   }
 
   addReply(newPostBody, newImage, postTitle, index) {
