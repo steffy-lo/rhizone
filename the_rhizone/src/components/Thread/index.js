@@ -17,7 +17,9 @@ class Thread extends React.Component {
       replyNum: 0,
       username: props.state.username,
       loggedIn: props.state.loggedIn,
-      threadId: this.getThreadId()
+      threadId: this.getThreadId(),
+      mainThread: Data.threadData,
+      replies: {}
     };
 
     this.loadThread = this.loadThread.bind(this);
@@ -145,18 +147,47 @@ class Thread extends React.Component {
   }
 
   loadReply(replyText, index) {
+    let replies;
+    let adminButton;
+    const userData = Data.userData.get(this.state.username);
+    if (userData !== undefined && userData.isAdmin){
+        adminButton = <button class="deleteButton">Delete</button>;
+    }
+    console.log(this.state.replies[index]);
+    console.log(this.state.replies);
+    console.log(index);
+
+    if (this.state.replies[index] !== undefined) {
+      replies = this.state.replies[index].map(reply => (
+        <ul>
+          <li className="media" id={reply.index}>
+            <div className="media-body">
+              {reply.replyText} <br/>
+              {this.loadImage(reply.index)} <br/>
+              {adminButton}
+              <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
+              <div className="hidden">
+                <PostEditor className="replyPostEditor" addPost={this.addReply} index={reply.index} isReply={true}/>
+              </div>
+            </div>
+          </li>
+        </ul>
+      ));
+    }
     return(
       <li className="media" id={index}>
         <div className="media-body">
           {replyText} <br/>
           {this.loadImage(index)} <br/>
+          {adminButton}
           <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
           <div className="hidden">
             <PostEditor className="replyPostEditor" addPost={this.addReply} index={index} isReply={true}/>
           </div>
+          {replies}
         </div>
       </li>
-    )
+    );
   }
 
   addReply(newPostBody, newImage, postTitle, index) {
@@ -188,10 +219,24 @@ class Thread extends React.Component {
         }
     });
 
+    this.setState({mainThread: Data.threadData})
+
     let newReply = Data.threadData.get(newId);
     const replyText = newReply.content.body;
 
-    this.manualCreateReply(replyText, newReply.content.imgRef, index, newId);
+    if (Data.threadData.get(index).pid !== -1) {
+      let reply = [];
+      if (this.state.replies[index] !== undefined) {
+        reply = this.state.replies[index]
+      }
+      reply.push({index: newId, replyText: replyText})
+      const replyList = this.state.replies;
+      replyList[index] = reply;
+      this.setState({replies: replyList})
+    }
+
+    // this.manualCreateReply(replyText, newReply.content.imgRef, index, newId);
+  
 
   }
 
@@ -273,9 +318,9 @@ class Thread extends React.Component {
       <div className="jumbotron text-center">
         <h1 className="title">The RhiZone</h1>
         <div className="buttons">
-          <div className="LinkMeLogin" >
-          <Link to={{pathname: '/settings'}}>
-            <Button className="settings">Logout</Button>
+          <div className = "LinkMeLogin" onClick={() => this.props.login(false)} >
+          <Link to="/">
+            <Button>Logout</Button>
           </Link>
           </div>
           <div className="LinkMeSettings" >
