@@ -110,7 +110,7 @@ class Thread extends React.Component {
     let replies = [];
 
     for (let i = 0; i < Data.threadData.size; i++) {
-      if (Data.threadData.get(i).pid == this.state.threadId) {
+      if (Data.threadData.get(i).pid === this.state.threadId) {
         replies.push(this.loadReply(Data.threadData.get(i).content.body, i));
       }
     }
