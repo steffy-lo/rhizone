@@ -15,6 +15,7 @@ const userDataModel = mongoose.model('UserData', {
 	},
 	isAdmin: {
 	    type: Boolean,
+	    required: true,
 	    default: false
 	}
 })
