@@ -11,7 +11,7 @@ const { mongoose } = require('./db/mongoose')
 
 // import the mongoose models
 const { Thread } = require('./models/thread')
-const { User } = require('./models/user')
+const { User } = require('./models/userDataModel')
 
 // to validate object IDs
 const { ObjectID } = require('mongodb')
@@ -25,16 +25,32 @@ app.use(bodyParser.json())
 /*** API Routes below ************************************/
 
 // a POST route to create a resource
-app.post()
+app.post('/user', (req, res) => {
+    console.log("request" + req.body);
+    const user = new User({
+        userName: req.body.username,
+        password: req.body.password,
+        isAdmin: req.body.isAdmin
+    })
 
-// a GET route to get a resource
-app.get()
+    // Save to the database
+    user.save().then(result => {
+        res.send(result)
+        console.log("response");
+        mongoose.connection.close();
+    }, error => {
+        res.status(400).send(error)
+    })
+})
 
-// a DELETE route to delete a resource
-app.delete()
+// // a GET route to get a resource
+// app.get()
 
-// a PATCH route for changing properties of a resource
-app.patch()
+// // a DELETE route to delete a resource
+// app.delete()
+
+// // a PATCH route for changing properties of a resource
+// app.patch()
 
 
 /*************************************************/

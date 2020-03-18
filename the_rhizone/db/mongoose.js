@@ -5,9 +5,11 @@ const mongoose = require('mongoose')
 
 /* Connnect to our database */
 // Get the URI of the local database, or the one specified on deployment.
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/rhizone'
+const mongoURI = 'mongodb://localhost:27017/test'
 
 mongoose.connect(mongoURI,
-    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
+    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+    .then(() => console.log('MongoDB Connected...'))
+    .catch(err => console.log(err));
 
 module.exports = { mongoose }  // Export the active connection.

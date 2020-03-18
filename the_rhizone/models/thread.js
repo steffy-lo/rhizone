@@ -1,7 +1,7 @@
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Thread = mongoose.model('Thread', {
+const Thread = mongoose.model('Thread', new mongoose.Schema({
     id: {
         type: Number,
         required: true
@@ -28,6 +28,6 @@ const Thread = mongoose.model('Thread', {
         required: true,
         minlength: 1
     }
-})
+}))
 
 module.exports = { Thread }

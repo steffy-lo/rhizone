@@ -9,6 +9,7 @@ class Login extends React.Component {
     super(props);
     this.authenticate = this.authenticate.bind(this);
     this.createAccount = this.createAccount.bind(this);
+    this.addUser = this.addUser.bind(this);
   }
 
   authenticate(e) {
@@ -33,6 +34,54 @@ class Login extends React.Component {
     }
   }
 
+  // A function to send a POST request to add a new user
+  addUser(username, password) {
+    // the URL for the request
+    const url = '/user';
+
+    // The data we are going to send in our request
+    let data = {
+      username: username,
+      password: password,
+      isAdmin: false
+    }
+
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    // Send the request with fetch()
+    fetch(url)
+        .then(function(res) {
+
+          // Handle response we get from the API.
+          // Usually check the error codes to see what happened.
+          const form = document.querySelector('.form');
+          const createMsg = document.createElement('p');
+          createMsg.className = 'createMsg';
+          if (res.status === 200) {
+            console.log(res)
+            createMsg.appendChild(document.createTextNode('Account successfully created!'));
+            createMsg.style.color = "green";
+            form.appendChild(createMsg);
+          } else {
+            // If server couldn't add the student, tell the user.
+            // Here we are adding a generic message, but you could be more specific in your app.
+            createMsg.appendChild(document.createTextNode('Could not add student.'));
+            createMsg.style.color = "red";
+            form.appendChild(createMsg);
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+  }
+
   createAccount(e) {
     e.preventDefault();
     const username = document.querySelector('#username').value;
@@ -41,14 +90,13 @@ class Login extends React.Component {
     if (form.lastChild.className === "loginError" || form.lastChild.className === "createMsg") {
       form.removeChild(form.lastChild)
     }
-    let createMsg = document.createElement('p');
-    createMsg.className = 'createMsg';
     if (Data.userData.get(username) === undefined) { // get from database
-      createMsg.appendChild(document.createTextNode('Account successfully created!'));
-      createMsg.style.color = "green";
-      form.appendChild(createMsg);
-      Data.userData.set(username, {password: password, isAdmin: false}) // add to database
+      Data.userData.set(username, {password: password, isAdmin: false});
+      // add to database
+      this.addUser(username, password)
     } else {
+      const createMsg = document.createElement('p');
+      createMsg.className = 'createMsg';
       createMsg.appendChild(document.createTextNode('Account already exists!'));
       createMsg.style.color = "red";
       form.appendChild(createMsg);
