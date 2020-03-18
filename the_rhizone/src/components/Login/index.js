@@ -37,7 +37,7 @@ class Login extends React.Component {
   // A function to send a POST request to add a new user
   addUser(username, password) {
     // the URL for the request
-    const url = '/user';
+    const url = 'http://localhost:5000/user';
 
     // The data we are going to send in our request
     let data = {
@@ -57,7 +57,7 @@ class Login extends React.Component {
     });
 
     // Send the request with fetch()
-    fetch(url)
+    fetch(request)
         .then(function(res) {
 
           // Handle response we get from the API.
@@ -66,7 +66,7 @@ class Login extends React.Component {
           const createMsg = document.createElement('p');
           createMsg.className = 'createMsg';
           if (res.status === 200) {
-            console.log(res)
+            console.log(res);
             createMsg.appendChild(document.createTextNode('Account successfully created!'));
             createMsg.style.color = "green";
             form.appendChild(createMsg);
@@ -92,6 +92,7 @@ class Login extends React.Component {
     }
     if (Data.userData.get(username) === undefined) { // get from database
       Data.userData.set(username, {password: password, isAdmin: false});
+      console.log("add to database")
       // add to database
       this.addUser(username, password)
     } else {

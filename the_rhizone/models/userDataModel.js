@@ -1,7 +1,7 @@
 /* Student mongoose model */
 const mongoose = require('mongoose')
 
-const UserDataModel = mongoose.model('UserData', new mongoose.Schema({
+const User = mongoose.model('User', new mongoose.Schema({
 	userName: {
 		type: String,
 		required: true,
@@ -20,4 +20,4 @@ const UserDataModel = mongoose.model('UserData', new mongoose.Schema({
 	}
 }))
 
-module.exports = { UserDataModel }
+module.exports = { User }

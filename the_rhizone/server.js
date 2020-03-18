@@ -18,26 +18,29 @@ const { ObjectID } = require('mongodb')
 
 // body-parser: middleware for parsing HTTP JSON body into a usable object
 const bodyParser = require('body-parser')
+
+// cors
+const cors = require('cors')
+
 app.use(bodyParser.json())
+app.use(cors())
 
 /*********************************************************/
 
 /*** API Routes below ************************************/
-
 // a POST route to create a resource
-app.post('/user', (req, res) => {
-    console.log("request" + req.body);
+app.post('/user', (req, res, next) => {
+    console.log("request");
     const user = new User({
         userName: req.body.username,
         password: req.body.password,
         isAdmin: req.body.isAdmin
     })
-
+    
     // Save to the database
     user.save().then(result => {
         res.send(result)
-        console.log("response");
-        mongoose.connection.close();
+        console.log("respond");
     }, error => {
         res.status(400).send(error)
     })
