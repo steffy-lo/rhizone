@@ -10,8 +10,9 @@ const app = express();
 const { mongoose } = require('./db/mongoose')
 
 // import the mongoose models
-const { Thread } = require('./models/thread')
-const { User } = require('./models/userDataModel')
+const { threadDataModel } = require('./models/threadDataModel')
+const { userDataModel } = require('./models/userDataModel')
+const { inboxDataModel } = require('./models/inboxDataModel')
 
 // to validate object IDs
 const { ObjectID } = require('mongodb')

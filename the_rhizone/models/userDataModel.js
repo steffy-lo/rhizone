@@ -1,7 +1,7 @@
 /* Student mongoose model */
 const mongoose = require('mongoose')
 
-const User = mongoose.model('User', new mongoose.Schema({
+const userDataModel = mongoose.model('User', new mongoose.Schema({
 	userName: {
 		type: String,
 		required: true,
@@ -15,9 +15,8 @@ const User = mongoose.model('User', new mongoose.Schema({
 	},
 	isAdmin: {
 	    type: Boolean,
-	    required: true,
 	    default: false
 	}
 }))
 
-module.exports = { User }
+module.exports = { userDataModel }
