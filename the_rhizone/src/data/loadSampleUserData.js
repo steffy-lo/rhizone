@@ -9,7 +9,7 @@ for (const [key, value] of userData.entries()) {
     sampleUserData.push({userName:key, password:value.password, isAdmin:value.isAdmin});
  };
 
-mongoose.connect('mongodb://localhost:27017/UserDataAPI', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost:27017/RhizoneAPI', {useNewUrlParser: true, useUnifiedTopology: true});
 
 userDataModel.insertMany(sampleUserData, function(error, docs) {
     if (error) return console.error(error);

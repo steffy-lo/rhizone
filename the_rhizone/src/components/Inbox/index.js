@@ -4,56 +4,79 @@ import './styles.css';
 import * as Data from './../../data/hardcoded.js';
 import ls from 'local-storage';
 import Button from "@material-ui/core/Button";
-
-const inboxType = {
-    REPLY: 'reply'
-};
+const log = console.log
 
 const actType = {
     NEW: 'new',
     OLD: 'old',
     PAST: 'past'
 }
+const url = 'http://localhost:5000/inboxes'
 
 class Inbox extends React.Component {
     constructor(props) {
         super(props);
-        const user = props.state.username;
-        if (Data.inboxData.has(user)) {
-            this.state = {
-                username: user,
-                newActivity: Data.inboxData.get(user).newActivity,
-                oldActivity: Data.inboxData.get(user).oldActivity,
-                pastPosts: Data.inboxData.get(user).pastPosts,
-                loggedIn: props.state.loggedIn
-            }
-        } else {
-            this.state = {
-                username: "",
-                newActivity: [],
-                oldActivity: [],
-                pastPosts:[]
-            }
+        this.state = {
+            username: "",
+            newActivity: [],
+            oldActivity: [],
+            pastPosts:[],
+            loggedIn: false
         }
     };
 
-    componentWillMount() {
-        if (ls.get('loggedIn') !== undefined) {
-            if (ls.get('loggedIn') === true) {
-                const user = ls.get('username');
-                this.setState({
-                    username: user,
-                    loggedIn: ls.get('loggedIn'),
-                    newActivity: Data.inboxData.get(user).newActivity,
-                    oldActivity: Data.inboxData.get(user).oldActivity,
-                    pastPosts: Data.inboxData.get(user).pastPosts,
-                });
+    getInbox(user) {
+        const customUrl = url +  '/?userName=' + user
+        // Create our request constructor with all the parameters we need
+        const request = new Request( customUrl, {
+            method: 'get',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        // Send the request with fetch()
+        fetch(request)
+        .then( res => {
+            // Handle response we get from the API.
+            if (res.status === 200) {
+                // user found
+                log('user found')
+                return res.json();
             } else {
-                this.setState({
-                    username: null,
-                    loggedIn: ls.get('loggedIn')
-                });
+                log('Failed to get inbox data with userName:' + user)
+                return null;
             }
+        }).then (
+            res => {
+            if (res === null) { return; }
+            this.setStateWithQueryData(res)
+        })
+    }
+
+    setStateWithQueryData(queryData) {
+        log(queryData)
+        this.setState({
+            username: queryData.userName,
+            newActivity: queryData.newActivity,
+            oldActivity: queryData.oldActivity,
+            pastPosts: queryData.pastPosts,
+        })
+    }
+
+    componentWillMount() {
+        if (ls.get('loggedIn') === true) {
+            const user = ls.get('username');
+            this.getInbox(user);
+            this.setState({
+                loggedIn: ls.get('loggedIn')
+            })
+        } else {
+            this.setState({
+                username: null,
+                loggedIn: ls.get('loggedIn')
+            });
         }
       }
 

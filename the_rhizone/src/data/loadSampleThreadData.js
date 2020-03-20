@@ -15,7 +15,7 @@ for (const [key, value] of threadData.entries()) {
     });
  };
 
-mongoose.connect('mongodb://localhost:27017/ThreadDataAPI', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost:27017/RhizoneAPI', {useNewUrlParser: true, useUnifiedTopology: true});
 
 threadDataModel.insertMany(sampleThreadData, function(error, docs) {
     if (error) return console.error(error);

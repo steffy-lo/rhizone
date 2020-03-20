@@ -14,7 +14,7 @@ for (const [key, value] of inboxData.entries()) {
     });
  };
 
-mongoose.connect('mongodb://localhost:27017/InboxDataAPI', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost:27017/RhizoneAPI', {useNewUrlParser: true, useUnifiedTopology: true});
 
 inboxDataModel.insertMany(sampleInboxData, function(error, docs) {
     if (error) return console.error(error);
