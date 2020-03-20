@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const log = console.log;
 const {userData,inboxData,threadData} = require('./sampleData.js');
-const {userDataModel} = require('../../models/userDataModel.js');
+const {User} = require('../../models/userDataModel.js');
 
 const sampleUserData = new Array;
 
@@ -11,7 +11,7 @@ for (const [key, value] of userData.entries()) {
 
 mongoose.connect('mongodb://localhost:27017/RhizoneAPI', {useNewUrlParser: true, useUnifiedTopology: true});
 
-userDataModel.insertMany(sampleUserData, function(error, docs) {
+User.insertMany(sampleUserData, function(error, docs) {
     if (error) return console.error(error);
     log("user Data inserted!");
     mongoose.connection.close();

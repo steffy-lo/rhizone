@@ -78,7 +78,73 @@ class Inbox extends React.Component {
                 loggedIn: ls.get('loggedIn')
             });
         }
-      }
+    }
+
+    deleteInbox(user) {
+        const customUrl = url +  '/?userName=' + user
+        // Create our request constructor with all the parameters we need
+        const request = new Request( customUrl, {
+            method: 'delete',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        // Send the request with fetch()
+        fetch(request)
+        .then( res => {
+            // Handle response we get from the API.
+            if (res.status === 200) {
+                // user found
+                log('user inbox deleted')
+            } else {
+                log('Failed to delete inbox data with userName:' + user)
+                return null;
+            }
+        }).catch((error) => {
+            log(error)
+        })
+    }
+
+    addInbox() {
+        // Create our request constructor with all the parameters we need
+        let data = {
+            username: this.state.username,
+            newActivity: this.state.newActivity,
+            oldActivity: this.state.oldActivity,
+            pastPosts: this.state.pastPosts
+        }
+        const request = new Request( url, {
+            method: 'post',
+            body: JSON.stringify(this.state),
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        // Send the request with fetch()
+        fetch(request)
+        .then( res => {
+            // Handle response we get from the API.
+            if (res.status === 200) {
+                // user found
+                log('user inbox added')
+                return res.json();
+            } else {
+                log('Failed to add user inbox')
+                return null;
+            }
+        }).catch((error) => {
+            log(error)
+        })
+    }
+
+    updateInbox(user) {
+        this.deleteInbox(user);
+        this.addInbox();
+    }
 
     // move activity from newActivity to oldActivity
     read(key,type) {
@@ -93,11 +159,17 @@ class Inbox extends React.Component {
         n1.splice(idx,1);
         const o1 = this.state.oldActivity;
         o1.splice(0,0,act);
-        this.setState({newActivity:n1, oldActivity:o1});
+
+        const newStates = {
+            newActivity: n1,
+            oldActivity: o1,
+            pastPosts: this.state.pastPosts
+        }
+        this.setState(newStates);
+        this.updateInbox(this.state.username);
     }
 
     removeThread(activity, idx, type){
-        //Data.threadData.delete(activity);
         switch (type){
             case actType.NEW:
                 const n1 = this.state.newActivity;
@@ -117,6 +189,7 @@ class Inbox extends React.Component {
             default:
                 break;
         }
+        this.updateInbox(this.state.username);
     }
 
     /*

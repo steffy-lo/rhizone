@@ -68,16 +68,15 @@ app.post('/users/login', (req, res) => {
     })
 })
 
-// post inboxData should only be called when new user is added
 app.post('/inboxes', (req, res) => {
-	// log(req.body)
+	log(req.body)
 
 	// Create a new student using the Student mongoose model
 	const inbox = new inboxDataModel({
 		userName: req.body.username,
-		newActivity: new Array(),
-		oldActivity: new Array(),
-		pastPosts: new Array()
+		newActivity: Array.from(req.body.newActivity),
+		oldActivity: Array.from(req.body.oldActivity),
+		pastPosts: Array.from(req.body.pastPosts)
 	})
 
 	// Save inbox to the database
@@ -129,7 +128,7 @@ app.delete('/users/delete/:id', (req, res) => {
 })
 
 app.delete('/inboxes', (req, res) => {
-	// log(req.body)
+	// log(req.query)
 
 	// Delete a inbox by userName
 	const query = {userName: req.query.userName}
@@ -170,8 +169,9 @@ app.patch('/users/patch/:id', (req, res) => {
 
 })
 
-app.patch('/inboxes', (req, res) => {
-	// log(req.body)
+// not supported by browser, use delete + add as an alternative
+/*app.patch('/inboxes', (req, res) => {
+	log(req.body)
 
 	const {newActivity, oldActivity, pastPosts} = req.body;
 	const body = {newActivity, oldActivity, pastPosts};
@@ -186,7 +186,7 @@ app.patch('/inboxes', (req, res) => {
     }).catch((error) => {
       	res.status(500).send()  // server error
     })
-})
+})*/
 
 /*************************************************/
 // Express server listening...
