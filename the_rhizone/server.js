@@ -44,11 +44,7 @@ app.use(session({
 
 /*** API Routes below ************************************/
 // a POST route to create a resource
-<<<<<<< HEAD
-app.post('/users/create', (req, res, next) => {
-=======
 app.post('/UserDataAPI/users', (req, res, next) => {
->>>>>>> 626187b5940913842145f625e804230e0765a26b
     console.log("request");
     const user = new userDataModel({
         userName: req.body.username,
