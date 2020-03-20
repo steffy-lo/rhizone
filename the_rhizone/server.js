@@ -30,9 +30,9 @@ app.use(cors())
 
 /*** API Routes below ************************************/
 // a POST route to create a resource
-app.post('/user', (req, res, next) => {
+app.post('/UserDataAPI/users', (req, res, next) => {
     console.log("request");
-    const user = new User({
+    const user = new userDataModel({
         userName: req.body.username,
         password: req.body.password,
         isAdmin: req.body.isAdmin
@@ -55,6 +55,7 @@ app.post('/user', (req, res, next) => {
 
 // // a PATCH route for changing properties of a resource
 // app.patch()
+
 
 
 /*************************************************/

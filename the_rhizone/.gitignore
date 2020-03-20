@@ -25,5 +25,4 @@ yarn-error.log*
 
 /mongo-data
 package-lock.json
-package.json
 /src/.idea
