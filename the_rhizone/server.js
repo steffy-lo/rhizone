@@ -44,9 +44,13 @@ app.use(session({
 
 /*** API Routes below ************************************/
 // a POST route to create a resource
+<<<<<<< HEAD
 app.post('/users/create', (req, res, next) => {
+=======
+app.post('/UserDataAPI/users', (req, res, next) => {
+>>>>>>> 626187b5940913842145f625e804230e0765a26b
     console.log("request");
-    const user = new User({
+    const user = new userDataModel({
         userName: req.body.username,
         password: req.body.password,
         isAdmin: req.body.isAdmin
@@ -141,6 +145,7 @@ app.patch('/users/patch/:id', (req, res) => {
 
 // // a PATCH route for changing properties of a resource
 // app.patch()
+
 
 
 /*************************************************/
