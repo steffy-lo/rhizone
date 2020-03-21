@@ -1,7 +1,6 @@
 import React from 'react';
 import './styles.css';
 import { Redirect} from 'react-router-dom';
-import * as Data from './../../data/hardcoded.js';
 
 class Login extends React.Component {
 
@@ -14,6 +13,7 @@ class Login extends React.Component {
 
   authenticate(e) {
     e.preventDefault();
+    const component = this;
     const form = document.querySelector('.form');
     if (form.lastChild.className === "loginError" || form.lastChild.className === "createMsg") {
       form.removeChild(form.lastChild)
@@ -21,23 +21,47 @@ class Login extends React.Component {
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
 
-    if (Data.userData.get(username) !== undefined && Data.userData.get(username).password === password) {
-      this.props.login(true, username);
-    }
+    const url = 'http://localhost:5000/users/login';
 
-    if (document.querySelector('.loginError') == null) {
-      let pElement = document.createElement('p');
-      pElement.className = 'loginError';
-      pElement.appendChild(document.createTextNode('Incorrect username or password.'));
-      pElement.style.color = "red";
-      form.appendChild(pElement);
-    }
+    // The data we are going to send in our request
+    let data = {
+      userName: username,
+      password: password
+    };
+
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    // Send the request with fetch()
+    fetch(request)
+        .then(function(res) {
+          if (res.status === 200) {
+            component.props.login(true, username);
+          } else {
+            if (document.querySelector('.loginError') == null) {
+                let pElement = document.createElement('p');
+                pElement.className = 'loginError';
+                pElement.appendChild(document.createTextNode('Incorrect username or password.'));
+                pElement.style.color = "red";
+                form.appendChild(pElement);
+              }
+          }
+        }).catch((error) => {
+          console.log(error)
+        });
   }
 
   // A function to send a POST request to add a new user
   addUser(username, password) {
     // the URL for the request
-    const url = 'http://localhost:5000/user';
+    const url = 'http://localhost:5000/add_user';
 
     // The data we are going to send in our request
     let data = {
@@ -83,6 +107,7 @@ class Login extends React.Component {
   }
 
   createAccount(e) {
+    const component = this;
     e.preventDefault();
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
@@ -90,18 +115,25 @@ class Login extends React.Component {
     if (form.lastChild.className === "loginError" || form.lastChild.className === "createMsg") {
       form.removeChild(form.lastChild)
     }
-    if (Data.userData.get(username) === undefined) { // get from database
-      Data.userData.set(username, {password: password, isAdmin: false});
-      console.log("add to database")
-      // add to database
-      this.addUser(username, password)
-    } else {
-      const createMsg = document.createElement('p');
-      createMsg.className = 'createMsg';
-      createMsg.appendChild(document.createTextNode('Account already exists!'));
-      createMsg.style.color = "red";
-      form.appendChild(createMsg);
-    }
+    const url = 'http://localhost:5000/user/' + username;
+
+    fetch(url)
+        .then(function(res) {
+          if (res.status === 200) {
+            const createMsg = document.createElement('p');
+            createMsg.className = 'createMsg';
+            createMsg.appendChild(document.createTextNode('Account already exists!'));
+            createMsg.style.color = "red";
+            form.appendChild(createMsg);
+          } else if (res.status === 404) {
+            // Data.userData.set(username, {password: password, isAdmin: false});
+            console.log("add to database");
+            // add to database
+            component.addUser(username, password)
+          }
+        }).catch((error) => {
+          console.log(error)
+        });
   }
 
   render () {

@@ -43,30 +43,57 @@ app.use(session({
 }));
 
 /*** API Routes below ************************************/
+app.post('/add_user', (req, res, next) => {
+	const user = new User({
+		userName: req.body.username,
+		password: req.body.password,
+		isAdmin: req.body.isAdmin
+	})
+
+	// Save to the database
+	user.save().then(result => {
+		res.send(result)
+	}, error => {
+		console.log("fail")
+		res.status(400).send(error)
+	})
+})
+
+app.get('/user/:username', (req, res) => {
+	const username = req.params.username;
+	// Otherwise, find by the id and creator
+	User.findOne({ userName: username }).then((user) => {
+		if (!user) {
+			res.status(404).send()  // could not find this student
+		} else {
+			/// sometimes we wrap returned object in another object:
+			//res.send({student})
+			res.send(user)
+		}
+	}).catch((error) => {
+		res.status(500).send()  // server error
+	})
+});
+
 // a POST route to create a resource
 app.post('/users/login', (req, res) => {
-	const userName = req.body.userName
-    const password = req.body.password
-	
+	const userName = req.body.userName;
+    const password = req.body.password;
+
     // Use the static method on the User model to find a user
     // by their email and password
 	User.findByUserPassword(userName, password).then((user) => {
-	    if (!user) {
-			res.send('NO USER')
-            //res.redirect('/login');
-        } else {
-            // Add the user's id to the session cookie.
-            // We can check later if this exists to ensure we are logged in.
-			res.send('HELLO')
+	    if (user) {
+			res.send(user);
             req.session.user = user._id;
             req.session.userName = user.userName;
             //res.redirect('/home');
         }
     }).catch((error) => {
-		res.send('ERROR')
-		//res.status(400).redirect('/login');
+    	console.log(error);
+		res.status(400).send();
     })
-})
+});
 
 app.post('/inboxes', (req, res) => {
 	log(req.body)
