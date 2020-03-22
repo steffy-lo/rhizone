@@ -41,20 +41,27 @@ class Login extends React.Component {
 
     // Send the request with fetch()
     fetch(request)
-        .then(function(res) {
-          if (res.status === 200) {
-            component.props.login(true, username);
-          } else {
+        .then(res => {
+          return res.json();
+        })
+        .then(data => {
+            console.log(data);
+            const user = {
+                username: data.userName,
+                password: data.password,
+                isAdmin: data.isAdmin
+            }
+            component.props.login(true, user);
+        })
+        .catch((error) => {
+            console.log(error);
             if (document.querySelector('.loginError') == null) {
                 let pElement = document.createElement('p');
                 pElement.className = 'loginError';
                 pElement.appendChild(document.createTextNode('Incorrect username or password.'));
                 pElement.style.color = "red";
                 form.appendChild(pElement);
-              }
-          }
-        }).catch((error) => {
-          console.log(error)
+            }
         });
   }
 

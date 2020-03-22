@@ -67,7 +67,7 @@ class Inbox extends React.Component {
 
     componentWillMount() {
         if (ls.get('loggedIn') === true) {
-            const user = ls.get('username');
+            const user = ls.get('user').username;
             this.getInbox(user);
             this.setState({
                 loggedIn: ls.get('loggedIn')

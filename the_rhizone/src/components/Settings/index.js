@@ -9,7 +9,7 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: props.state.username,
+      user: props.state.user,
       loggedIn: props.state.loggedIn
     };
     this.updateSettings = this.updateSettings.bind(this);
@@ -21,7 +21,7 @@ class Settings extends React.Component {
   componentWillMount() {
     if (ls.get('loggedIn') !== undefined) {
       this.setState({
-        username: ls.get('username'),
+        user: ls.get('user'),
         loggedIn: ls.get('loggedIn')
       });
     }
@@ -114,8 +114,8 @@ class Settings extends React.Component {
   render () {
     if (this.state.loggedIn) {
       let adminView;
-      const user = this.state.username;
-      if (Data.userData.get(user).isAdmin) {
+      const user = this.state.user;
+      if (user.isAdmin) {
           adminView =
               <dl className="form">
                 <label>Allow Admin Rights</label>

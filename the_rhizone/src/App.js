@@ -15,21 +15,21 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: null,
+      user: null,
       loggedIn: false
     }
   }
 
   componentDidMount() {
     this.setState({
-      username: ls.get('username'),
+      user: ls.get('user'),
       loggedIn: ls.get('loggedIn')
     });
   }
   
-  login = (val, username) => {
-    this.setState({username: username, loggedIn: val})
-    ls.set('username', username)
+  login = (val, user) => {
+    this.setState({user: user, loggedIn: val})
+    ls.set('user', user)
     ls.set('loggedIn', val)
   }
 

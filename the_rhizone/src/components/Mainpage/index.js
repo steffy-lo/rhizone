@@ -161,7 +161,7 @@ class Mainpage extends React.Component {
 	
 	// Loads delete button in card if user is admin
 	adminDelete(index) {
-		const userData = Data.userData.get(this.props.state.username);
+		const userData = Data.userData.get(this.props.state.user.username);
 		if (!userData) { return;}
 		if (!userData.isAdmin) { return;}
 		return(
