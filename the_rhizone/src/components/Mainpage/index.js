@@ -218,14 +218,14 @@ class Mainpage extends React.Component {
 				</div>
 				</div>
 			</header>
-			<div className = "addPostButton"><button className = "buttonForPosting" onClick={() => this.displayAddPost()}>+Add Thread</button></div>
+			<div className = "addPostButton"><button className="buttonForPosting" onClick={() => this.displayAddPost()}>+Add Thread</button></div>
 			<div className = "addingPost hidden">
 			<PostEditor addPost={this.addPost} />
 			</div>
-			
-			<div className = "currentPost center-block">
-			<h3>Active Threads:</h3>
+
+			<div className="currentPost">
 			<div className="container py-1">
+				<h3>Active Threads:</h3>
 			<div className="row mb-1">
 				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 0])}
 				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 1])}
@@ -241,15 +241,13 @@ class Mainpage extends React.Component {
 				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 7])}
 				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 8])}
 			</div>
-		</div>		
+		</div>
 			<div className = "postingForm">
-			<span className ="navButton"><button className = "btn-default btn-sm" onClick={() => this.threadLess()}> ←  </button>
-			<button className = "btn-default btn-sm" onClick={() => this.threadMore()}> → </button></span>
-			
+			<span className ="navButton"><Button className="btn-default btn-sm" onClick={() => this.threadLess()}> ← </Button>
+			<Button className = "btn-default btn-sm" onClick={() => this.threadMore()}> → </Button></span>
+
 			</div>
-			</div>				
-			{ 
-		}
+			</div>
 		</div>
 		);
 	}

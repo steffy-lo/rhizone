@@ -64,10 +64,8 @@ app.get('/user/:username', (req, res) => {
 	// Otherwise, find by the id and creator
 	User.findOne({ userName: username }).then((user) => {
 		if (!user) {
-			res.status(404).send()  // could not find this student
+			res.status(404).send()
 		} else {
-			/// sometimes we wrap returned object in another object:
-			//res.send({student})
 			res.send(user)
 		}
 	}).catch((error) => {

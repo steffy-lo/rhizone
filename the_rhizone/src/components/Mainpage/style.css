@@ -2,6 +2,10 @@
   color: #61dafb;
 }
 
+.row mb-1 {
+    width: 90%;
+}
+
 .title {
   color: #5866D1;
   font-family: "Trebuchet MS", Helvetica, sans-serif;
@@ -11,7 +15,7 @@
 h3 {
   color: #5866D1;
   font-family: "Trebuchet MS", Helvetica, sans-serif;
-  padding: 0 1%;
+    margin: 20px;
 }
 .login-header {
     text-align: center;
@@ -23,11 +27,11 @@ h3 {
 
 .postingForm {
 	position: relative;
+    text-align: center;
 }
 
-.container {
-	position: relative;
-	right: 10%;
+.postingForm button:hover {
+    background: #5866D1;
 }
 
 .LinkMeSettings {
@@ -43,11 +47,6 @@ h3 {
 .LinkMeInbox {
   position: relative;
   float: right;
-}
-
-.container {
-	  padding:0;
-    margin:0;
 }
 
 .preview {
@@ -111,18 +110,14 @@ h5 {
 	margin: 10% 35%;
 }
 
-button.MuiButtonBase-root {
-  text-align: center;
-  background-color: #535FC1;
-  color: #FFFFFF;
-  font-family: "Trebuchet MS", Helvetica, sans-serif;
-}
-
 .buttons {
   position: absolute;
   top: 10px;
   right: 1%;
-  text-decoration: none;
+}
+
+.buttons a {
+    text-decoration: none;
 }
 
 .deleteButton {
@@ -133,9 +128,5 @@ button.MuiButtonBase-root {
 	bottom:   0;
 	opacity: 0.7;
 
-}
-
-.buttons button:hover {
-  background: #5866D1;
 }
 
