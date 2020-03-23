@@ -1,4 +1,4 @@
-
+	
 const mongoose = require('mongoose');
 
 const inboxDataModel = mongoose.model('Inbox', new mongoose.Schema({

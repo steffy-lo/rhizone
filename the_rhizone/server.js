@@ -31,6 +31,8 @@ const session = require('express-session')
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+
+
 /*********************************************************/
 app.use(session({
     secret: 'oursecret',

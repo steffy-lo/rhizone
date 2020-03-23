@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 
 /* Connnect to our database */
 // Get the URI of the local database, or the one specified on deployment.
-const mongoURI = 'mongodb://localhost:27017/RhizoneAPI'
+const mongoURI = 'mongodb+srv://rhizoneadmin:csc309rhizones@therhizone-klo9g.mongodb.net/test?retryWrites=true&w=majority'
 
 mongoose.connect(mongoURI,
     { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
