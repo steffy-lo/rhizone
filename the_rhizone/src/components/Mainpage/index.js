@@ -135,8 +135,8 @@ class Mainpage extends React.Component {
 			return (<div></div>);
 		} else {
 			return (
-			<div className = "img-sub">
-			<img className="card-img-top" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
+			<div className = "img-sub overlay zoom view">
+			<img className="card-img-top img-fluid" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
 			</div>
 			
 			);
@@ -241,8 +241,8 @@ class Mainpage extends React.Component {
 			</div>
 		</div>
 			<div className = "postingForm">
-			<span className ="navButton"><Button className="btn-default btn-sm" onClick={() => this.threadLess()}> ← </Button>
-			<Button className = "btn-default btn-sm" onClick={() => this.threadMore()}> → </Button></span>
+			<span className ="navButton"><Button className="btn-default btn-sm" onClick={() => this.threadLess()}> ←Recent </Button>
+			<Button className = "btn-default btn-sm" onClick={() => this.threadMore()}> Previous→ </Button></span>
 
 			</div>
 			</div>
