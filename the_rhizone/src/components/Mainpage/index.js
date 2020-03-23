@@ -161,11 +161,17 @@ class Mainpage extends React.Component {
 	
 	// Loads delete button in card if user is admin
 	adminDelete(index) {
-		const userData = Data.userData.get(this.props.state.user.username);
-		if (!userData) { return;}
-		if (!userData.isAdmin) { return;}
-		return(
-		<button className = "deleteButton" onClick={() => this.deleteReply(index)}>Delete</button>);
+		if (this.props.state.user) {
+			const userData = Data.userData.get(this.props.state.user.username);
+			if (!userData) {
+				return;
+			}
+			if (!userData.isAdmin) {
+				return;
+			}
+			return (
+				<button className="deleteButton" onClick={() => this.deleteReply(index)}>Delete</button>);
+		}
 	}
 	
 	// Actually deletes the post, only the admin can access this function
@@ -199,7 +205,7 @@ class Mainpage extends React.Component {
 		return (
 		<div>
 			<header className="login-header">
-				<h1 className="title">The RhiZone</h1>
+				<img className="title" src={require('./../../images/logo.png')}/>
 				<div className = "buttons">
 				<div className = "LinkMeLogin" onClick={() => this.props.login(false)} >
 				<Link to="/login">

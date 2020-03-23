@@ -148,7 +148,7 @@ class Login extends React.Component {
       return (
         <div>
           <header className="login-header">
-            <h1 className="title">The RhiZone</h1>
+              <img className="title" src={require('./../../images/logo.png')}/>
           </header>
           <div className="form">
             <form className="login-form">

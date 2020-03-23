@@ -230,7 +230,7 @@ class Inbox extends React.Component {
             return(
                 <div>
                     <div className="jumbotron text-center">
-                        <h1 className="title">The RhiZone</h1>
+                        <img className="title" src={require('./../../images/logo.png')}/>
                         <div className="buttons">
                             <div className="LinkMeLogin" onClick={() => this.props.login(false)} ><Link to="/">
                                 <Button>Logout</Button>
