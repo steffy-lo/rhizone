@@ -135,10 +135,8 @@ class Mainpage extends React.Component {
 			return (<div></div>);
 		} else {
 			return (
-			<div className = "view overlay zoom">
-			<img className="card-img-top img-fluid" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
-			<div className = "mask pattern-8">
-			</div>
+			<div className = "img-sub">
+			<img className="card-img-top" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
 			</div>
 			
 			);
@@ -161,7 +159,7 @@ class Mainpage extends React.Component {
 	
 	// Loads delete button in card if user is admin
 	adminDelete(index) {
-		const userData = Data.userData.get(this.props.state.user.username);
+		const userData = Data.userData.get(this.props.state.user);
 		if (!userData) { return;}
 		if (!userData.isAdmin) { return;}
 		return(

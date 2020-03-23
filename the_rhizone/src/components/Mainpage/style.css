@@ -6,6 +6,30 @@
     width: 90%;
 }
 
+.card-img-top {
+	  opacity: 0.42;
+	  overflow: hidden;
+}
+
+    .img-sub {
+      height: 100%;
+      overflow: hidden;
+      width: 104%;
+      display:block;
+      position:relative;
+    }
+    
+    .img-sub img {
+      height: 100%;
+      position: absolute;
+      margin: 0 5%;
+	  overflow: hidden;
+      right: -30%;
+      width: 58%;
+	clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+
+
 .title {
   color: #5866D1;
   font-family: "Trebuchet MS", Helvetica, sans-serif;
@@ -80,9 +104,8 @@ h5 {
 }
 
 
-.card-img-top {
-	  opacity: 0.42;
-}
+
+
 
 @media(max-width: 900px) {
 	.post-body {
