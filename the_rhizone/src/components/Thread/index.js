@@ -105,14 +105,21 @@ class Thread extends React.Component {
       );
     }
   }
-
+  
   loadReplies() {
     let replies = [];
-
+	
+	// so we have a O(n) solution 
+	let replyIDs = [];
+	
     for (let i = 0; i < Data.threadData.size; i++) {
       if (Data.threadData.get(i).pid === this.state.threadId) {
         replies.push(this.loadReply(Data.threadData.get(i).content.body, i));
-      }
+		replyIDs.push(i);  
+      } else if (replyIDs.includes(Data.threadData.get(i).pid)){
+		  replyIDs.push(i);
+		  replies.push(this.loadReply(Data.threadData.get(i).content.body, i));
+	  }
     }
 
     return(
@@ -140,12 +147,18 @@ class Thread extends React.Component {
     const replyText = e.target.parentElement.firstElementChild.value;
     let test = document.createElement('div');
     this.addReply(replyText);
+	
+	const editor = e.target.parentElement.lastChild;
+	editor.classList.toggle("hidden");
+      // hides the reply button
+     editor.previousSibling.classList.toggle("hidden");
     console.log(this.loadReply(replyText, null));
   }
 
   loadReply(replyText, index) {
     let replies;
     let adminButton;
+	let parentID;
     const userData = Data.userData.get(this.state.username);
     if (userData !== undefined && userData.isAdmin){
         adminButton = <button className="deleteBtn">Delete</button>;
@@ -153,19 +166,14 @@ class Thread extends React.Component {
     console.log(this.state.replies[index]);
     console.log(this.state.replies);
     console.log(index);
-
+	
     if (this.state.replies[index] !== undefined) {
       replies = this.state.replies[index].map(reply => (
         <ul>
-          <li className="media" id={reply.index}>
+          <li className="media">
             <div className="media-body">
-              {reply.replyText} <br/>
-              {this.loadImage(reply.index)} <br/>
+			  Reply: <a href={"#"+reply.index}>See Reply #{reply.index}</a> <br />
               {adminButton}
-              <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
-              <div className="hidden">
-                <PostEditor className="replyPostEditor" addPost={this.addReply} index={reply.index} isReply={true}/>
-              </div>
             </div>
           </li>
         </ul>
@@ -175,13 +183,16 @@ class Thread extends React.Component {
     return(
       <li className="media" id={index}>
         <div className="media-body">
+			<a href={"#"+index}>Post #{index}</a> | <a href={"#"+Data.threadData.get(index).pid}>Reply to #{Data.threadData.get(index).pid}</a><br />
           <div className ="text-body">{replyText}</div>
           {this.loadImage(index)} <br/>
           {adminButton}
+		  <div>
           <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
           <div className="hidden">
             <PostEditor className="replyPostEditor" addPost={this.addReply} index={index} isReply={true}/>
           </div>
+		  </div>
           {replies}
         </div>
       </li>
@@ -209,15 +220,17 @@ class Thread extends React.Component {
 		} else {
 				imageReference = new_file.name;
 		}
-
-    Data.threadData.set(newId, {pid:this.state.threadId, author:"user", replies: [],
+	// this.state.threadId
+    Data.threadData.set(newId, {pid:index, author:"user", replies: [],
         content:{
             title: postTitle,
             body: newPostBody,
             imgRef: imageReference,
         }
     });
-
+	
+	Data.threadData.get(index).replies.push(newId);
+	
     this.setState({mainThread: Data.threadData})
 
     let newReply = Data.threadData.get(newId);
@@ -233,7 +246,22 @@ class Thread extends React.Component {
       replyList[index] = reply;
       this.setState({replies: replyList})
     }
+	
+	let elements = document.querySelectorAll('.post-editor')
+	for(let i = 1; i < elements.length; i++){
+		elements[i].parentElement.parentElement.parentElement.firstElementChild.classList.remove("hidden");
+		if(elements[i].parentElement.className !== 'hidden'){
+		 const hiddenElement = document.createElement('div');
+		hiddenElement.className = 'hidden';
+		let parent = elements[i].parentElement.parentElement.parentElement;
+		parent.appendChild(hiddenElement);
+		const bufferElement = document.createElement('div');
+		hiddenElement.appendChild(bufferElement);
+		bufferElement.appendChild(elements[i]);
+		}
 
+	}
+	
     // this.manualCreateReply(replyText, newReply.content.imgRef, index, newId);
   
 
