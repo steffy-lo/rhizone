@@ -5,11 +5,13 @@ import { Link } from 'react-router-dom';
 import * as Data from './../../data/hardcoded.js';
 import Button from "@material-ui/core/Button";
  
+//const { threadDataModel } = require('./models/threadDataModel')
 
 class Mainpage extends React.Component {
 	constructor (props) {
 		super(props);
 		this.addPost = this.addPost.bind(this);
+		 this.addThread = this.addThread.bind(this);
 		this.state = {
 			posts: [],
 			threadDisplay: this.getThreadDisplay(),
@@ -21,6 +23,74 @@ class Mainpage extends React.Component {
 		}
 				
 	}
+	
+	/*
+	getThreadCount(){
+		threadDataModel
+		.estimatedDocumentCount()
+		.then(count => {
+			console.log(count)
+			return count;
+			//and do one super neat trick
+		})
+		.catch(err => {
+			//handle possible errors
+	})}*/
+	
+	  // A function to send a POST request to add a new user
+  addThread(author, postTitle, postBody, imgReference) {
+    // the URL for the request
+    const url = 'http://localhost:5000/create_thread';
+
+    // The data we are going to send in our request
+	const title = postTitle;
+	const body = postBody;
+	const imgRef = imgReference;
+	const threadContent = {title, body, imgRef}	
+	
+    let data = {
+		pid: -1,
+		author: author,
+		replies: [],
+		content: threadContent
+    }
+	
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+	
+	console.log(request)
+
+    // Send the request with fetch()
+    fetch(request)
+        .then(function(res) {
+
+          // Handle response we get from the API.
+          // Usually check the error codes to see what happened.
+          const form = document.querySelector('.post-editor');
+          const createMsg = document.createElement('p');
+          createMsg.className = 'createMsg';
+          if (res.status === 200) {
+            console.log(res);
+            createMsg.appendChild(document.createTextNode('Thread successfully created!'));
+            createMsg.style.color = "green";
+            form.appendChild(createMsg);
+          } else {
+			  console.log(res);
+            createMsg.appendChild(document.createTextNode('Could not add create Thread.'));
+            createMsg.style.color = "red";
+            form.appendChild(createMsg);
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+  }
 
     // Function to add posts (i.e threads)
 	addPost(newPostBody, newImage, postTitle) {
@@ -28,7 +98,8 @@ class Mainpage extends React.Component {
 		// Makes a state which will be set to the new post data
 		const newState = Object.assign({}, this.state);
 		newState.posts.push(newPostBody);
-		
+		 const component = this;
+
 		// If there is no image attached to the post do nothing
 		if(newImage == null){
 		}else {
@@ -59,11 +130,24 @@ class Mainpage extends React.Component {
         }
 		});
 		
-		// Reload threads
-		this.setThreadDisplayState();
+		const url = 'http://localhost:5000/create_thread';
 		
-		// Hide add thread button
-		this.displayAddPost();
+		fetch(url)
+        .then(function(res) {
+			// NOT SURE WHAT TO ADD FOR USER HERE? STEFFY COULD YOU LOOK AT IT?
+			component.addThread("user", postTitle, newPostBody, imageReference)
+        }).then( data => {
+								// Reload threads
+			component.setThreadDisplayState();
+			// Hide add thread button
+			component.displayAddPost();
+			
+		}).catch((error) => {
+          console.log(error)
+        });
+		
+
+		
 	}
 	
 	// This function displays or hides the Add Thread section based off whether or not it is clicked or not

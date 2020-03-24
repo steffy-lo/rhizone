@@ -45,6 +45,26 @@ app.use(session({
 }));
 
 /*** API Routes below ************************************/
+app.post('/create_thread', (req, res, next) => {
+	const thread = new threadDataModel({
+				id: 0,
+				pid: req.body.pid,
+				author: req.body.author,
+				replies: [],
+				content: req.body.content
+	})
+	
+	threadDataModel.estimatedDocumentCount()
+		.then(count => {
+			thread.id = count + 1;
+		}).then(data =>{
+			thread.save().then(result => {
+				res.send(result)})
+		}).catch(err => {
+			//handle possible errors
+		})
+})
+
 app.post('/add_user', (req, res, next) => {
 	const user = new User({
 		userName: req.body.username,
