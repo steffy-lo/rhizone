@@ -128,7 +128,7 @@ class Mainpage extends React.Component {
         .then(function(res) {
 			component.addThread(component.props.state.user.username, postTitle, newPostBody, imageReference)
         }).then( data => {
-								// Reload threads
+            // Reload threads
 			component.setThreadDisplayState();
 			// Hide add thread button
 			component.displayAddPost();
@@ -204,17 +204,15 @@ class Mainpage extends React.Component {
 	// Loads Image in card
 	imageLoad(index) {
 		// null evaluates false 
-		if(Data.threadData.get(index) == null || Data.threadData.get(index) === null ){
+		if(this.state.threads[index] === null) {
 			return (<div></div>);
-		} else if (Data.threadData.get(index).content.imgRef == "")
-		{
+		} else if (this.state.threads[index].content.imgRef === "") {
 			return (<div></div>);
 		} else {
 			return (
 			<div className = "img-sub overlay zoom view">
 			<img className="card-img-top img-fluid" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
 			</div>
-			
 			);
 		}
 	}
@@ -244,7 +242,6 @@ class Mainpage extends React.Component {
         }
         return (
             <button className="deleteButton" onClick={() => this.deleteReply(index)}>Delete</button>);
-
 	}
 
 	getThreads() {
@@ -307,7 +304,7 @@ class Mainpage extends React.Component {
 	
 	// Loads content, image, and delete (if admin) into the card
 	columnLoad(index) {
-		if(index == null || index === null){
+		if(index === null){
 		} else {
 		return (
 			<div className="col-4 card">
