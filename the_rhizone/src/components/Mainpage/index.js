@@ -122,7 +122,7 @@ class Mainpage extends React.Component {
 		}
 		
 		// set the data in hardcoded.js to what the post contents are. Because we have not done a back-end, this data will not save on reload.
-		Data.threadData.set(Data.threadData.size, {pid:-1, author:"user", replies: [],
+		Data.threadData.set(Data.threadData.size, {pid:-1, author: this.props.state.user.username, replies: [],
         content:{
             title: postTitle,
             body: newPostBody,
@@ -134,8 +134,7 @@ class Mainpage extends React.Component {
 		
 		fetch(url)
         .then(function(res) {
-			// NOT SURE WHAT TO ADD FOR USER HERE? STEFFY COULD YOU LOOK AT IT?
-			component.addThread("user", postTitle, newPostBody, imageReference)
+			component.addThread(this.props.state.user.username, postTitle, newPostBody, imageReference)
         }).then( data => {
 								// Reload threads
 			component.setThreadDisplayState();
