@@ -114,13 +114,13 @@ class Mainpage extends React.Component {
 		}
 		
 		// set the data in hardcoded.js to what the post contents are. Because we have not done a back-end, this data will not save on reload.
-		Data.threadData.set(Data.threadData.size, {pid:-1, author: component.props.state.user.username, replies: [],
+		/*Data.threadData.set(Data.threadData.size, {pid:-1, author: component.props.state.user.username, replies: [],
         content:{
             title: postTitle,
             body: newPostBody,
 			imgRef: imageReference,
         }
-		});
+		});*/
 		
 		const url = 'http://localhost:5000/create_thread';
 		
@@ -175,7 +175,7 @@ class Mainpage extends React.Component {
 		let threadDisplayState = [];
 		let count = 0;
 		console.log(this.state.threads);
-		for(let i = 0; i < Object.keys(this.state.threads).length; i++){
+		for(let i = Object.keys(this.state.threads).length - 1; i >= 0 ; i--){
 			if(this.state.threads[i].pid === -1){
 				threadDisplayState[count] = i;
 				count++;
@@ -209,6 +209,7 @@ class Mainpage extends React.Component {
 		} else if (this.state.threads[index].content.imgRef === "") {
 			return (<div></div>);
 		} else {
+			// IMAGE LOADING DOES NOT WORK ANYMORE BECAUSE WE HAVEN'T GOTTEN THAT TO WORK SO IMAGES ARE JUST STUFF IN THE BACKEND
 			return (
 			<div className = "img-sub overlay zoom view">
 			<img className="card-img-top img-fluid" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />

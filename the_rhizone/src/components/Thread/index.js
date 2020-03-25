@@ -233,7 +233,7 @@ class Thread extends React.Component {
       replyList[index] = reply;
       this.setState({replies: replyList})
     }
-
+	
     // this.manualCreateReply(replyText, newReply.content.imgRef, index, newId);
   
 
