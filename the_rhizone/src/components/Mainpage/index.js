@@ -304,7 +304,7 @@ class Mainpage extends React.Component {
 	
 	// Loads content, image, and delete (if admin) into the card
 	columnLoad(index) {
-		if(index == null || index === null){
+		if(index == null){
 		} else {
 		return (
 			<div className="col-4 card">
