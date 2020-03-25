@@ -11,19 +11,20 @@ class Mainpage extends React.Component {
 	constructor (props) {
 		super(props);
 		this.addPost = this.addPost.bind(this);
-		 this.addThread = this.addThread.bind(this);
+		this.addThread = this.addThread.bind(this);
+		this.getThreads = this.getThreads.bind(this);
 		this.state = {
 			posts: [],
-			threadDisplay: this.getThreadDisplay(),
 			images: [],
 			threadNumber: 0,
+			loaded: false
 		};
-		
-		this.login = {
-		}
-				
 	}
-	
+
+	componentDidMount() {
+		this.getThreads();
+	}
+
 	/*
 	getThreadCount(){
 		threadDataModel
@@ -73,19 +74,10 @@ class Mainpage extends React.Component {
 
           // Handle response we get from the API.
           // Usually check the error codes to see what happened.
-          const form = document.querySelector('.post-editor');
-          const createMsg = document.createElement('p');
-          createMsg.className = 'createMsg';
           if (res.status === 200) {
-            console.log(res);
-            createMsg.appendChild(document.createTextNode('Thread successfully created!'));
-            createMsg.style.color = "green";
-            form.appendChild(createMsg);
+            window.location.reload(true);
           } else {
 			  console.log(res);
-            createMsg.appendChild(document.createTextNode('Could not add create Thread.'));
-            createMsg.style.color = "red";
-            form.appendChild(createMsg);
           }
         }).catch((error) => {
           console.log(error)
@@ -98,7 +90,7 @@ class Mainpage extends React.Component {
 		// Makes a state which will be set to the new post data
 		const newState = Object.assign({}, this.state);
 		newState.posts.push(newPostBody);
-		 const component = this;
+		const component = this;
 
 		// If there is no image attached to the post do nothing
 		if(newImage == null){
@@ -122,7 +114,7 @@ class Mainpage extends React.Component {
 		}
 		
 		// set the data in hardcoded.js to what the post contents are. Because we have not done a back-end, this data will not save on reload.
-		Data.threadData.set(Data.threadData.size, {pid:-1, author: this.props.state.user.username, replies: [],
+		Data.threadData.set(Data.threadData.size, {pid:-1, author: component.props.state.user.username, replies: [],
         content:{
             title: postTitle,
             body: newPostBody,
@@ -134,7 +126,7 @@ class Mainpage extends React.Component {
 		
 		fetch(url)
         .then(function(res) {
-			component.addThread(this.props.state.user.username, postTitle, newPostBody, imageReference)
+			component.addThread(component.props.state.user.username, postTitle, newPostBody, imageReference)
         }).then( data => {
 								// Reload threads
 			component.setThreadDisplayState();
@@ -182,8 +174,9 @@ class Mainpage extends React.Component {
 	getThreadDisplay(){
 		let threadDisplayState = [];
 		let count = 0;
-		for(let i = Data.threadData.size - 1; i >= 0 ; i--){
-			if(Data.threadData.get(i).pid === -1){
+		console.log(this.state.threads);
+		for(let i = 0; i < Object.keys(this.state.threads).length; i++){
+			if(this.state.threads[i].pid === -1){
 				threadDisplayState[count] = i;
 				count++;
 			}
@@ -191,22 +184,22 @@ class Mainpage extends React.Component {
 		return threadDisplayState
 	}
 	
-	// makes all threads appear. Call this method whenever we need to reload the page.
-	// Essentially, it goes through all the threadData again and sets which IDs should show 
-	// in which column
-	setThreadDisplayState(){
-		let threadDisplayState = [];
-		let count = 0;
-		for(let i = Data.threadData.size - 1; i >= 0 ; i--){
-			if(Data.threadData.get(i).pid === -1){
-				threadDisplayState[count] = i;
-				count++;
-			}
-		}
-		return this.setState((state) => ({
-			threadDisplay: threadDisplayState,
-		}));
-	}
+	// // makes all threads appear. Call this method whenever we need to reload the page.
+	// // Essentially, it goes through all the threadData again and sets which IDs should show
+	// // in which column
+	// setThreadDisplayState(){
+	// 	let threadDisplayState = [];
+	// 	let count = 0;
+	// 	for(let i = Data.threadData.size - 1; i >= 0 ; i--){
+	// 		if(Data.threadData.get(i).pid === -1){
+	// 			threadDisplayState[count] = i;
+	// 			count++;
+	// 		}
+	// 	}
+	// 	return this.setState((state) => ({
+	// 		threadDisplay: threadDisplayState,
+	// 	}));
+	// }
 	
 	// Loads Image in card
 	imageLoad(index) {
@@ -231,10 +224,10 @@ class Mainpage extends React.Component {
 		return(
 			<Link className='activity-link' to={"./../thread#" + index}>
 			<h5 className = "card-title previewtitle">
-			{Data.threadData.get(index).content.title}
+			{this.state.threads[index].content.title}
 			</h5>
 			<p className="card-img-overlay d-flex flex-column preview">
-			{Data.threadData.get(index).content.body}
+			{this.state.threads[index].content.body}
 			</p>
 			</Link>
 		);
@@ -242,26 +235,74 @@ class Mainpage extends React.Component {
 	
 	// Loads delete button in card if user is admin
 	adminDelete(index) {
-		if (this.props.state.user) {
-			const userData = Data.userData.get(this.props.state.user.username);
-			if (!userData) {
-				return;
-			}
-			if (!userData.isAdmin) {
-				return;
-			}
-			return (
-				<button className="deleteButton" onClick={() => this.deleteReply(index)}>Delete</button>);
-		}
+        const userData = this.props.state.user;
+        if (!userData) {
+            return;
+        }
+        if (!userData.isAdmin) {
+            return;
+        }
+        return (
+            <button className="deleteButton" onClick={() => this.deleteReply(index)}>Delete</button>);
+
 	}
-	
+
+	getThreads() {
+		const url = "http://localhost:5000/threads"
+		// Create our request constructor with all the parameters we need
+		const request = new Request( url, {
+			method: 'get',
+			headers: {
+				'Accept': 'application/json, text/plain, */*',
+				'Content-Type': 'application/json'
+			},
+		});
+
+		// Send the request with fetch()
+		fetch(request)
+			.then(res => {
+				return res.json();
+			}).then (
+			res => {
+				console.log("response" + res);
+				this.setState({threads: res},
+					() => this.setState({threadDisplay: this.getThreadDisplay()},
+						() => this.setState({loaded: true})));
+			})
+	}
 	// Actually deletes the post, only the admin can access this function
 	deleteReply(index) {
-		Data.threadData.get(index).content.body = "[deleted]";
-		Data.threadData.get(index).content.imgRef = "";
-		Data.threadData.get(index).content.title = "[deleted]";
-		// Reload threads
-		this.setThreadDisplayState();
+		// Data.threadData.get(index).content.body = "[deleted]";
+		// Data.threadData.get(index).content.imgRef = "";
+		// Data.threadData.get(index).content.title = "[deleted]";
+		const threadToDel = this.state.threads[index]
+		const url = "http://localhost:5000/del_thread/?tid=" + threadToDel._id
+		// Create our request constructor with all the parameters we need
+		const request = new Request( url, {
+			method: 'delete',
+			headers: {
+				'Accept': 'application/json, text/plain, */*',
+				'Content-Type': 'application/json'
+			},
+		});
+		console.log(this.state.threadDisplay);
+		// Send the request with fetch()
+		fetch(request)
+			.then(res => {
+				// Handle response we get from the API.
+				if (res.status === 200) {
+					console.log('thread deleted')
+					this.setState({threadDisplay: this.getThreadDisplay()}, () => {
+						window.location.reload(true)
+					})
+
+				} else {
+					console.log('Failed to delete thread with index:' + index)
+				}
+			})
+			.catch((error) => {
+			console.log(error)
+		})
 	}
 	
 	// Loads content, image, and delete (if admin) into the card
@@ -279,65 +320,72 @@ class Mainpage extends React.Component {
 	}
 	
     render() {
-		let logButton = "Login"
-		if (this.props.state.loggedIn) {
-			logButton = "Logout"
+		if (this.state.loaded) {
+			let logButton = "Login"
+			if (this.props.state.loggedIn) {
+				logButton = "Logout"
+			}
+			return (
+				<div>
+					<header className="login-header">
+						<img className="title" src={require('./../../images/logo.png')}/>
+						<div className="buttons">
+							<div className="LinkMeLogin" onClick={() => this.props.login(false)}>
+								<Link to="/login">
+									<Button>{logButton}</Button>
+								</Link>
+							</div>
+							<div className="LinkMeSettings">
+								<Link to="/settings">
+									<Button>Settings</Button>
+								</Link>
+							</div>
+							<div className="LinkMeInbox">
+								<Link to="/inbox">
+									<Button>Inbox</Button>
+								</Link>
+							</div>
+						</div>
+					</header>
+					<div className="addPostButton">
+						<button className="buttonForPosting" onClick={() => this.displayAddPost()}>+Add Thread</button>
+					</div>
+					<div className="addingPost hidden">
+						<PostEditor addPost={this.addPost}/>
+					</div>
+
+					<div className="currentPost">
+						<div className="container py-1">
+							<h3>Active Threads:</h3>
+							<div className="row mb-1">
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 0])}
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 1])}
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 2])}
+							</div>
+							<div className="row mb-1">
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 3])}
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 4])}
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 5])}
+							</div>
+							<div className="row mb-1">
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 6])}
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 7])}
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 8])}
+							</div>
+						</div>
+						<div className="postingForm">
+			<span className="navButton"><Button className="btn-default btn-sm"
+												onClick={() => this.threadLess()}> ←Recent </Button>
+			<Button className="btn-default btn-sm" onClick={() => this.threadMore()}> Previous→ </Button></span>
+						</div>
+					</div>
+				</div>
+			);
+		} else {
+			return null;
 		}
-		return (
-		<div>
-			<header className="login-header">
-				<img className="title" src={require('./../../images/logo.png')}/>
-				<div className = "buttons">
-				<div className = "LinkMeLogin" onClick={() => this.props.login(false)} >
-				<Link to="/login">
-					<Button>{logButton}</Button>
-				</Link>
-				</div>
-				<div className = "LinkMeSettings" >
-					<Link to="/settings">
-						<Button>Settings</Button>
-					</Link>
-				</div>
-				<div className = "LinkMeInbox" >
-					<Link to="/inbox">
-						<Button>Inbox</Button>
-					</Link>
-				</div>
-				</div>
-			</header>
-			<div className = "addPostButton"><button className="buttonForPosting" onClick={() => this.displayAddPost()}>+Add Thread</button></div>
-			<div className = "addingPost hidden">
-			<PostEditor addPost={this.addPost} />
-			</div>
-
-			<div className="currentPost">
-			<div className="container py-1">
-				<h3>Active Threads:</h3>
-			<div className="row mb-1">
-				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 0])}
-				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 1])}
-				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 2])}
-			</div>
-			<div className="row mb-1">
-				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 3])}
-				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 4])}
-				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 5])}
-			</div>
-				<div className="row mb-1">
-				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 6])}
-				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 7])}
-				{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 8])}
-			</div>
-		</div>
-			<div className = "postingForm">
-			<span className ="navButton"><Button className="btn-default btn-sm" onClick={() => this.threadLess()}> ←Recent </Button>
-			<Button className = "btn-default btn-sm" onClick={() => this.threadMore()}> Previous→ </Button></span>
-
-			</div>
-			</div>
-		</div>
-		);
 	}
+
 }
 
 export default Mainpage;

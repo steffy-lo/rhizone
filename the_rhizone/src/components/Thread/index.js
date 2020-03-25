@@ -146,8 +146,8 @@ class Thread extends React.Component {
   loadReply(replyText, index) {
     let replies;
     let adminButton;
-    const userData = Data.userData.get(this.state.username);
-    if (userData !== undefined && userData.isAdmin){
+    const userData = this.props.state.user;
+    if (userData && userData.isAdmin) {
         adminButton = <button className="deleteBtn">Delete</button>;
     }
     console.log(this.state.replies[index]);
