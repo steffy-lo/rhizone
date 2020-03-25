@@ -12,6 +12,7 @@ const actType = {
     PAST: 'past'
 }
 const url = 'http://localhost:5000/inboxes'
+const userUrl = 'http://localhost:5000/users'
 
 class Inbox extends React.Component {
     constructor(props) {
@@ -192,6 +193,46 @@ class Inbox extends React.Component {
         this.updateInbox(this.state.username);
     }
 
+    setPostAuthor(user, idx, aType, author) {
+        const customUrl = userUrl +  '/?userName=' + user
+        // Create our request constructor with all the parameters we need
+        const request = new Request( customUrl, {
+            method: 'get',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        // Send the request with fetch()
+        fetch(request)
+        .then( res => {
+            // Handle response we get from the API.
+            if (res.status === 200) {
+                // user found
+                log('user found')
+                return res.json();
+            } else {
+                log('Failed to get user data with userName:' + user)
+                return null;
+            }
+        }).then (
+            res => {
+            if (res === null) { return; }
+            if (res.isAdmin) {
+                const queryString = 'div[class="activity"][aType="' + aType + '"]';
+                //log(queryString);
+                const targetAct = document.querySelectorAll(queryString)[idx];
+                //log(targetAct);
+                if (targetAct === null){
+                    return;
+                }
+                const targetName = targetAct.querySelector('.actauthor');
+                targetName.innerHTML = author;
+            }
+        })
+    }
+
     /*
      * Render one activity in the list with specs actContent
      * parameters:
@@ -207,7 +248,9 @@ class Inbox extends React.Component {
             return;
         }
 
-        const actName = (Data.userData.get(this.state.username).isAdmin)? refContent.author : "Anonymous";
+        const actName = "Anonymous";
+        // back-end set author name if admin
+        this.setPostAuthor(this.state.username, idx, aType, refContent.author);
 
         const msg = (aType === actType.PAST)? " created thread: " : " replies to your thread:";
 

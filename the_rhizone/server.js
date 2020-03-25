@@ -103,10 +103,11 @@ app.post('/add_user', (req, res) => {
 	})
 })
 
-app.get('/user/:username', (req, res) => {
-	const username = req.params.username;
+app.get('/users', (req, res) => {
+    //log(req.query.userName);
+    const query = {userName: req.query.userName}
 	// Otherwise, find by the id and creator
-	User.findOne({ userName: username }).then((user) => {
+	User.findOne(query).then((user) => {
 		if (!user) {
 			res.status(404).send()
 		} else {
@@ -238,24 +239,6 @@ app.patch('/users/patch/:id', (req, res) => {
 
 })
 
-// not supported by browser, use delete + add as an alternative
-/*app.patch('/inboxes', (req, res) => {
-	log(req.body)
-
-	const {newActivity, oldActivity, pastPosts} = req.body;
-	const body = {newActivity, oldActivity, pastPosts};
-
-    const query = {userName: req.query.userName}
-    inboxDataModel.findOneAndUpdate(query, {$set: body}).then((inbox) => {
-        if (!inbox) {
-            res.status(404).send();  // could not find this user
-        } else {
-            res.send(inbox);
-        }
-    }).catch((error) => {
-      	res.status(500).send()  // server error
-    })
-})*/
 
 /*************************************************/
 // Express server listening...
