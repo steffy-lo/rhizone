@@ -16,6 +16,8 @@ class Settings extends React.Component {
     this.updateRights = this.updateRights.bind(this);
     this.createAccount = this.createAccount.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
+    this.addUser = this.addUser.bind(this);
+    this.updatePassword = this.updatePassword.bind(this);
   }
 
   componentWillMount() {
@@ -30,44 +32,155 @@ class Settings extends React.Component {
   deleteAccount(e) {
     const username = document.querySelector('#usernameDel').value;
     const del = document.querySelector('.deleteAccount');
-    if (del.lastChild.className === "msg") {
-      del.removeChild(del.lastChild)
-    }
     let msg = document.createElement('p');
     msg.className = "msg";
-    if (Data.userData.get(username) === undefined) { // get from database
-      msg.appendChild(document.createTextNode("User doesn't exist!"));
-      msg.style.color = "red";
-      del.appendChild(msg);
-    } else {
-      msg.appendChild(document.createTextNode("Account has been successfully deleted!"));
-      msg.style.color = "green";
-      del.appendChild(msg);
-      Data.userData.delete(username) // delete from database
+    const url = 'http://localhost:5000/users/delete/' + username;
+
+    const request = new Request(url, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    fetch(request)
+        .then(res => {
+          if (del.lastChild.className === "msg") {
+            del.removeChild(del.lastChild)
+          }
+          if (res.status === 200) {
+            msg.appendChild(document.createTextNode("Account has been successfully deleted!"));
+            msg.style.color = "green";
+            del.appendChild(msg);
+          } else if (res.status === 404) {
+            msg.appendChild(document.createTextNode("User doesn't exist!"));
+            msg.style.color = "red";
+            del.appendChild(msg);
+          }
+        }).catch((error) => {
+      console.log(error)
+    });
+
+  }
+
+  addUser(username, password) {
+    // the URL for the request
+    const url = 'http://localhost:5000/add_user';
+
+    // The data we are going to send in our request
+    let data = {
+      username: username,
+      password: password,
+      isAdmin: false
     }
 
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    // Send the request with fetch()
+    fetch(request)
+        .then(function(res) {
+
+          // Handle response we get from the API.
+          // Usually check the error codes to see what happened.
+          const create = document.querySelector('.createAccount');
+          const msg = document.createElement('p');
+          msg.className = 'msg';
+          if (create.lastChild.className === "msg") {
+            create.removeChild(create.lastChild)
+          }
+          if (res.status === 200) {
+            console.log(res);
+            msg.appendChild(document.createTextNode('Account successfully created!'));
+            msg.style.color = "green";
+            create.appendChild(msg);
+          } else {
+            // If server couldn't add the student, tell the user.
+            // Here we are adding a generic message, but you could be more specific in your app.
+            msg.appendChild(document.createTextNode('Could not add user.'));
+            msg.style.color = "red";
+            create.appendChild(msg);
+          }
+        }).catch((error) => {
+      console.log(error)
+    })
   }
 
   createAccount(e) {
     e.preventDefault();
+    const component = this;
     const username = document.querySelector('#usernameCreate').value;
     const password = document.querySelector('#passwordCreate').value;
     const create = document.querySelector('.createAccount');
-    if (create.lastChild.className === "msg") {
-      create.removeChild(create.lastChild)
-    }
     let msg = document.createElement('p');
     msg.className = "msg";
-    if (Data.userData.get(username) === undefined) { // get from database
-      msg.appendChild(document.createTextNode('Account successfully created!'));
-      msg.style.color = "green";
-      create.appendChild(msg);
-      Data.userData.set(username, {password: password, isAdmin: false}) // add to database
-    } else {
-      msg.appendChild(document.createTextNode('Account already exists!'));
-      msg.style.color = "red";
-      create.appendChild(msg);
+    const url = 'http://localhost:5000/users/?userName=' + username
+
+    fetch(url)
+        .then(function(res) {
+          if (create.lastChild.className === "msg") {
+            create.removeChild(create.lastChild)
+          }
+          if (res.status === 200) {
+            msg.appendChild(document.createTextNode('Account already exists!'));
+            msg.style.color = "red";
+            create.appendChild(msg);
+          } else if (res.status === 404) {
+            console.log("add to database");
+            // add to database
+            component.addUser(username, password)
+          }
+        }).catch((error) => {
+      console.log(error)
+    });
+  }
+
+  updatePassword(password) {
+    const url = 'http://localhost:5000/users';
+
+    let data = {
+      username: this.state.user.userName,
+      password: password,
     }
+
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    fetch(request)
+        .then(function(res) {
+          const updateMsg = document.createElement('p');
+          updateMsg.className = "update";
+          const form = document.querySelector('.form');
+          if (form.lastChild.className === "update") {
+            form.removeChild(form.lastChild)
+          }
+          if (res.status === 200) {
+            updateMsg.appendChild(document.createTextNode('Your password has been updated successfully!'));
+            updateMsg.style.color = "green";
+            form.appendChild(updateMsg);
+          } else {
+            updateMsg.appendChild(document.createTextNode('Could not update password.'));
+            updateMsg.style.color = "red";
+            form.appendChild(updateMsg);
+          }
+        }).catch((error) => {
+      console.log(error)
+    });
   }
 
   updateSettings() {
@@ -75,40 +188,78 @@ class Settings extends React.Component {
     const updateMsg = document.createElement('p');
     updateMsg.className = "update";
     const form = document.querySelector('.form');
-    if (form.lastChild.className === "update") {
-      form.removeChild(form.lastChild)
-    }
-    if (inputCurrPassword === Data.userData.get(this.props.state.username).password) {
-      const newPassword = document.querySelector('#inputPasswordNew').value;
-      Data.userData.get(this.props.state.username).password = newPassword;
-      updateMsg.appendChild(document.createTextNode('Your password has been updated successfully!'));
-      updateMsg.style.color = "green";
-      form.appendChild(updateMsg);
-    } else {
-      updateMsg.appendChild(document.createTextNode('The entered current password is wrong! Please try again.'));
-      updateMsg.style.color = "red";
-      form.appendChild(updateMsg);
-    }
+    const url = 'http://localhost:5000/users/login';
+
+    // The data we are going to send in our request
+    let data = {
+      userName: this.state.user.userName,
+      password: inputCurrPassword
+    };
+
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    // Send the request with fetch()
+    fetch(request)
+        .then(res => {
+          return res.json();
+        })
+        .then(data => {
+          console.log(data);
+          const newPassword = document.querySelector('#inputPasswordNew').value;
+          this.updatePassword(newPassword)
+        })
+        .catch((error) => {
+          console.log(error);
+          if (form.lastChild.className === "update") {
+            form.removeChild(form.lastChild)
+          }
+          updateMsg.appendChild(document.createTextNode('The entered current password is wrong! Please try again.'));
+          updateMsg.style.color = "red";
+          form.appendChild(updateMsg);
+        });
   }
 
   updateRights() {
     const user = document.querySelector('#username').value;
     const form = document.querySelector('.admin');
-    if (form.lastChild.className === 'givingRightsMsg') {
-      form.removeChild(form.lastChild);
-    }
     const givingRightsMsg = document.createElement('p');
-    givingRightsMsg.className = 'givingRightsMsg';
-    if (Data.userData.get(user) === undefined) {
-      givingRightsMsg.appendChild(document.createTextNode("The user doesn't exist!"));
-      givingRightsMsg.style.color = "red";
-      form.appendChild(givingRightsMsg);
-    } else {
-      Data.userData.get(user).isAdmin = true;
-      givingRightsMsg.appendChild(document.createTextNode(user + " has been given admin rights"));
-      givingRightsMsg.style.color = "green";
-      form.appendChild(givingRightsMsg);
-    }
+    givingRightsMsg.className = 'msg';
+
+    const url = 'http://localhost:5000/users/privileges/' + user;
+
+    const request = new Request(url, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    fetch(request)
+        .then(function(res) {
+          if (form.lastChild.className === 'msg') {
+            form.removeChild(form.lastChild);
+          }
+          if (res.status === 200) {
+            givingRightsMsg.appendChild(document.createTextNode(user + " has been given admin rights"));
+            givingRightsMsg.style.color = "green";
+            form.appendChild(givingRightsMsg);
+          } else {
+            givingRightsMsg.appendChild(document.createTextNode("The user doesn't exist!"));
+            givingRightsMsg.style.color = "red";
+            form.appendChild(givingRightsMsg);
+          }
+        }).catch((error) => {
+      console.log(error)
+    });
   }
 
   render () {
@@ -118,9 +269,11 @@ class Settings extends React.Component {
       if (user.isAdmin) {
           adminView =
               <dl className="form">
-                <label>Allow Admin Rights</label>
-                <input type="text" id="username" placeholder="Username"/>
-                <p><button id="give-admin-rights" type="click" onClick={this.updateRights}>Allow</button></p>
+                <div className="admin">
+                  <label>Allow Admin Rights</label>
+                  <input type="text" id="username" placeholder="Username"/>
+                  <p><button id="give-admin-rights" type="click" onClick={this.updateRights}>Allow</button></p>
+                </div>
                 <br/>
                 <div className="createAccount">
                   <label>Create User Account</label>

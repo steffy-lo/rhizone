@@ -126,7 +126,7 @@ class Mainpage extends React.Component {
 		
 		fetch(url)
         .then(function(res) {
-			component.addThread(component.props.state.user.username, postTitle, newPostBody, imageReference)
+			component.addThread(component.props.state.user.userName, postTitle, newPostBody, imageReference)
         }).then( data => {
             // Reload threads
 			component.setThreadDisplayState();

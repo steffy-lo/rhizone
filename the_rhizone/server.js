@@ -98,7 +98,6 @@ app.post('/add_user', (req, res) => {
 	user.save().then(result => {
 		res.send(result)
 	}, error => {
-		console.log("fail")
 		res.status(400).send(error)
 	})
 })
@@ -175,28 +174,6 @@ app.get('/inboxes', (req, res) => {
     })
 })
 
-/// a DELETE route to remove a student by their id.
-app.delete('/users/delete/:id', (req, res) => {
-	const id = req.params.id
-
-	//Validate id
-	if (!ObjectID.isValid(id)) {
-		res.status(404).send()
-		return;
-	}
-
-	// Delete a student by their id
-	User.findOneAndDelete({_id: id}).then((user) => {
-		if (!user) {
-			res.status(404).send()
-		} else {   
-			res.send(user)
-		}
-	}).catch((error) => {
-		res.status(500).send() // server error, could not delete.
-	})
-})
-
 app.delete('/inboxes', (req, res) => {
 	// log(req.query)
 
@@ -215,19 +192,12 @@ app.delete('/inboxes', (req, res) => {
 
 // a PATCH route for changing properties of a resource.
 // (alternatively, a PUT is used more often for replacing entire resources).
-app.patch('/users/patch/:id', (req, res) => {
-	const id = req.params.id
-
-	// get the updated password from the request body.
+app.patch('/users', (req, res) => {
+	const username = req.body.username;
 	const password = req.body.password;
 
-	if (!ObjectID.isValid(id)) {
-		res.status(404).send()
-		return;
-	}
-
 	// Update the user by their id.
-	User.findOneAndUpdate({_id: id}, {password:password}, {new: true}).then((user) => {
+	User.findOneAndUpdate({userName: username}, {password: password}, {new: true, omitUndefined: true}).then((user) => {
 		if (!user) {
 			res.status(404).send()
 		} else {   
@@ -237,6 +207,36 @@ app.patch('/users/patch/:id', (req, res) => {
 		res.status(400).send() // bad request for changing the user.
 	})
 
+})
+
+app.delete('/users/delete/:username', (req, res) => {
+	const username = req.params.username
+
+	// Delete a student by their id
+	User.findOneAndDelete({userName: username}).then((user) => {
+		if (!user) {
+			res.status(404).send()
+		} else {
+			res.send(user)
+		}
+	}).catch((error) => {
+		res.status(500).send() // server error, could not delete.
+	})
+})
+
+app.patch('/users/privileges/:username', (req, res) => {
+	const username = req.params.username
+
+	// Update the user by their id.
+	User.findOneAndUpdate({userName: username}, {isAdmin: true}, {new: true, omitUndefined: true}).then((user) => {
+		if (!user) {
+			res.status(404).send()
+		} else {
+			res.send(user)
+		}
+	}).catch((error) => {
+		res.status(400).send() // bad request for changing the user.
+	})
 })
 
 

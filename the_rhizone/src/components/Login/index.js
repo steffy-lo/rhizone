@@ -46,12 +46,7 @@ class Login extends React.Component {
         })
         .then(data => {
             console.log(data);
-            const user = {
-                username: data.userName,
-                password: data.password,
-                isAdmin: data.isAdmin
-            }
-            component.props.login(true, user);
+            component.props.login(true, data);
         })
         .catch((error) => {
             console.log(error);
@@ -97,14 +92,13 @@ class Login extends React.Component {
           const createMsg = document.createElement('p');
           createMsg.className = 'createMsg';
           if (res.status === 200) {
-            console.log(res);
             createMsg.appendChild(document.createTextNode('Account successfully created!'));
             createMsg.style.color = "green";
             form.appendChild(createMsg);
           } else {
             // If server couldn't add the student, tell the user.
             // Here we are adding a generic message, but you could be more specific in your app.
-            createMsg.appendChild(document.createTextNode('Could not add student.'));
+            createMsg.appendChild(document.createTextNode('Could not add user.'));
             createMsg.style.color = "red";
             form.appendChild(createMsg);
           }
@@ -119,14 +113,14 @@ class Login extends React.Component {
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
     const form = document.querySelector('.form');
-    if (form.lastChild.className === "loginError" || form.lastChild.className === "createMsg") {
-      form.removeChild(form.lastChild)
-    }
-    const url = 'http://localhost:5000/user/' + username;
+    const url = 'http://localhost:5000/users/?userName=' + username
 
     fetch(url)
         .then(function(res) {
           if (res.status === 200) {
+              if (form.lastChild.className === "loginError" || form.lastChild.className === "createMsg") {
+                  form.removeChild(form.lastChild)
+              }
             const createMsg = document.createElement('p');
             createMsg.className = 'createMsg';
             createMsg.appendChild(document.createTextNode('Account already exists!'));
