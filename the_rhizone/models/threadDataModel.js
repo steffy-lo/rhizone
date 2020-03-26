@@ -18,13 +18,17 @@ const threadContentSchema = new mongoose.Schema({
 
 const threadDataSchema = new mongoose.Schema({
     id: {
-        type: String,
+        type: Number,
         required: true
     },
     pid: {
         type: String,
         default: -1
     },
+	pid_num: {
+		type: Number,
+		required: false
+	},
     author: {
         type: String,
         required: true,

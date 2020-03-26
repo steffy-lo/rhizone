@@ -51,6 +51,7 @@ app.post('/create_thread', (req, res, next) => {
 	const thread = new threadDataModel({
 		id: 0,
 		pid: req.body.pid,
+		pid_num: req.body.pid_num,
 		author: req.body.author,
 		replies: [],
 		content: req.body.content

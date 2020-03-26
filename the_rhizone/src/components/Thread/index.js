@@ -144,7 +144,9 @@ class Thread extends React.Component {
     let replies = [];
     console.log(thread.replies)
     for (let i = 0; i < thread.replies.length; i++) {
-      replies.push(this.loadReply(thread.replies[i]));
+			replies.push(this.loadReply(thread.replies[i]));
+			console.log("UHH" + i)
+     
     }
 
     return(
@@ -177,12 +179,13 @@ class Thread extends React.Component {
         adminButton = <button className="deleteBtn" onClick={() => this.deleteThread(thread)}>Delete</button>;
     }
 
-    console.log(thread)
+    console.log(thread) 
     if (thread.replies.length !== 0) {
       replies = thread.replies.map(reply => (
         <ul>
-          <li className="media" id={reply._id}>
+          <li className="media" id={this.state.threadId+"#"+reply.id}>
             <div className="media-body">
+			  <a href={"#"+this.state.threadId+"#"+reply.pid_num}>Replying to: {reply.pid_num}</a> <a href={"#" + this.state.threadId+"#"+reply.id}>Post Number: {reply.id}</a> <br />
               {reply.content.body} <br/>
               {this.loadImage(reply)} <br/>
               {adminButton}
@@ -196,9 +199,10 @@ class Thread extends React.Component {
         </ul>
       ));
     }
-    return(
-        <li className="media" id={thread._id}>
+		return(
+        <li className="media" id={this.state.threadId+"#"+thread.id}>
           <div className="media-body">
+			<a href={"#"+this.state.threadId+"#"+thread.id}>POST ID: {thread.id}</a> <a href={"#" +this.state.threadId+"#"+thread.pid_num}>PARENT ID: {thread.pid_num}</a>
             <div className ="text-body">{thread.content.body}</div>
             {this.loadImage(thread)} <br/>
             {adminButton}
@@ -210,12 +214,14 @@ class Thread extends React.Component {
           </div>
         </li>
     );
+
   }
 
   addReplyToThread(thread, reply) {
     const data = {
       id: thread._id,
       pid: thread.pid,
+	  pid_num: thread.id,
       reply: reply
     }
 
@@ -260,6 +266,7 @@ class Thread extends React.Component {
 
     const reply = {
         pid: thread._id,
+		pid_num: thread.id,
         author: this.props.state.user.userName,
         replies: [],
         content: {
