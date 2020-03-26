@@ -27,7 +27,7 @@ class PostEditor extends React.Component {
 	// Then we set the states the the post's body, title and selected image
 	createPost() {
 		 if (this.validator.fieldValid('NewPostBody')) {
-			 this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle, this.props.index);
+			 this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle, this.props.thread);
 			this.setState({
 			newPostBody: '',
 			selectedFile: null,

@@ -128,8 +128,6 @@ class Mainpage extends React.Component {
         .then(function(res) {
 			component.addThread(component.props.state.user.userName, postTitle, newPostBody, imageReference)
         }).then( data => {
-            // Reload threads
-			component.setThreadDisplayState();
 			// Hide add thread button
 			component.displayAddPost();
 			
@@ -175,8 +173,8 @@ class Mainpage extends React.Component {
 		let threadDisplayState = [];
 		let count = 0;
 		console.log(this.state.threads);
-		for(let i = Object.keys(this.state.threads).length - 1; i >= 0 ; i--){
-			if(this.state.threads[i].pid === -1){
+		for(let i = this.state.threads.length - 1; i >= 0 ; i--){
+			if(this.state.threads[i].pid == -1){
 				threadDisplayState[count] = i;
 				count++;
 			}
@@ -221,7 +219,7 @@ class Mainpage extends React.Component {
 	// Loads content (title and body) in card
 	contentLoad(index) {
 		return(
-			<Link className='activity-link' to={"./../thread#" + index}>
+			<Link className='activity-link' to={"./../thread#" + this.state.threads[index]._id}>
 			<h5 className = "card-title previewtitle">
 			{this.state.threads[index].content.title}
 			</h5>
@@ -356,7 +354,7 @@ class Mainpage extends React.Component {
 						<div className="container py-1">
 							<h3>Active Threads:</h3>
 							<div className="row mb-1">
-								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 0])}
+								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber])}
 								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 1])}
 								{this.columnLoad(this.state.threadDisplay[this.state.threadNumber + 2])}
 							</div>

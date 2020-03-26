@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const threadContentSchema = new mongoose.Schema({
@@ -17,13 +16,13 @@ const threadContentSchema = new mongoose.Schema({
     }
 });
 
-const threadDataModel = mongoose.model('Thread', new mongoose.Schema({
+const threadDataSchema = new mongoose.Schema({
     id: {
-        type: Number,
+        type: String,
         required: true
     },
     pid: {
-        type: Number,
+        type: String,
         default: -1
     },
     author: {
@@ -31,10 +30,13 @@ const threadDataModel = mongoose.model('Thread', new mongoose.Schema({
         required: true,
         minlegth: 1
     },
-    replies: [{
-        type: Number
-    }],
     content: threadContentSchema
-}))
+})
+
+threadDataSchema.add({
+    replies: [threadDataSchema]
+})
+
+const threadDataModel = mongoose.model('Thread', threadDataSchema)
 
 module.exports = { threadDataModel }

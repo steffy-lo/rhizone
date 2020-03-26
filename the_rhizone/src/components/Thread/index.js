@@ -15,8 +15,7 @@ class Thread extends React.Component {
 
     this.state = {
       replyNum: 0,
-      username: props.state.username,
-      loggedIn: props.state.loggedIn,
+      loaded: false,
       threadId: this.getThreadId(),
       mainThread: Data.threadData,
       replies: {}
@@ -26,23 +25,34 @@ class Thread extends React.Component {
     this.loadImage = this.loadImage.bind(this);
     this.loadReplies = this.loadReplies.bind(this);
     this.createReply = this.createReply.bind(this);
-    this.postReply = this.postReply.bind(this);
     this.loadReply = this.loadReply.bind(this);
     this.addReply = this.addReply.bind(this);
-    //this.addNestedReply = this.addNestedReply.bind(this);
+    this.getMainThread = this.getMainThread.bind(this);
+    this.addReplyToThread = this.addReplyToThread.bind(this);
   }
 
   getThreadId() {
-    return parseInt(window.location.hash.substring(1));
+    return window.location.hash.substring(1);
   }
 
   componentWillMount() {
-    if (ls.get('loggedIn') !== undefined) {
-      this.setState({
-        username: ls.get('username'),
-        loggedIn: ls.get('loggedIn')
-      });
-    }
+    this.getMainThread()
+  }
+
+  getMainThread() {
+    const url = "http://localhost:5000/threads/" + this.state.threadId
+
+    // Send the request with fetch()
+    fetch(url)
+        .then(res => {
+          return res.json();
+        }).then (
+        res => {
+          console.log("response" + res);
+          this.setState({mainThread: res},
+                  () => this.setState({loaded: true}));
+        })
+
   }
 
   renderAdminMainThreadInfo() {
@@ -84,35 +94,31 @@ class Thread extends React.Component {
   loadThread() {
     return(
       <div className='rootPost'>
-        <h2>{Data.threadData.get(this.state.threadId).content.title}</h2>
+        <h2>{this.state.mainThread.content.title}</h2>
         <p>
-          {Data.threadData.get(this.state.threadId).content.body}
+          {this.state.mainThread.content.body}
         </p>
-        {this.loadImage(this.state.threadId)}
+        {this.loadImage(this.state.mainThread)}
       </div>
     );
   }
 
-  loadImage(index) {
-    if (Data.threadData.get(index) == null || Data.threadData.get(index) === null ){
-      return (<img/>);
-    } else if (Data.threadData.get(index).content.imgRef === "")
+  loadImage(thread) {
+    if (thread.content.imgRef === "")
     {
       return (<img/>);
     } else {
       return (
-        <img className="threadImage" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Thread Image" />
+        <img className="threadImage" src={require('./../../images/' + thread.content.imgRef)}	 alt="Thread Image" />
       );
     }
   }
 
-  loadReplies() {
+  loadReplies(thread) {
     let replies = [];
-
-    for (let i = 0; i < Data.threadData.size; i++) {
-      if (Data.threadData.get(i).pid === this.state.threadId) {
-        replies.push(this.loadReply(Data.threadData.get(i).content.body, i));
-      }
+    console.log(thread.replies)
+    for (let i = 0; i < thread.replies.length; i++) {
+      replies.push(this.loadReply(thread.replies[i]));
     }
 
     return(
@@ -136,107 +142,145 @@ class Thread extends React.Component {
 		}
   }
 
-  postReply(e) {
-    const replyText = e.target.parentElement.firstElementChild.value;
-    let test = document.createElement('div');
-    this.addReply(replyText);
-    console.log(this.loadReply(replyText, null));
-  }
-
-  loadReply(replyText, index) {
+  loadReply(thread) {
     let replies;
     let adminButton;
     const userData = this.props.state.user;
     if (userData && userData.isAdmin) {
         adminButton = <button className="deleteBtn">Delete</button>;
     }
-    console.log(this.state.replies[index]);
-    console.log(this.state.replies);
-    console.log(index);
 
-    if (this.state.replies[index] !== undefined) {
-      replies = this.state.replies[index].map(reply => (
+    console.log(thread)
+    if (thread.replies.length !== 0) {
+      replies = thread.replies.map(reply => (
         <ul>
-          <li className="media" id={reply.index}>
+          <li className="media" id={reply._id}>
             <div className="media-body">
-              {reply.replyText} <br/>
-              {this.loadImage(reply.index)} <br/>
+              {reply.content.body} <br/>
+              {this.loadImage(reply)} <br/>
               {adminButton}
               <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
               <div className="hidden">
-                <PostEditor className="replyPostEditor" addPost={this.addReply} index={reply.index} isReply={true}/>
+                <PostEditor className="replyPostEditor" addPost={this.addReply} thread={reply} isReply={true}/>
               </div>
+              {this.loadReplies(reply)}
             </div>
           </li>
         </ul>
       ));
     }
-    if (Data.threadData.get(index).pid !== -1) {
     return(
-      <li className="media" id={index}>
-        <div className="media-body">
-          <div className ="text-body">{replyText}</div>
-          {this.loadImage(index)} <br/>
-          {adminButton}
-          <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
-          <div className="hidden">
-            <PostEditor className="replyPostEditor" addPost={this.addReply} index={index} isReply={true}/>
+        <li className="media" id={thread._id}>
+          <div className="media-body">
+            <div className ="text-body">{thread.content.body}</div>
+            {this.loadImage(thread)} <br/>
+            {adminButton}
+            <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
+            <div className="hidden">
+              <PostEditor className="replyPostEditor" addPost={this.addReply} thread={thread} isReply={true}/>
+            </div>
+            {replies}
           </div>
-          {replies}
-        </div>
-      </li>
+        </li>
     );
-    } else {
-      return null;
-    }
   }
 
-  addReply(newPostBody, newImage, postTitle, index) {
-    console.log("parent id", index);
-    const newId = Data.threadData.size;
+  addReplyToThread(thread, reply) {
+    const data = {
+      id: thread._id,
+      reply: reply
+    }
 
-    if (newImage == null){
-		} else {
-			// rename newImage to be threadNumber
-			// File Upload not supported yet because we need a database to access such files. We only have hardcoded files.
-			var new_file = new File([newImage], newId + '.jpg', {type: 'image/jpeg'});
-		}
+    const url = 'http://localhost:5000/threads';
 
-		// add Post to archive
-		let imageReference = "";
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
 
-		if (newImage == null){
-		} else {
-				imageReference = new_file.name;
-		}
+    // Send the request with fetch()
+    fetch(request)
+        .then(function(res) {
+          // Handle response we get from the API.
+          // Usually check the error codes to see what happened.
+          if (res.status === 200) {
+            console.log(res.json())
+          } else {
+            console.log(res);
+          }
+        }).catch((error) => {
+      console.log(error)
+    });
 
-    Data.threadData.set(newId, {pid:this.state.threadId, author:"user", replies: [],
-        content:{
+  }
+
+  addReply(newPostBody, newImage, postTitle, thread) {
+    console.log("parent thread", thread);
+    const component = this;
+      // add Post to archive
+      let imageReference = "";
+
+      if (newImage == null){
+      } else {
+              imageReference = newImage.name;
+      }
+
+    const reply = {
+        pid: thread._id,
+        author: this.props.state.user.userName,
+        replies: [],
+        content: {
             title: postTitle,
             body: newPostBody,
             imgRef: imageReference,
         }
-    });
+    };
 
-    this.setState({mainThread: Data.threadData})
+      // the URL for the request
+      const url = 'http://localhost:5000/create_thread';
 
-    let newReply = Data.threadData.get(newId);
-    const replyText = newReply.content.body;
+      // Create our request constructor with all the parameters we need
+      const request = new Request(url, {
+        method: 'POST',
+        body: JSON.stringify(reply),
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        },
+      });
 
-    if (Data.threadData.get(index).pid !== -1) {
-      let reply = [];
-      if (this.state.replies[index] !== undefined) {
-        reply = this.state.replies[index]
-      }
-      reply.push({index: newId, replyText: replyText})
-      const replyList = this.state.replies;
-      replyList[index] = reply;
-      this.setState({replies: replyList})
-    }
-	
-    // this.manualCreateReply(replyText, newReply.content.imgRef, index, newId);
-  
+      // Send the request with fetch()
+      fetch(request)
+        .then(res => {
+          return res.json();
+        }).then ( res => {
+          console.log(res);
+          component.addReplyToThread(thread, res);
+        })
+          .catch((error) => {
+            console.log(error)
+      });
 
+    // this.setState({mainThread: Data.threadData})
+
+    // let newReply = Data.threadData.get(newId);
+    // const replyText = newReply.content.body;
+    //
+    // if (Data.threadData.get(index).pid !== -1) {
+    //   let reply = [];
+    //   if (this.state.replies[index] !== undefined) {
+    //     reply = this.state.replies[index]
+    //   }
+    //   reply.push({index: newId, replyText: replyText})
+    //   const replyList = this.state.replies;
+    //   replyList[index] = reply;
+    //   this.setState({replies: replyList})
+    // }
   }
 
   deleteReply(e) {
@@ -314,46 +358,50 @@ class Thread extends React.Component {
   }
 
   render () {
-    const replies = this.loadReplies();
-    return (
-      <div className="threadPage">
-      <div className="jumbotron text-center">
-        <img className="title" src={require('./../../images/logo.png')}/>
-        <div className="buttons">
-          <div className = "LinkMeLogin" onClick={() => this.props.login(false)} >
-          <Link to="/">
-            <Button>Logout</Button>
-          </Link>
+    if (this.state.loaded) {
+      return (
+          <div className="threadPage">
+            <div className="jumbotron text-center">
+              <img className="title" src={require('./../../images/logo.png')}/>
+              <div className="buttons">
+                <div className="LinkMeLogin" onClick={() => this.props.login(false)}>
+                  <Link to="/">
+                    <Button>Logout</Button>
+                  </Link>
+                </div>
+                <div className="LinkMeSettings">
+                  <Link to={{pathname: '/settings'}}>
+                    <Button className="settings">Settings</Button>
+                  </Link>
+                </div>
+                <div className="LinkMeInbox">
+                  <Link to={{pathname: '/inbox'}}>
+                    <Button className="inbox">Inbox</Button>
+                  </Link>
+                </div>
+                <div className="LinkMeHome">
+                  <Link to="/">
+                    <Button>Home</Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {this.loadThread()}
+
+            <div className='threadReply'>
+              <p>Add reply to thread: </p>
+              <PostEditor className="replyPostEditor" addPost={this.addReply} thread={this.state.mainThread}
+                          isReply={true}/>
+            </div>
+
+            {this.loadReplies(this.state.mainThread)}
+
           </div>
-          <div className="LinkMeSettings" >
-          <Link to={{pathname: '/settings'}}>
-            <Button className="settings">Settings</Button>
-          </Link>
-          </div>
-          <div className="LinkMeInbox" >
-            <Link to={{pathname: '/inbox'}}>
-              <Button className="inbox">Inbox</Button>
-            </Link>
-          </div>
-          <div className="LinkMeHome" >
-            <Link to="/">
-              <Button>Home</Button>
-            </Link>
-        </div>
-        </div>
-      </div>
-
-      {this.loadThread()}
-
-      <div className='threadReply'>
-        <p>Add reply to thread: </p>
-        <PostEditor className="replyPostEditor" addPost={this.addReply} index={this.state.threadId} isReply={true}/>
-      </div>
-
-      {this.loadReplies()}
-
-      </div>
-    );
+      );
+    } else {
+      return null;
+    }
   }
 }
 
