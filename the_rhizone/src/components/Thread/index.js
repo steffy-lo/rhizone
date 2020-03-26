@@ -57,6 +57,7 @@ class Thread extends React.Component {
   }
 
   deleteThread(threadToDel) {
+    console.log(threadToDel)
     const url = "http://localhost:5000/del_thread/?tid=" + threadToDel._id
     // Create our request constructor with all the parameters we need
     const request = new Request( url, {
@@ -142,7 +143,6 @@ class Thread extends React.Component {
 
   loadReplies(thread) {
     let replies = [];
-    console.log(thread.replies)
     for (let i = 0; i < thread.replies.length; i++) {
       replies.push(this.loadReply(thread.replies[i]));
     }
@@ -171,6 +171,7 @@ class Thread extends React.Component {
   loadReply(thread) {
     let replies;
     let adminButton;
+    const component = this;
     const userData = this.props.state.user;
 
     if (userData && userData.isAdmin) {
@@ -185,7 +186,11 @@ class Thread extends React.Component {
             <div className="media-body">
               {reply.content.body} <br/>
               {this.loadImage(reply)} <br/>
-              {adminButton}
+              {
+                (function(){
+                  if (userData && userData.isAdmin) return (<button className="deleteBtn" onClick={() => component.deleteThread(reply)}>Delete</button>);
+                })()
+              }
               <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
               <div className="hidden">
                 <PostEditor className="replyPostEditor" addPost={this.addReply} thread={reply} isReply={true}/>
