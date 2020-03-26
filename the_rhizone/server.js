@@ -109,39 +109,62 @@ app.get('/threads/:id', (req, res) => {
 })
 
 function updateParent(id, res, pres) {
-	threadDataModel.findByIdAndUpdate(
-		{_id: id},
-		{
-				replies: res
-		},
-		{new: true, omitUndefined: true},
-		(err, res) => {
-			if (err) return;
-			// call the function recursively with the new parent
-			if (res.pid != -1) {
-				console.log(res)
-				updateParent(res.pid, res);
-			}
-		}).then((thread) => {
+	threadDataModel.findById(id).then((thread) => {
 		if (!thread) {
 			pres.status(404).send()
 		} else {
-			pres.send(thread)
+			if (thread.pid != -1) {
+				threadDataModel.findByIdAndUpdate(
+					{_id: id},
+					{
+						replies: res
+					},
+					{new: true, omitUndefined: true},
+					(err, res) => {
+						if (err) return;
+						// call the function recursively with the new parent
+						updateParent(res.pid, res, pres);
+					}).then((thread) => {
+					if (!thread) {
+						pres.status(404).send()
+					} else {
+						pres.send(thread)
+					}
+				})
+			} else {
+				thread.replies.push(res);
+				thread.save();
+			}
 		}
 	}).catch((error) => {
-		pres.status(400).send() // bad request for changing the user.
+		pres.status(500).send()  // server error
 	})
 }
 
 app.patch('/threads', (req, res) => {
 	const id = req.body.id
+	const pid = req.body.pid
 	const reply = req.body.reply
 
 	if (!ObjectID.isValid(id)) {
 		res.status(404).send()  // if invalid id, definitely can't find resource, 404.
 		return;  // so that we don't run the rest of the handler.
 	}
-	updateParent(id, reply, res)
+	if (pid != -1) {
+		updateParent(id, reply, res)
+	} else {
+		console.log("just push reply")
+		threadDataModel.findByIdAndUpdate({_id: id}, {$push: {replies: reply}}, {new: true, omitUndefined: true}).then((thread) => {
+			if (!thread) {
+				res.status(404).send()
+			} else {
+				res.send(thread)
+			}
+		}).catch((error) => {
+			res.status(400).send() // bad request for changing the user.
+		})
+	}
+
 })
 
 app.post('/add_user', (req, res) => {

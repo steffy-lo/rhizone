@@ -29,6 +29,7 @@ class Thread extends React.Component {
     this.addReply = this.addReply.bind(this);
     this.getMainThread = this.getMainThread.bind(this);
     this.addReplyToThread = this.addReplyToThread.bind(this);
+    this.deleteThread = this.deleteThread.bind(this);
   }
 
   getThreadId() {
@@ -51,6 +52,32 @@ class Thread extends React.Component {
           console.log("response" + res);
           this.setState({mainThread: res},
                   () => this.setState({loaded: true}));
+        })
+
+  }
+
+  deleteThread(threadToDel) {
+    const url = "http://localhost:5000/del_thread/?tid=" + threadToDel._id
+    // Create our request constructor with all the parameters we need
+    const request = new Request( url, {
+      method: 'delete',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+    // Send the request with fetch()
+    fetch(request)
+        .then(res => {
+          // Handle response we get from the API.
+          if (res.status === 200) {
+              window.location.reload(true);
+          } else {
+            console.log('Failed to delete thread with id:' + threadToDel._id)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
         })
 
   }
@@ -146,8 +173,9 @@ class Thread extends React.Component {
     let replies;
     let adminButton;
     const userData = this.props.state.user;
+
     if (userData && userData.isAdmin) {
-        adminButton = <button className="deleteBtn">Delete</button>;
+        adminButton = <button className="deleteBtn" onClick={() => this.deleteThread(thread)}>Delete</button>;
     }
 
     console.log(thread)
@@ -188,6 +216,7 @@ class Thread extends React.Component {
   addReplyToThread(thread, reply) {
     const data = {
       id: thread._id,
+      pid: thread.pid,
       reply: reply
     }
 
@@ -209,7 +238,7 @@ class Thread extends React.Component {
           // Handle response we get from the API.
           // Usually check the error codes to see what happened.
           if (res.status === 200) {
-            console.log(res.json())
+            window.location.reload(true)
           } else {
             console.log(res);
           }
@@ -265,96 +294,6 @@ class Thread extends React.Component {
           .catch((error) => {
             console.log(error)
       });
-
-    // this.setState({mainThread: Data.threadData})
-
-    // let newReply = Data.threadData.get(newId);
-    // const replyText = newReply.content.body;
-    //
-    // if (Data.threadData.get(index).pid !== -1) {
-    //   let reply = [];
-    //   if (this.state.replies[index] !== undefined) {
-    //     reply = this.state.replies[index]
-    //   }
-    //   reply.push({index: newId, replyText: replyText})
-    //   const replyList = this.state.replies;
-    //   replyList[index] = reply;
-    //   this.setState({replies: replyList})
-    // }
-  }
-
-  deleteReply(e) {
-    console.log("deleteReply");
-    console.log(e.target.parentElement.parentElement);
-    const replyToRemove = e.target.parentElement.parentElement;
-    const parentThread = replyToRemove.parentElement;
-    parentThread.removeChild(replyToRemove);
-  }
-
-  manualCreateReply(replyText, imgRef, pid, newId) {
-    let threadBody;
-    let parentReply;
-    let ulElement;
-
-    if (Data.threadData.get(pid).pid === -1) {
-      threadBody = document.querySelector('.threadBody');
-    } else {
-      parentReply = document.getElementById(pid.toString());
-      console.log(parentReply.querySelector('ul'));
-      ulElement = parentReply.querySelector('ul');
-      if (ulElement === null) {
-        ulElement = document.createElement('ul');
-      }
-    }
-
-    const listElement = document.createElement('li');
-    listElement.className = 'media';
-    listElement.setAttribute('id', newId);
-
-    if (imgRef !== "") {
-      const imgElement = document.createElement('img');
-      imgElement.setAttribute('src', imgRef);
-      imgElement.className = 'mr-3';
-      imgElement.setAttribute('alt', "Reply Image");
-      listElement.appendChild(imgElement);
-    }
-
-    const divElement = document.createElement('div');
-    divElement.className = 'media-body';
-	
-	const textElement = document.createElement('div');
-	textElement.className = 'text-body';
-	textElement.appendChild(document.createTextNode(replyText));
-	divElement.appendChild(textElement);
-    divElement.appendChild(document.createElement('br'));
-
-    const button = document.createElement('button');
-    button.className = 'replyButton';
-    button.onclick = this.createReply;
-    button.appendChild(document.createTextNode('Reply'));
-
-    const editor = document.createElement('PostEditor');
-    editor.className = 'replyPostEditor';
-
-    divElement.appendChild(button);
-
-    const userData = Data.userData.get(this.state.username);
-    if (userData.isAdmin){
-        const delButton = document.createElement('button');
-        delButton.className = 'deleteButton';
-        delButton.onclick = this.deleteReply;
-        delButton.appendChild(document.createTextNode('Delete'));
-        divElement.appendChild(delButton);
-    }
-
-    listElement.appendChild(divElement);
-
-    if (Data.threadData.get(pid).pid === -1) {
-      threadBody.appendChild(listElement);
-    } else {
-      ulElement.appendChild(listElement);
-      parentReply.appendChild(ulElement);
-    }
   }
 
   render () {
