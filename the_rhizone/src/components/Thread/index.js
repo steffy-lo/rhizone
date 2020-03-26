@@ -69,12 +69,11 @@ class Thread extends React.Component {
     // Send the request with fetch()
     fetch(request)
         .then(res => {
-          // Handle response we get from the API.
-          if (res.status === 200) {
-              window.location.reload(true);
-          } else {
-            console.log('Failed to delete thread with id:' + threadToDel._id)
-          }
+          return res.json()
+        })
+        .then(res => {
+          console.log(res)
+          window.location.reload(true)
         })
         .catch((error) => {
           console.log(error)

@@ -1,5 +1,6 @@
 /* server.js, with mongodb API and static directories */
 'use strict';
+
 const log = console.log
 
 const express = require('express')
@@ -66,12 +67,39 @@ app.post('/create_thread', (req, res, next) => {
 	})
 })
 
+// app.patch('/cascade_del/:id', (req, res) => {
+//     const id = req.params.id
+//     threadDataModel.find({replies: { $in: [id] } }).then(threads => {
+//         console.log(threads);
+//         threads.map(thread =>
+//             thread.findByIdAndUpdate(
+//                 thread._id,
+//                 { $pull: { replies: id } },
+//                 { new: true, omitUndefined: true }
+//             )
+//         )
+//     }).catch((error) => {
+//         res.status(500).send()
+//     })
+// })
+
 app.delete('/del_thread', (req, res) => {
 	const query = {_id: req.query.tid}
 	threadDataModel.findOneAndRemove(query).then((thread) => {
 		if (!thread) {
 			res.status(404).send();
 		} else {
+            threadDataModel.find({replies: { $in: [thread] } }).then(threads => {
+                threads.map(t =>
+                    threadDataModel.findByIdAndUpdate(
+                        t._id,
+                        { $pull: {replies: { $in: [thread] } }},
+                        { new: true, omitUndefined: true, multi: true}
+                    ).then(t => {
+                        t.save();
+                    })
+                )
+            })
 			res.send(thread);
 		}
 	}).catch((error) => {
