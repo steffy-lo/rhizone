@@ -95,7 +95,7 @@ app.delete('/del_thread', (req, res) => {
                     threadDataModel.findByIdAndUpdate(
                         t._id,
                         { $pull: {replies: { _id: thread._id } }},
-                        { new: true, omitUndefined: true, multi: true}
+                        { new: true, omitUndefined: true}
                     ).then(t => {
                         t.save();
                     })
