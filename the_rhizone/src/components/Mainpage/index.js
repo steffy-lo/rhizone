@@ -41,7 +41,9 @@ class Mainpage extends React.Component {
 	  // A function to send a POST request to add a new user
   addThread(author, postTitle, postBody, imgReference) {
     // the URL for the request
-    const url = process.env.API_PROXY_URL+ process.env.PORT +'/create_thread' || 'http://localhost:5000/create_thread';
+	const hope = encodeURI(process.env.API_PROXY_URL+":"+process.env.PORT+"/create_thread")
+	
+    const url = hope || 'http://localhost:5000/create_thread';
 
     // The data we are going to send in our request
 	const title = postTitle;
@@ -120,8 +122,8 @@ class Mainpage extends React.Component {
 			imgRef: imageReference,
         }
 		});*/
-		
-		const url =  process.env.API_PROXY_URL+ process.env.PORT +'/create_thread' || 'http://localhost:5000/create_thread';
+		const hope = encodeURI(process.env.API_PROXY_URL+":"+process.env.PORT+"/create_thread")
+		const url =  hope || 'http://localhost:5000/create_thread';
 		
 		fetch(url)
         .then(function(res) {
