@@ -41,7 +41,7 @@ class Mainpage extends React.Component {
 	  // A function to send a POST request to add a new user
   addThread(author, postTitle, postBody, imgReference) {
     // the URL for the request
-    const url = process.env.API_PROXY_URL + '/create_thread' || 'http://localhost:5000/create_thread';
+    const url = process.env.API_PROXY_URL+'/create_thread' || 'http://localhost:5000/create_thread';
 
     // The data we are going to send in our request
 	const title = postTitle;
@@ -50,7 +50,6 @@ class Mainpage extends React.Component {
 	const threadContent = {title, body, imgRef}	
 	
     let data = {
-		pid: -1,
 		author: author,
 		replies: [],
 		content: threadContent
@@ -122,7 +121,7 @@ class Mainpage extends React.Component {
         }
 		});*/
 		
-		const url =  process.env.API_PROXY_URL + '/create_thread' || 'http://localhost:5000/create_thread';
+		const url =  process.env.API_PROXY_URL+'/create_thread' || 'http://localhost:5000/create_thread';
 		
 		fetch(url)
         .then(function(res) {
@@ -244,7 +243,7 @@ class Mainpage extends React.Component {
 	}
 
 	getThreads() {
-		const url =  process.env.API_PROXY_URL + '/threads' || "http://localhost:5000/threads"
+		const url = "http://localhost:5000/threads"
 		// Create our request constructor with all the parameters we need
 		const request = new Request( url, {
 			method: 'get',
@@ -272,7 +271,7 @@ class Mainpage extends React.Component {
 		// Data.threadData.get(index).content.imgRef = "";
 		// Data.threadData.get(index).content.title = "[deleted]";
 		const threadToDel = this.state.threads[index]
-		const url = process.env.API_PROXY_URL+'/del_thread/?tid=' + 'threadToDel._id' || "http://localhost:5000/del_thread/?tid=" + threadToDel._id
+		const url = "http://localhost:5000/del_thread/?tid=" + threadToDel._id
 		// Create our request constructor with all the parameters we need
 		const request = new Request( url, {
 			method: 'delete',
