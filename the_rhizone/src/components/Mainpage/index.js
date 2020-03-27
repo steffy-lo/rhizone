@@ -206,14 +206,14 @@ class Mainpage extends React.Component {
 			return (<div></div>);
 		} else if (this.state.threads[index].content.imgRef === "") {
 			return (<div></div>);
-		// } else {
-		// 	// IMAGE LOADING DOES NOT WORK ANYMORE BECAUSE WE HAVEN'T GOTTEN THAT TO WORK SO IMAGES ARE JUST STUFF IN THE BACKEND
-		// 	return (
-		// 	<div className = "img-sub overlay zoom view">
-		// 	<img className="card-img-top img-fluid" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
-		// 	</div>
-		// 	);
-		}
+		} else {
+			/*/ IMAGE LOADING DOES NOT WORK ANYMORE BECAUSE WE HAVEN'T GOTTEN THAT TO WORK SO IMAGES ARE JUST STUFF IN THE BACKEND
+			return (
+			<div className = "img-sub overlay zoom view">
+			<img className="card-img-top img-fluid" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
+			</div>
+			);
+		*/}
 	}
 	
 	// Loads content (title and body) in card

@@ -51,6 +51,7 @@ app.post('/create_thread', (req, res, next) => {
 	const thread = new threadDataModel({
 		id: 0,
 		pid: req.body.pid,
+		pid_num: req.body.pid_num,
 		author: req.body.author,
 		replies: [],
 		content: req.body.content
@@ -110,11 +111,25 @@ app.delete('/del_thread', (req, res) => {
 })
 
 app.get('/threads', (req, res) => {
-	threadDataModel.find().then((thread) => {
-		res.send(thread) // can wrap in object if want to add more properties
-	}, (error) => {
-		res.status(500).send(error) // server error
-	})
+    if (req.query.id == null){
+        threadDataModel.find().then((thread) => {
+    		res.send(thread) // can wrap in object if want to add more properties
+    	}, (error) => {
+    		res.status(500).send(error) // server error
+    	})
+    } else {
+        const query = {id: req.query.id}
+        threadDataModel.findOne(query).then((thread) => {
+            //log(inbox)
+            if (!thread) {
+                res.status(404).send();  // could not find this user
+            } else {
+                res.send(thread);
+            }
+        }).catch((error) => {
+          	res.status(500).send()  // server error
+        })
+    }
 })
 
 app.get('/replies', (req, res) => {
