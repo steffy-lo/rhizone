@@ -13,7 +13,7 @@ const actType = {
 }
 const url = 'http://localhost:5000/inboxes'
 const userUrl = 'http://localhost:5000/users'
-const userUrl = 'http://localhost:5000/threads'
+// const userUrl = 'http://localhost:5000/threads'
 
 class Inbox extends React.Component {
     constructor(props) {

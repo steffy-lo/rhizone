@@ -193,8 +193,8 @@ class Thread extends React.Component {
   createReply(e) {
 
     if (this.props.state.loggedIn) {
-			const editor = e.target.parentElement.lastChild;
-			editor.classList.toggle("hidden");
+        const editor = e.target.parentElement.lastChild;
+        editor.classList.toggle("hidden");
       // hides the reply button
       editor.previousSibling.classList.toggle("hidden");
 		} else {
@@ -215,14 +215,16 @@ class Thread extends React.Component {
             <div className="media-body">
                 {this.state.threads[reply].content.body} <br/>
                 {this.loadImage(this.state.threads[reply])} <br/>
-                {
-                    (function(){
-                        if (userData && userData.isAdmin) return (<button className="deleteBtn" onClick={() => component.deleteThread(component.state.threads[reply])}>Delete</button>);
-                    })()
-                }
-                <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
-                <div className="hidden">
-                    <PostEditor className="replyPostEditor" addPost={this.addReply} thread={this.state.threads[reply]} isReply={true}/>
+                <div>
+                    {
+                        (function(){
+                            if (userData && userData.isAdmin) return (<button className="deleteBtn" onClick={() => component.deleteThread(component.state.threads[reply])}>Delete</button>);
+                        })()
+                    }
+                    <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
+                    <div className="hidden">
+                        <PostEditor className="replyPostEditor" addPost={this.addReply} thread={this.state.threads[reply]} isReply={true}/>
+                    </div>
                 </div>
                 {this.loadReplies(this.state.threads[reply])}
             </div>
@@ -235,10 +237,12 @@ class Thread extends React.Component {
           <div className="media-body">
             <div className ="text-body">{thread.content.body}</div>
             {this.loadImage(thread)} <br/>
-            {adminButton}
-            <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
-            <div className="hidden">
-              <PostEditor className="replyPostEditor" addPost={this.addReply} thread={thread} isReply={true}/>
+            <div>
+                {adminButton}
+                <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
+                <div className="hidden">
+                  <PostEditor className="replyPostEditor" addPost={this.addReply} thread={thread} isReply={true}/>
+                </div>
             </div>
               {replies}
           </div>
