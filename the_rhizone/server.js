@@ -91,14 +91,12 @@ app.delete('/del_thread', (req, res) => {
 			res.status(404).send();
 		} else {
             threadDataModel.find({replies: { $in: [thread._id] } }).then(threads => {
-            	console.log(threads)
                 threads.map(t =>
                     threadDataModel.findByIdAndUpdate(
                         t._id,
                         { $pull: {replies: { $in: [thread._id] } }},
                         { new: true, omitUndefined: true}
                     ).then(t => {
-                    	console.log(t)
                         t.save();
                     })
                 )
@@ -136,12 +134,22 @@ app.get('/replies', (req, res) => {
 	const replies = req.query.ids.split(",");
 	const threads = [];
 	for (let i = 0; i < replies.length; i++) {
-		threads.push(mongoose.Types.ObjectId(replies[i]))
+		if (!ObjectID.isValid(replies[i])) {
+			res.status(404).send()  // if invalid id, definitely can't find resource, 404.
+			return;  // so that we don't run the rest of the handler.
+		}
+		threads.push(replies[i])
 	}
 	threadDataModel.find({
 		'_id': { $in: threads}
-	}, function(err, docs){
-		res.send(docs)
+	}).then(docs => {
+		if (!docs) {
+			res.status(404).send();  // could not find this user
+		} else {
+			res.send(docs);
+		}
+	}).catch(err => {
+		res.status(500).send()
 	})
 })
 

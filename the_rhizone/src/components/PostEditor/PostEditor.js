@@ -14,7 +14,8 @@ class PostEditor extends React.Component {
 		this.state = {
 			newPostBody: '',
 			selectedFile: null,
-			postTitle: ''
+			postTitle: '',
+			hidden: '',
 		};
 
 		this.handlePostEditorInputChange = this.handlePostEditorInputChange.bind(this);
@@ -22,23 +23,26 @@ class PostEditor extends React.Component {
 		this.fileChangedHandler = this.fileChangedHandler.bind(this);
 		this.createPost = this.createPost.bind(this);
 	}
-	
+
 	// To create a post, we check if it is a valid post first (i.e if it is over 150 characters)
 	// Then we set the states the the post's body, title and selected image
 	createPost() {
 		 if (this.validator.fieldValid('NewPostBody')) {
 			 this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle, this.props.thread);
 			this.setState({
-			newPostBody: '',
-			selectedFile: null,
-			postTitle: ''
+				newPostBody: '',
+				selectedFile: null,
+				postTitle: ''
 			});
+			if (this.props.thread.pid != -1) {
+				this.setState({hidden: "hidden"})
+			}
 		} else {
 		this.validator.showMessages();
 		this.forceUpdate();
 		}
 	}
-	
+
 	// This file handler is for file upload
 	fileChangedHandler = (e) => {
 		this.setState({ selectedFile: e.target.files[0] })
@@ -50,7 +54,7 @@ class PostEditor extends React.Component {
 			postTitle: e.target.value
 		});
 	}
-	
+
 	// This handler is for post body changes
 	handlePostEditorInputChange(e) {
 		this.setState({
@@ -60,16 +64,12 @@ class PostEditor extends React.Component {
 	render () {
 		let hideTitle;
 		if (this.props.isReply) {
-			console.log(this.props.isReply);
 			hideTitle = "hidden";
-			console.log(hideTitle);
 		} else {
 			hideTitle = "form-control";
 		}
-
-		console.log(hideTitle);
 		return (
-		<div>
+		<div className={this.state.hidden}>
 			<div className="panel panel-default post-editor">
 				<div className="panel-body form-group">
 					 <input type="text" className={hideTitle} value={this.state.postTitle} onChange={this.handlePostEditorInputTitleChange} placeholder="Thread Title"/>
@@ -79,7 +79,6 @@ class PostEditor extends React.Component {
 					<input type="file" name="file" className = "center-block" onChange={this.fileChangedHandler} />
 				</div>
 			</div>
-
 		</div>
 		);
 	}

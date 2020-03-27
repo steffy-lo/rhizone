@@ -48,7 +48,11 @@ class Thread extends React.Component {
         }).then (
         res => {
           console.log("response" + res);
-          this.state.threads[res._id] = res;
+            component.setState(prevState => {
+                let threads = {...prevState.threads};
+                threads[res._id] = res;
+                return {threads};
+            });
           this.setState({mainThread: res},
                   () => {
               setTimeout(function() {
@@ -61,7 +65,6 @@ class Thread extends React.Component {
   }
 
   deleteThread(threadToDel) {
-    console.log(threadToDel)
     const url = "http://localhost:5000/del_thread/?tid=" + threadToDel._id
     // Create our request constructor with all the parameters we need
     const request = new Request( url, {
@@ -78,7 +81,7 @@ class Thread extends React.Component {
         })
         .then(res => {
           console.log(res)
-          window.location.reload(true)
+            window.location.reload(true)
         })
         .catch((error) => {
           console.log(error)
@@ -147,9 +150,10 @@ class Thread extends React.Component {
 
   getReplies(thread) {
       const component = this;
+      if (thread.replies.toString() === '') return;
       const url = "http://localhost:5000/replies/?ids=" + thread.replies.toString();
       // Create our request constructor with all the parameters we need
-      const request = new Request( url, {
+      const request = new Request(url, {
           method: 'get',
           headers: {
               'Accept': 'application/json, text/plain, */*',
@@ -159,15 +163,22 @@ class Thread extends React.Component {
 
       fetch(request)
           .then(res => {
-              if (res.status)
               return res.json();
           }).then (res => {
+              console.log("got replies");
               for (let i = 0; i < res.length; i++) {
-                  component.state.threads[res[i]._id] = res[i];
+                  component.setState(prevState => {
+                      let threads = {...prevState.threads};
+                      threads[res[i]._id] = res[i];
+                      return {threads};
+                  });
                   if (res[i].replies.length > 0) {
                       component.getReplies(res[i])
+
                   }
               }
+      }).catch((error) => {
+          console.log(error)
       })
   }
 
@@ -252,11 +263,11 @@ class Thread extends React.Component {
 
   addReplyToThread(thread, reply) {
       const component = this;
-    const data = {
-      id: thread._id,
-      pid: thread.pid,
-      reply: reply._id
-    }
+      const data = {
+          id: thread._id,
+          pid: thread.pid,
+          reply: reply._id
+      }
 
     const url = 'http://localhost:5000/threads';
 
@@ -278,9 +289,10 @@ class Thread extends React.Component {
           return res.json()
         })
         .then(res => {
-            component.getReplies(thread)
-            window.location.reload(true)
-
+            component.getReplies(res)
+            setTimeout(function() {
+                component.state.threads[thread._id] = res;
+            component.getReplies(component.state.threads[component.getThreadId()])}, 1000)
         })
         .catch((error) => {
       console.log(error)
@@ -290,6 +302,7 @@ class Thread extends React.Component {
 
   addReply(newPostBody, newImage, postTitle, thread) {
     console.log("parent thread", thread);
+    this.setState({hidden: "hidden"})
     const component = this;
       // add Post to archive
       let imageReference = "";
@@ -327,7 +340,7 @@ class Thread extends React.Component {
       fetch(request)
         .then(res => {
           return res.json();
-        }).then ( res => {
+        }).then (res => {
           console.log(res);
           component.addReplyToThread(thread, res);
         })
@@ -338,7 +351,6 @@ class Thread extends React.Component {
 
   render () {
     if (this.state.loaded) {
-        console.log(Object.keys(this.state.threads))
       return (
           <div className="threadPage">
             <div className="jumbotron text-center">
@@ -371,11 +383,11 @@ class Thread extends React.Component {
 
             <div className='threadReply'>
               <p>Add reply to thread: </p>
-              <PostEditor className="replyPostEditor" addPost={this.addReply} thread={this.state.mainThread}
+              <PostEditor className="replyPostEditor" addPost={this.addReply} thread={this.state.threads[this.getThreadId()]}
                           isReply={true}/>
             </div>
 
-            {this.loadReplies(this.state.mainThread)}
+            {this.loadReplies(this.state.threads[this.getThreadId()])}
 
           </div>
       );
