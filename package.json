@@ -6,10 +6,9 @@
     "node": "10.x"
   },
   "scripts": {
-    "start": "node the_rhizone/server",
-    "build": "cd the_rhizone/ && npm install && npm run build",
-    "postinstall": "&& npm start"
-  },
+    "start": "cd the_rhizone/ && concurrently \"npm start\" \"node server\"",
+    "build": "cd the_rhizone/ && npm install && npm run build"
+	},
   "cacheDirectories": [
     "node_modules",
     "react-ui/node_modules"
