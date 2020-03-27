@@ -14,11 +14,10 @@ class Thread extends React.Component {
     super(props);
 
     this.state = {
-      replyNum: 0,
-      loaded: false,
-      threadId: this.getThreadId(),
-      mainThread: Data.threadData,
-      replies: {}
+        replyNum: 0,
+        loaded: false,
+        threadId: this.getThreadId(),
+        threads: {}
     };
 
     this.loadThread = this.loadThread.bind(this);
@@ -30,18 +29,17 @@ class Thread extends React.Component {
     this.getMainThread = this.getMainThread.bind(this);
     this.addReplyToThread = this.addReplyToThread.bind(this);
     this.deleteThread = this.deleteThread.bind(this);
+    this.getReplies = this.getReplies.bind(this);
+    this.getMainThread();
   }
 
   getThreadId() {
     return window.location.hash.substring(1);
   }
 
-  componentWillMount() {
-    this.getMainThread()
-  }
-
   getMainThread() {
-    const url = "http://localhost:5000/threads/" + this.state.threadId
+      const component = this;
+    const url = "http://localhost:5000/threads/" + this.state.threadId;
 
     // Send the request with fetch()
     fetch(url)
@@ -50,8 +48,14 @@ class Thread extends React.Component {
         }).then (
         res => {
           console.log("response" + res);
+          this.state.threads[res._id] = res;
           this.setState({mainThread: res},
-                  () => this.setState({loaded: true}));
+                  () => {
+              setTimeout(function() {
+                  component.setState({loaded: true})
+              }, 1000)
+              this.getReplies(res)
+                  })
         })
 
   }
@@ -141,19 +145,49 @@ class Thread extends React.Component {
     }
   }
 
+  getReplies(thread) {
+      const component = this;
+      const url = "http://localhost:5000/replies/?ids=" + thread.replies.toString();
+      // Create our request constructor with all the parameters we need
+      const request = new Request( url, {
+          method: 'get',
+          headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+          },
+      });
+
+      fetch(request)
+          .then(res => {
+              if (res.status)
+              return res.json();
+          }).then (res => {
+              for (let i = 0; i < res.length; i++) {
+                  component.state.threads[res[i]._id] = res[i];
+                  if (res[i].replies.length > 0) {
+                      component.getReplies(res[i])
+                  }
+              }
+      })
+  }
+
   loadReplies(thread) {
     let replies = [];
-    for (let i = 0; i < thread.replies.length; i++) {
-      replies.push(this.loadReply(thread.replies[i]));
+    let thread_replies = this.state.threads[thread._id].replies;
+    if (thread_replies) {
+        for (let i = 0; i < thread_replies.length; i++) {
+            console.log(this.state.threads[thread_replies[i]])
+            replies.push(this.loadReply(this.state.threads[thread_replies[i]]));
+        }
     }
 
-    return(
-      <div className="threadBody">
-        <ul className="list-unstyled">
-          {replies}
-        </ul>
-      </div>
-    );
+      return(
+          <div className="threadBody">
+              <ul className="list-unstyled">
+                  {replies}
+              </ul>
+          </div>
+      );
   }
 
   createReply(e) {
@@ -169,7 +203,6 @@ class Thread extends React.Component {
   }
 
   loadReply(thread) {
-    let replies;
     let adminButton;
     const component = this;
     const userData = this.props.state.user;
@@ -177,30 +210,26 @@ class Thread extends React.Component {
     if (userData && userData.isAdmin) {
         adminButton = <button className="deleteBtn" onClick={() => this.deleteThread(thread)}>Delete</button>;
     }
-
-    console.log(thread)
-    if (thread.replies.length !== 0) {
-      replies = thread.replies.map(reply => (
-        <ul>
-          <li className="media" id={reply._id}>
+    let replies = thread.replies.map(reply => (<ul>
+        <li className="media" id={this.state.threads[reply]}>
             <div className="media-body">
-              {reply.content.body} <br/>
-              {this.loadImage(reply)} <br/>
-              {
-                (function(){
-                  if (userData && userData.isAdmin) return (<button className="deleteBtn" onClick={() => component.deleteThread(reply)}>Delete</button>);
-                })()
-              }
-              <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
-              <div className="hidden">
-                <PostEditor className="replyPostEditor" addPost={this.addReply} thread={reply} isReply={true}/>
-              </div>
-              {this.loadReplies(reply)}
+                {this.state.threads[reply].content.body} <br/>
+                {this.loadImage(this.state.threads[reply])} <br/>
+                {
+                    (function(){
+                        if (userData && userData.isAdmin) return (<button className="deleteBtn" onClick={() => component.deleteThread(component.state.threads[reply])}>Delete</button>);
+                    })()
+                }
+                <button type="button" className="replyButton" data-toggle="collapse" data-target="#reply" onClick={this.createReply}>Reply</button>
+                <div className="hidden">
+                    <PostEditor className="replyPostEditor" addPost={this.addReply} thread={this.state.threads[reply]} isReply={true}/>
+                </div>
+                {this.loadReplies(this.state.threads[reply])}
             </div>
-          </li>
-        </ul>
-      ));
-    }
+        </li>
+    </ul>))
+
+    console.log(replies);
     return(
         <li className="media" id={thread._id}>
           <div className="media-body">
@@ -211,17 +240,18 @@ class Thread extends React.Component {
             <div className="hidden">
               <PostEditor className="replyPostEditor" addPost={this.addReply} thread={thread} isReply={true}/>
             </div>
-            {replies}
+              {replies}
           </div>
         </li>
     );
   }
 
   addReplyToThread(thread, reply) {
+      const component = this;
     const data = {
       id: thread._id,
       pid: thread.pid,
-      reply: reply
+      reply: reply._id
     }
 
     const url = 'http://localhost:5000/threads';
@@ -241,12 +271,14 @@ class Thread extends React.Component {
         .then(function(res) {
           // Handle response we get from the API.
           // Usually check the error codes to see what happened.
-          if (res.status === 200) {
+          return res.json()
+        })
+        .then(res => {
+            component.getReplies(thread)
             window.location.reload(true)
-          } else {
-            console.log(res);
-          }
-        }).catch((error) => {
+
+        })
+        .catch((error) => {
       console.log(error)
     });
 
@@ -302,6 +334,7 @@ class Thread extends React.Component {
 
   render () {
     if (this.state.loaded) {
+        console.log(Object.keys(this.state.threads))
       return (
           <div className="threadPage">
             <div className="jumbotron text-center">

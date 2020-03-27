@@ -30,11 +30,8 @@ const threadDataSchema = new mongoose.Schema({
         required: true,
         minlegth: 1
     },
+    replies: [String],
     content: threadContentSchema
-})
-
-threadDataSchema.add({
-    replies: [threadDataSchema]
 })
 
 const threadDataModel = mongoose.model('Thread', threadDataSchema)

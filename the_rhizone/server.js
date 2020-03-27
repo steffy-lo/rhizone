@@ -89,13 +89,15 @@ app.delete('/del_thread', (req, res) => {
 		if (!thread) {
 			res.status(404).send();
 		} else {
-            threadDataModel.find({replies: { $in: [thread] } }).then(threads => {
+            threadDataModel.find({replies: { $in: [thread._id] } }).then(threads => {
+            	console.log(threads)
                 threads.map(t =>
                     threadDataModel.findByIdAndUpdate(
                         t._id,
-                        { $pull: {replies: { _id: thread._id } }},
+                        { $pull: {replies: { $in: [thread._id] } }},
                         { new: true, omitUndefined: true}
                     ).then(t => {
+                    	console.log(t)
                         t.save();
                     })
                 )
@@ -112,6 +114,19 @@ app.get('/threads', (req, res) => {
 		res.send(thread) // can wrap in object if want to add more properties
 	}, (error) => {
 		res.status(500).send(error) // server error
+	})
+})
+
+app.get('/replies', (req, res) => {
+	const replies = req.query.ids.split(",");
+	const threads = [];
+	for (let i = 0; i < replies.length; i++) {
+		threads.push(mongoose.Types.ObjectId(replies[i]))
+	}
+	threadDataModel.find({
+		'_id': { $in: threads}
+	}, function(err, docs){
+		res.send(docs)
 	})
 })
 
@@ -178,20 +193,15 @@ app.patch('/threads', (req, res) => {
 		res.status(404).send()  // if invalid id, definitely can't find resource, 404.
 		return;  // so that we don't run the rest of the handler.
 	}
-	if (pid != -1) {
-		updateParent(id, reply, res)
-	} else {
-		console.log("just push reply")
-		threadDataModel.findByIdAndUpdate({_id: id}, {$push: {replies: reply}}, {new: true, omitUndefined: true}).then((thread) => {
-			if (!thread) {
-				res.status(404).send()
-			} else {
-				res.send(thread)
-			}
-		}).catch((error) => {
-			res.status(400).send() // bad request for changing the user.
-		})
-	}
+	threadDataModel.findByIdAndUpdate({_id: id}, {$push: {replies: reply}}, {new: true, omitUndefined: true}).then((thread) => {
+		if (!thread) {
+			res.status(404).send()
+		} else {
+			res.send(thread)
+		}
+	}).catch((error) => {
+		res.status(400).send() // bad request for changing the user.
+	})
 
 })
 
