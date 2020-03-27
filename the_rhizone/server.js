@@ -109,11 +109,25 @@ app.delete('/del_thread', (req, res) => {
 })
 
 app.get('/threads', (req, res) => {
-	threadDataModel.find().then((thread) => {
-		res.send(thread) // can wrap in object if want to add more properties
-	}, (error) => {
-		res.status(500).send(error) // server error
-	})
+    if (req.query.id == null){
+        threadDataModel.find().then((thread) => {
+    		res.send(thread) // can wrap in object if want to add more properties
+    	}, (error) => {
+    		res.status(500).send(error) // server error
+    	})
+    } else {
+        const query = {id: req.query.id}
+        threadDataModel.findOne(query).then((thread) => {
+            //log(inbox)
+            if (!thread) {
+                res.status(404).send();  // could not find this user
+            } else {
+                res.send(thread);
+            }
+        }).catch((error) => {
+          	res.status(500).send()  // server error
+        })
+    }
 })
 
 app.get('/threads/:id', (req, res) => {
