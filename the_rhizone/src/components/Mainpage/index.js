@@ -41,10 +41,10 @@ class Mainpage extends React.Component {
 	  // A function to send a POST request to add a new user
   addThread(author, postTitle, postBody, imgReference) {
     // the URL for the request
-	const hope = encodeURI(process.env.API_PROXY_URL+":"+process.env.PORT+"/create_thread")
+	const hope = process.env.API_PROXY_URL+":"+process.env.PORT+"/create_thread"
 	
-    const url = hope || 'http://localhost:5000/create_thread';
-
+    const url = '/create_thread';
+	console.log("HII" + url)
     // The data we are going to send in our request
 	const title = postTitle;
 	const body = postBody;
@@ -72,7 +72,7 @@ class Mainpage extends React.Component {
     // Send the request with fetch()
     fetch(request)
         .then(function(res) {
-
+		  console.log(res)
           // Handle response we get from the API.
           // Usually check the error codes to see what happened.
           if (res.status === 200) {
@@ -122,16 +122,17 @@ class Mainpage extends React.Component {
 			imgRef: imageReference,
         }
 		});*/
-		const hope = encodeURI(process.env.API_PROXY_URL+":"+process.env.PORT+"/create_thread")
-		const url =  hope || 'http://localhost:5000/create_thread';
-		
+		const hope = "https://rhizones.herokuapp.com" + ":5000/create_thread"
+		const url =  '/create_thread';
+		console.log("HELLO" + url)
 		fetch(url)
         .then(function(res) {
+			console.log(res)
 			component.addThread(component.props.state.user.userName, postTitle, newPostBody, imageReference)
         }).then( data => {
 			// Hide add thread button
 			component.displayAddPost();
-			
+			console.log(data)
 		}).catch((error) => {
           console.log(error)
         });
