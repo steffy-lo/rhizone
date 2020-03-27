@@ -6,7 +6,7 @@
     "node": "10.x"
   },
   "scripts": {
-    "start": "cd the_rhizone/ && concurrently \"npm start\" \"node server\"",
+    "start": "cd the_rhizone/ && concurrently \"node server\" \"npm start\"",
     "build": "cd the_rhizone/ && npm install && npm run build"
 	},
   "cacheDirectories": [
