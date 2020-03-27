@@ -34,7 +34,7 @@ class PostEditor extends React.Component {
 				selectedFile: null,
 				postTitle: ''
 			});
-			if (this.props.thread.pid != -1) {
+			if (typeof this.props.thread != "undefined" && this.props.thread.pid != -1) {
 				this.setState({hidden: "hidden"})
 			}
 		} else {
