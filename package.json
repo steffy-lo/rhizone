@@ -6,7 +6,7 @@
     "node": "10.x"
   },
   "scripts": {
-    "start": "cd the_rhizone/ && node server.js",
+    "start": "cd the_rhizone/ && concurrently \"npm start\" \"node server\" ",
     "build": "cd the_rhizone/ && npm install && npm run build",
 	"heroku-postbuild": "cd the_rhizone && npm install && npm run build"
 	},
