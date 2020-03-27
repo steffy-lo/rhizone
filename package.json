@@ -6,7 +6,7 @@
     "node": "10.x"
   },
   "scripts": {
-    "start": "node the_rhizone\server",
+    "start": "node the_rhizone/server",
     "build": "cd the_rhizone/ && npm install && npm run build",
     "postinstall": "&& npm start"
   },
