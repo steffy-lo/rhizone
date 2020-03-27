@@ -49,7 +49,7 @@ app.use(session({
 
 /*** API Routes below ************************************/
 
-app.post('/undefined/create_thread', (req, res, next) => {
+app.post('/create_thread', (req, res, next) => {
 	const thread = new threadDataModel({
 		id: 0,
 		pid: req.body.pid,
