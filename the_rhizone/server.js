@@ -3,6 +3,8 @@
 
 const log = console.log
 
+const  PORT = process.env.PORT || 5000;
+
 const express = require('express')
 // starting the express server
 const app = express();

@@ -224,6 +224,7 @@ class Thread extends React.Component {
     let replies = thread.replies.map(reply => (<ul>
         <li className="media" id={this.state.threads[reply]}>
             <div className="media-body">
+				Post ID: #{this.state.threads[reply].id} <br/>
                 {this.state.threads[reply].content.body} <br/>
                 {this.loadImage(this.state.threads[reply])} <br/>
                 <div>
@@ -246,6 +247,7 @@ class Thread extends React.Component {
     return(
         <li className="media" id={thread._id}>
           <div className="media-body">
+			Post ID: #{thread.id}
             <div className ="text-body">{thread.content.body}</div>
             {this.loadImage(thread)} <br/>
             <div>

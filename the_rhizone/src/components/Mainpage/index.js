@@ -41,7 +41,7 @@ class Mainpage extends React.Component {
 	  // A function to send a POST request to add a new user
   addThread(author, postTitle, postBody, imgReference) {
     // the URL for the request
-    const url = 'http://localhost:5000/create_thread';
+    const url = '/create_thread';
 
     // The data we are going to send in our request
 	const title = postTitle;
@@ -122,7 +122,7 @@ class Mainpage extends React.Component {
         }
 		});*/
 		
-		const url = 'http://localhost:5000/create_thread';
+		const url = '/create_thread';
 		
 		fetch(url)
         .then(function(res) {
@@ -272,7 +272,7 @@ class Mainpage extends React.Component {
 		// Data.threadData.get(index).content.imgRef = "";
 		// Data.threadData.get(index).content.title = "[deleted]";
 		const threadToDel = this.state.threads[index]
-		const url = "http://localhost:5000/del_thread/?tid=" + threadToDel._id
+		const url = "/del_thread/?tid=" + threadToDel._id
 		// Create our request constructor with all the parameters we need
 		const request = new Request( url, {
 			method: 'delete',

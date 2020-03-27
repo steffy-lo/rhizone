@@ -28,7 +28,7 @@
     "simple-react-validator": "^1.4.5"
   },
   "scripts": {
-    "start": "node server.js && react-scripts start",
+    "start": "node serve",
     "build": "npm run build",
 	"install-client": "npm install" ,
 	"heroku-postbuild": "npm run install-client && npm run build",
