@@ -1,0 +1,1 @@
+web: cd the_rhizone && concurrently "npm start" "node server"
