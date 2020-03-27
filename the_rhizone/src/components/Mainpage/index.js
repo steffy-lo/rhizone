@@ -246,7 +246,7 @@ class Mainpage extends React.Component {
 	}
 
 	getThreads() {
-		const url = "http://localhost:5000/threads"
+		const url = "/threads"
 		// Create our request constructor with all the parameters we need
 		const request = new Request( url, {
 			method: 'get',
@@ -274,7 +274,7 @@ class Mainpage extends React.Component {
 		// Data.threadData.get(index).content.imgRef = "";
 		// Data.threadData.get(index).content.title = "[deleted]";
 		const threadToDel = this.state.threads[index]
-		const url = "http://localhost:5000/del_thread/?tid=" + threadToDel._id
+		const url = "/del_thread/?tid=" + threadToDel._id
 		// Create our request constructor with all the parameters we need
 		const request = new Request( url, {
 			method: 'delete',
