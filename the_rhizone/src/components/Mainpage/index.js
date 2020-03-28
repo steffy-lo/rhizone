@@ -43,7 +43,7 @@ class Mainpage extends React.Component {
     // the URL for the request
 	const hope = process.env.API_PROXY_URL+":"+process.env.PORT+"/create_thread"
 	
-    const url = '/create_thread';
+    const url = 'http://localhost:5000/create_thread';
 	console.log("HII" + url)
     // The data we are going to send in our request
 	const title = postTitle;
@@ -123,7 +123,7 @@ class Mainpage extends React.Component {
         }
 		});*/
 		const hope = "https://rhizones.herokuapp.com" + ":5000/create_thread"
-		const url =  '/create_thread';
+		const url =  'http://localhost:5000/create_thread';
 		console.log("HELLO" + url)
 		fetch(url)
         .then(function(res) {
