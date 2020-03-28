@@ -38,11 +38,9 @@ cleanser.setLocale();
 // Some words which are ok to say
 cleanser.removeWords("asshole");
 cleanser.removeWords("circlejerk");
-cleanser.removeWords("dildo");
 cleanser.removeWords("domination");
 cleanser.removeWords("erotic");
 cleanser.removeWords("eroticism");
-cleanser.removeWords("escort");
 cleanser.removeWords("fuck");
 cleanser.removeWords("fucking");
 cleanser.removeWords("sadism");
@@ -50,9 +48,7 @@ cleanser.removeWords("sex");
 cleanser.removeWords("shit");
 cleanser.removeWords("suck");
 cleanser.removeWords("sucks");
-cleanser.removeWords("twink");
 cleanser.removeWords("voyeur");
-cleanser.removeWords("vagina");
 
 var grawlix = require('grawlix');
 grawlix.setDefaults({
