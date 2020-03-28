@@ -39,7 +39,7 @@ class Thread extends React.Component {
 
   getMainThread() {
       const component = this;
-    const url = "http://localhost:5000/threads/" + this.state.threadId;
+    const url = "/threads/" + this.state.threadId;
 
     // Send the request with fetch()
     fetch(url)
@@ -65,7 +65,7 @@ class Thread extends React.Component {
   }
 
   deleteThread(threadToDel) {
-    const url = "http://localhost:5000/del_thread/?tid=" + threadToDel._id
+    const url = "/del_thread/?tid=" + threadToDel._id
     // Create our request constructor with all the parameters we need
     const request = new Request( url, {
       method: 'delete',
@@ -151,7 +151,7 @@ class Thread extends React.Component {
   getReplies(thread) {
       const component = this;
       if (thread.replies.toString() === '') return;
-      const url = "http://localhost:5000/replies/?ids=" + thread.replies.toString();
+      const url = "/replies/?ids=" + thread.replies.toString();
       // Create our request constructor with all the parameters we need
       const request = new Request(url, {
           method: 'get',
@@ -271,7 +271,7 @@ class Thread extends React.Component {
           reply: reply._id
       }
 
-    const url = 'http://localhost:5000/threads';
+    const url = '/threads';
 
     // Create our request constructor with all the parameters we need
     const request = new Request(url, {
@@ -326,7 +326,7 @@ class Thread extends React.Component {
     };
 
       // the URL for the request
-      const url = 'http://localhost:5000/create_thread';
+      const url = '/create_thread';
 
       // Create our request constructor with all the parameters we need
       const request = new Request(url, {
