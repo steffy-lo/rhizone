@@ -245,7 +245,7 @@ class Mainpage extends React.Component {
 	}
 
 	getThreads() {
-		const url = "http://localhost:5000/threads"
+		const url = "/threads"
 		// Create our request constructor with all the parameters we need
 		const request = new Request( url, {
 			method: 'get',
