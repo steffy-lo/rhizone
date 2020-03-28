@@ -422,12 +422,18 @@ app.patch('/users/privileges/:username', (req, res) => {
 	})
 })
 
-// Serve the build
-app.use(express.static(__dirname + "/the_rhizone/build"));
+//Serving?
+
+app.use(express.static(__dirname + "/build"));
+
+// All routes other than above will go to index.html
+app.get("*", (req, res) => {
+    res.sendFile(__dirname + "/build/index.html");
+});
 
 /*************************************************/
 // Express server listening...
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 3000
 app.listen(port, () => {
     log(`Listening on port ${port}...`)
 })
