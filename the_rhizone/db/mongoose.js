@@ -12,8 +12,5 @@ mongoose.connect(process.env.MONGODB_URI || mongoURI,
     .then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err));
 
-if(process.env.NODE_ENV === "production"){
-	app.use(express.static('build'));
-}
 	
 module.exports = { mongoose }  // Export the active connection.
