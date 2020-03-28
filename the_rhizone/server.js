@@ -35,13 +35,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 var cleanser = require('profanity-cleanser');
 cleanser.setLocale(); 
-// Some words which are ok to say
+// Some words which are ok to say--we nee
+cleanser.removeWords("ass");
 cleanser.removeWords("asshole");
+cleanser.removeWords("bastard");
 cleanser.removeWords("circlejerk");
 cleanser.removeWords("domination");
 cleanser.removeWords("erotic");
 cleanser.removeWords("eroticism");
+cleanser.removeWords("escort");
 cleanser.removeWords("fuck");
+cleanser.removeWords("motherfucker");
+cleanser.removeWords("dick");
 cleanser.removeWords("fucking");
 cleanser.removeWords("sadism");
 cleanser.removeWords("sex");
@@ -65,14 +70,15 @@ grawlix.setDefaults({
 		  var str = '';
 		  for (var i=0; i<len; i++) {
 			if (i % 2 > 0) {
-			  str += 'qt';
+			  str += 'uwu ';
 			} else {
-			  str += 'pi'
+			  str += ':3'
 			}
 		  }
 		  return str;
 		}
-	  }
+	  },
+	  allowed: [ "ass", "asshole", 'bastard', "dick", "dumbass", "fuck", "motherfuck", "motherfucker", "piss", "shit",]
   // other options...
 });
 
@@ -100,7 +106,7 @@ app.post('/create_thread', (req, res, next) => {
 	})
 	threadDataModel.estimatedDocumentCount()
 		.then(count => {
-			thread.content.title = grawlix(cleanser.replace(thread.content.body, 'word', 'QT3.14'));
+			thread.content.title = grawlix(cleanser.replace(thread.content.title, 'word', 'QT3.14'));
 			thread.content.body = grawlix(cleanser.replace(thread.content.body, 'word', 'QT3.14'));
 			thread.id = count + 1;
 		}).then(data =>{

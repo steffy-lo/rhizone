@@ -26,8 +26,8 @@ class PostEditor extends React.Component {
 	// To create a post, we check if it is a valid post first (i.e if it is over 150 characters)
 	// Then we set the states the the post's body, title and selected image
 	createPost() {
-		 if (this.validator.fieldValid('NewPostBody')) {
-			 this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle, this.props.thread);
+		 if (this.validator.fieldValid('NewPostBody') && this.validator.fieldValid('postTitle')) {
+				 this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle, this.props.thread);
 			this.setState({
 				newPostBody: '',
 				selectedFile: null,
@@ -67,12 +67,14 @@ class PostEditor extends React.Component {
 		} else {
 			hideTitle = "form-control";
 		}
-
+		
+		
 		return (
 		<div className={this.state.hidden}>
 			<div className="panel panel-default post-editor">
 				<div className="panel-body form-group">
 					 <input type="text" className={hideTitle} value={this.state.postTitle} onChange={this.handlePostEditorInputTitleChange} placeholder="Thread Title"/>
+					 {this.validator.message('postTitle', this.state.postTitle, 'required|max:100')}
 					<textarea id ='const'className = "form-control" value={this.state.newPostBody} onChange={this.handlePostEditorInputChange} placeholder="Type your thoughts here..."/>
 					 {this.validator.message('NewPostBody', this.state.newPostBody, 'required|min:150|max:4000')}
 					 <button className = "btn btn-success post-editor-button" onClick={this.createPost}>Post</button>

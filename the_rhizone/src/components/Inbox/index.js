@@ -11,8 +11,8 @@ const actType = {
     OLD: 'old',
     PAST: 'past'
 }
-const url = 'http://localhost:5000/inboxes'
-const userUrl = 'http://localhost:5000/users'
+const url = '/inboxes'
+const userUrl = '/users'
 // const userUrl = 'http://localhost:5000/threads'
 
 class Inbox extends React.Component {

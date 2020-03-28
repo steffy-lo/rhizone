@@ -21,7 +21,7 @@ class Login extends React.Component {
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
 
-    const url = 'http://localhost:5000/users/login';
+    const url = '/users/login';
 
     // The data we are going to send in our request
     let data = {

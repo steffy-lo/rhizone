@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const threadContentSchema = new mongoose.Schema({
     title: {
         type: String,
-        default: ""
+        default: "",
     },
     body: {
         type: String,
