@@ -422,6 +422,8 @@ app.patch('/users/privileges/:username', (req, res) => {
 	})
 })
 
+// Serve the build
+app.use(express.static(__dirname + "/the_rhizone/build"));
 
 /*************************************************/
 // Express server listening...

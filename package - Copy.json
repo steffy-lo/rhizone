@@ -6,11 +6,9 @@
     "node": "10.x"
   },
   "scripts": {
-        "setup": "cd the_rhizone && npm install && cd ..",
-        "build-run": "cd the_rhizone && npm run build && node server.js",
-        "start": "node server.js",
-        "heroku-postbuild": "cd the_rhizone && npm install && npm run build",
-        "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "cd the_rhizone/ && concurrently \"npm start\" \"node server\" ",
+    "build": "cd the_rhizone/ && npm install && npm run build",
+	"heroku-postbuild": "cd the_rhizone && npm install && npm run build"
 	},
   "cacheDirectories": [
     "node_modules",
