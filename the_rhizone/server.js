@@ -33,8 +33,52 @@ app.use(cors())
 const session = require('express-session')
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var cleanser = require('profanity-cleanser');
+cleanser.setLocale(); 
+// Some words which are ok to say
+cleanser.removeWords("asshole");
+cleanser.removeWords("circlejerk");
+cleanser.removeWords("dildo");
+cleanser.removeWords("domination");
+cleanser.removeWords("erotic");
+cleanser.removeWords("eroticism");
+cleanser.removeWords("escort");
+cleanser.removeWords("fuck");
+cleanser.removeWords("fucking");
+cleanser.removeWords("sadism");
+cleanser.removeWords("sex");
+cleanser.removeWords("shit");
+cleanser.removeWords("suck");
+cleanser.removeWords("sucks");
+cleanser.removeWords("twink");
+cleanser.removeWords("voyeur");
+cleanser.removeWords("vagina");
 
-
+var grawlix = require('grawlix');
+grawlix.setDefaults({
+  plugins: [
+    {
+      plugin: require('grawlix-racism'),
+      options: {
+		  style: false
+      }
+    }],
+	   style: {
+		name: 'custom-style',
+		randomChars: function(len) {
+		  var str = '';
+		  for (var i=0; i<len; i++) {
+			if (i % 2 > 0) {
+			  str += 'qt';
+			} else {
+			  str += 'pi'
+			}
+		  }
+		  return str;
+		}
+	  }
+  // other options...
+});
 
 /*********************************************************/
 app.use(session({
@@ -49,7 +93,7 @@ app.use(session({
 
 /*** API Routes below ************************************/
 
-app.post('/create_thread', (req, res, next) => {
+app.post('/create_thread', (req, res, next) => {	
 	const thread = new threadDataModel({
 		id: 0,
 		pid: req.body.pid,
@@ -58,9 +102,10 @@ app.post('/create_thread', (req, res, next) => {
 		replies: [],
 		content: req.body.content
 	})
-
 	threadDataModel.estimatedDocumentCount()
 		.then(count => {
+			thread.content.title = grawlix(cleanser.replace(thread.content.body, 'word', 'QT3.14'));
+			thread.content.body = grawlix(cleanser.replace(thread.content.body, 'word', 'QT3.14'));
 			thread.id = count + 1;
 		}).then(data =>{
 		thread.save().then(result => {

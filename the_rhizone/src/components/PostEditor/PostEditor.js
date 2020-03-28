@@ -1,7 +1,6 @@
 import React, {} from 'react';
-import './PostEditor.css'
+import './PostEditor.css';
 import SimpleReactValidator from 'simple-react-validator';
-
 
 class PostEditor extends React.Component {
 
@@ -68,6 +67,7 @@ class PostEditor extends React.Component {
 		} else {
 			hideTitle = "form-control";
 		}
+
 		return (
 		<div className={this.state.hidden}>
 			<div className="panel panel-default post-editor">
@@ -75,7 +75,7 @@ class PostEditor extends React.Component {
 					 <input type="text" className={hideTitle} value={this.state.postTitle} onChange={this.handlePostEditorInputTitleChange} placeholder="Thread Title"/>
 					<textarea id ='const'className = "form-control" value={this.state.newPostBody} onChange={this.handlePostEditorInputChange} placeholder="Type your thoughts here..."/>
 					 {this.validator.message('NewPostBody', this.state.newPostBody, 'required|min:150|max:4000')}
-					<button className = "btn btn-success post-editor-button" onClick={this.createPost}>Post</button>
+					 <button className = "btn btn-success post-editor-button" onClick={this.createPost}>Post</button>
 					<input type="file" name="file" className = "center-block" onChange={this.fileChangedHandler} />
 				</div>
 			</div>

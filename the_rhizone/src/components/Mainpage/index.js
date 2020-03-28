@@ -4,7 +4,6 @@ import PostEditor from './../PostEditor/PostEditor';
 import { Link } from 'react-router-dom';
 import * as Data from './../../data/hardcoded.js';
 import Button from "@material-ui/core/Button";
- 
 //const { threadDataModel } = require('./models/threadDataModel')
 
 class Mainpage extends React.Component {
@@ -274,7 +273,7 @@ class Mainpage extends React.Component {
 		// Data.threadData.get(index).content.imgRef = "";
 		// Data.threadData.get(index).content.title = "[deleted]";
 		const threadToDel = this.state.threads[index]
-		const url = "/del_thread/?tid=" + threadToDel._id
+		const url = "http://localhost:5000/del_thread/?tid=" + threadToDel._id
 		// Create our request constructor with all the parameters we need
 		const request = new Request( url, {
 			method: 'delete',
