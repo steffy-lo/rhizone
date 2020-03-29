@@ -13,13 +13,13 @@ const actType = {
 }
 const url = '/inboxes'
 const userUrl = '/users'
-// const userUrl = 'http://localhost:5000/threads'
+const threadUrl = '/threads'
 
 class Inbox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
+            userName: "",
             newActivity: [],
             oldActivity: [],
             pastPosts:[],
@@ -31,7 +31,7 @@ class Inbox extends React.Component {
         const customUrl = url +  '/?userName=' + user
         // Create our request constructor with all the parameters we need
         const request = new Request( customUrl, {
-            method: 'get',
+            method: 'GET',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ class Inbox extends React.Component {
     setStateWithQueryData(queryData) {
         log(queryData)
         this.setState({
-            username: queryData.userName,
+            userName: queryData.userName,
             newActivity: queryData.newActivity,
             oldActivity: queryData.oldActivity,
             pastPosts: queryData.pastPosts,
@@ -69,14 +69,16 @@ class Inbox extends React.Component {
 
     componentWillMount() {
         if (ls.get('loggedIn') === true) {
-            const user = ls.get('user').username;
+            //const user = ls.get('user').username;
+            const user = this.props.state.user.userName;
             this.getInbox(user);
             this.setState({
+                userName: user,
                 loggedIn: ls.get('loggedIn')
             })
         } else {
             this.setState({
-                username: null,
+                userName: null,
                 loggedIn: ls.get('loggedIn')
             });
         }
@@ -112,7 +114,7 @@ class Inbox extends React.Component {
     addInbox() {
         // Create our request constructor with all the parameters we need
         let data = {
-            username: this.state.username,
+            userName: this.state.userName,
             newActivity: this.state.newActivity,
             oldActivity: this.state.oldActivity,
             pastPosts: this.state.pastPosts
@@ -168,7 +170,7 @@ class Inbox extends React.Component {
             pastPosts: this.state.pastPosts
         }
         this.setState(newStates);
-        this.updateInbox(this.state.username);
+        this.updateInbox(this.state.userName);
     }
 
     removeThread(activity, idx, type){
@@ -191,7 +193,7 @@ class Inbox extends React.Component {
             default:
                 break;
         }
-        this.updateInbox(this.state.username);
+        this.updateInbox(this.state.userName);
     }
 
     setPostAuthor(user, idx, aType, author) {
@@ -234,6 +236,43 @@ class Inbox extends React.Component {
         })
     }
 
+    getThread(activity, idx, aType) {
+            const customUrl = threadUrl + '/' +  activity.activityID;
+            // Create our request constructor with all the parameters we need
+            const request = new Request( customUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            const component = this;
+            const componentUser = this.state.userName;
+
+            fetch(request)
+            .then( res => {
+                if (res.status === 200) {
+                    log('thread found')
+                    return res.json();
+                } else {
+                    log('Failed to get thread data with hash:' + activity.activityID);
+                    return null;
+                }
+            }).then (
+                res => {
+                if (res === null) { return; }
+                const queryString = 'div[class="activity"][aType="' + aType + '"]';
+                const targetAct = document.querySelectorAll(queryString)[idx];
+                if (targetAct === null){
+                    return;
+                }
+                const targetTitle = targetAct.querySelector('.acttitle');
+                targetTitle.innerHTML = res.content.body;
+                component.setPostAuthor(componentUser, idx, aType, res.author);
+            })
+        }
+
     /*
      * Render one activity in the list with specs actContent
      * parameters:
@@ -242,26 +281,21 @@ class Inbox extends React.Component {
      *      aType - activity type, NEW or OLD
     */
     renderOneActivity(activity, idx, aType) {
-        const refContent = Data.threadData.get(activity);
-        if (!refContent)
-        {
-            console.log("activity does not exist! Activity: " + activity);
-            return;
-        }
+        //const refContent = Data.threadData.get(activity);
 
         const actName = "Anonymous";
-        // back-end set author name if admin
-        this.setPostAuthor(this.state.username, idx, aType, refContent.author);
+        // back-end set content
+        this.getThread(activity, idx, aType);
 
         const msg = (aType === actType.PAST)? " created thread: " : " replies to your thread:";
 
         return (
             <div className='activity' key={idx} atype={aType}>
-                <Link className='activity-link' to={"./../thread#"+activity}
+                <Link className='activity-link' to={"./../thread#"+activity.rootID}
                     onClick={ () => this.read(idx,aType)}>
                     <p>
                     <span className='actauthor'> {actName} </span> {msg}
-                    <span className='acttitle'> {refContent.content.body} </span>.
+                    <span className='acttitle'></span>.
                     </p>
                 </Link>
                 <button className='pull-right' onClick={() => this.removeThread(activity,idx,aType)}> delete </button>
@@ -294,7 +328,7 @@ class Inbox extends React.Component {
                     </div>
                     <div id='user'>
                         <Link className='user-link' to={"./../Settings"}>
-                        <span className='username'> {this.state.username} </span>
+                        <span className='username'> {this.state.userName} </span>
                         </Link>
                     </div>
                     <div id="newactivity">

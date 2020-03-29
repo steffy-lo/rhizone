@@ -1,6 +1,17 @@
 	
 const mongoose = require('mongoose');
 
+const activitySchema = new mongoose.Schema({
+    rootID: {
+        type: String,
+        required: true
+    },
+    activityID: {
+        type: String,
+        required: true
+    }
+});
+
 const inboxDataModel = mongoose.model('Inbox', new mongoose.Schema({
     userName: {
         type: String,
@@ -8,15 +19,9 @@ const inboxDataModel = mongoose.model('Inbox', new mongoose.Schema({
     	minlegth: 1,
     	trim: true
     },
-    newActivity: [{
-        type: Number
-    }],
-    oldActivity: [{
-        type: Number
-    }],
-    pastPosts: [{
-        type: Number
-    }]
-}))
+    newActivity: [activitySchema],
+    oldActivity: [activitySchema],
+    pastPosts: [activitySchema]
+}));
 
 module.exports = { inboxDataModel }
