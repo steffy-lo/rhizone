@@ -247,7 +247,7 @@ class Thread extends React.Component {
     return(
         <li className="media" id={thread.id}>
           <div className="media-body">
-			Post ID: #{thread.id}</br>
+			Post ID: #{thread.id}<br/>
             <div className ="text-body">{thread.content.body}</div>
             {this.loadImage(thread)} <br/>
             <div>
