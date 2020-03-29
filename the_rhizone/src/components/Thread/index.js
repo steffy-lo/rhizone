@@ -222,9 +222,9 @@ class Thread extends React.Component {
         adminButton = <button className="deleteBtn" onClick={() => this.deleteThread(thread)}>Delete</button>;
     }
     let replies = thread.replies.map(reply => (<ul>
-        <li className="media" id={this.state.threads[reply]}>
+        <li className="media" id={this.state.threads[reply].id}>
             <div className="media-body">
-				Post ID: #{this.state.threads[reply].id} <br/>
+				<a href={"#"+this.state.threads[reply].id}>Post ID: #{this.state.threads[reply].id}</a><br/>
                 {this.state.threads[reply].content.body} <br/>
                 {this.loadImage(this.state.threads[reply])} <br/>
                 <div>
@@ -245,9 +245,9 @@ class Thread extends React.Component {
 
     console.log(replies);
     return(
-        <li className="media" id={thread._id}>
+        <li className="media" id={thread.id}>
           <div className="media-body">
-			Post ID: #{thread.id}
+			<a href={"#"+thread.id}>Post ID: #{thread.id}</a>
             <div className ="text-body">{thread.content.body}</div>
             {this.loadImage(thread)} <br/>
             <div>
@@ -261,7 +261,7 @@ class Thread extends React.Component {
           </div>
         </li>
     );
-  }
+  }  
 
   addReplyToThread(thread, reply) {
       const component = this;

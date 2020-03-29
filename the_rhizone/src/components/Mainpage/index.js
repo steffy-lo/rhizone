@@ -73,7 +73,7 @@ class Mainpage extends React.Component {
           // Handle response we get from the API.
           // Usually check the error codes to see what happened.
           if (res.status === 200) {
-            window.location.reload(true);
+              window.location.reload(true);
           } else {
 			  console.log(res);
           }

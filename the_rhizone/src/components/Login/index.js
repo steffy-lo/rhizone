@@ -63,7 +63,7 @@ class Login extends React.Component {
   // A function to send a POST request to add a new user
   addUser(username, password) {
     // the URL for the request
-    const url = 'http://localhost:5000/add_user';
+    const url = '/add_user';
 
     // The data we are going to send in our request
     let data = {
@@ -113,7 +113,7 @@ class Login extends React.Component {
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
     const form = document.querySelector('.form');
-    const url = 'http://localhost:5000/users/?userName=' + username
+    const url = '/users/?userName=' + username
 
     fetch(url)
         .then(function(res) {
