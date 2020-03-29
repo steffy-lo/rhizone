@@ -34,7 +34,7 @@ class Settings extends React.Component {
     const del = document.querySelector('.deleteAccount');
     let msg = document.createElement('p');
     msg.className = "msg";
-    const url = 'http://localhost:5000/users/delete/' + username;
+    const url = '/users/delete/' + username;
 
     const request = new Request(url, {
       method: 'DELETE',
@@ -66,7 +66,7 @@ class Settings extends React.Component {
 
   addUser(username, password) {
     // the URL for the request
-    const url = 'http://localhost:5000/add_user';
+    const url = '/add_user';
 
     // The data we are going to send in our request
     let data = {
@@ -122,7 +122,7 @@ class Settings extends React.Component {
     const create = document.querySelector('.createAccount');
     let msg = document.createElement('p');
     msg.className = "msg";
-    const url = 'http://localhost:5000/users/?userName=' + username
+    const url = '/users/?userName=' + username
 
     fetch(url)
         .then(function(res) {
@@ -144,7 +144,7 @@ class Settings extends React.Component {
   }
 
   updatePassword(password) {
-    const url = 'http://localhost:5000/users';
+    const url = '/users';
 
     let data = {
       username: this.state.user.userName,
@@ -188,7 +188,7 @@ class Settings extends React.Component {
     const updateMsg = document.createElement('p');
     updateMsg.className = "update";
     const form = document.querySelector('.form');
-    const url = 'http://localhost:5000/users/login';
+    const url = '/users/login';
 
     // The data we are going to send in our request
     let data = {
@@ -233,7 +233,7 @@ class Settings extends React.Component {
     const givingRightsMsg = document.createElement('p');
     givingRightsMsg.className = 'msg';
 
-    const url = 'http://localhost:5000/users/privileges/' + user;
+    const url = '/users/privileges/' + user;
 
     const request = new Request(url, {
       method: 'PATCH',
