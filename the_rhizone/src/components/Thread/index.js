@@ -302,6 +302,73 @@ class Thread extends React.Component {
 
   }
 
+  addInbox(url, user, rootHash, replyHash){
+    const data = {
+        userName: user,
+        pastPosts: {
+            rootID: rootHash,
+            activityID: replyHash
+        },
+        newActivity: {
+            rootID: rootHash,
+            activityID: replyHash
+        }
+    }
+
+    const request = new Request(url, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    // Send the request with fetch()
+    fetch(request)
+        .then(function(res) {
+            if (res.status === 200) {
+                console.log('inbox update for user:' + user);
+                return res.json();
+            } else {
+                console.log('Failed to update user inbox:' + user);
+                return null;
+            }
+        }).catch((error) => {
+      console.log(error)
+    });
+  }
+
+  getThreadAndAddToInbox(user, rootHash, replyHash) {
+    const customUrl = '/threads/' +  rootHash;
+    // Create our request constructor with all the parameters we need
+    const request = new Request( customUrl, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+             'Content-Type': 'application/json'
+        },
+    });
+
+    const component = this;
+
+    fetch(request)
+    .then( res => {
+        if (res.status === 200) {
+            console.log('thread found')
+            return res.json();
+        } else {
+            console.log('Failed to get thread data with hash:' + rootHash);
+            return null;
+        }
+        }).then (
+            res => {
+            if (res == null) { return; }
+            if (res.author === user) {return;}
+            component.addInbox('/inboxes/add_newActivity', res.author, rootHash, replyHash)
+        })
+    }
+
   addReply(newPostBody, newImage, postTitle, thread) {
     console.log("parent thread", thread);
     this.setState({hidden: "hidden"})
@@ -345,6 +412,8 @@ class Thread extends React.Component {
         }).then (res => {
           console.log(res);
           component.addReplyToThread(thread, res);
+          component.addInbox('/inboxes/add_pastPosts', reply.author, reply.pid, res._id);
+          component.getThreadAndAddToInbox(reply.author, reply.pid, res._id);
         })
           .catch((error) => {
             console.log(error)

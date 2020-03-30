@@ -66,6 +66,8 @@ class Mainpage extends React.Component {
 	
 	console.log(request)
 
+	const component = this;
+
     // Send the request with fetch()
     fetch(request)
         .then(function(res) {
@@ -73,13 +75,53 @@ class Mainpage extends React.Component {
           // Handle response we get from the API.
           // Usually check the error codes to see what happened.
           if (res.status === 200) {
-              window.location.reload(true);
+              return res.json();
           } else {
 			  console.log(res);
+			  return null;
           }
+        }).then((res) => {
+            if (res == null) { return; }
+            component.addPastPost(author, res._id);
+            window.location.reload(true);
         }).catch((error) => {
           console.log(error)
         })
+  }
+
+  addPastPost(user, hash){
+    const url = '/inboxes/add_pastPosts'
+
+    const data = {
+        userName: user,
+        pastPosts: {
+            rootID: hash,
+            activityID: hash
+        }
+    }
+
+    const request = new Request(url, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    // Send the request with fetch()
+    fetch(request)
+        .then(function(res) {
+            if (res.status === 200) {
+                console.log('past Post added')
+                return res.json();
+            } else {
+                console.log('Failed to add past Post')
+                return null;
+            }
+        }).catch((error) => {
+      console.log(error)
+    });
   }
 
     // Function to add posts (i.e threads)
@@ -263,6 +305,39 @@ class Mainpage extends React.Component {
 						() => this.setState({loaded: true})));
 			})
 	}
+
+  deletePastPost(user, hash){
+    const url = '/inboxes/delete_pastPosts'
+
+    const data = {
+        userName: user,
+        pastPosts: hash
+    }
+
+    const request = new Request(url, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+    });
+
+    // Send the request with fetch()
+    fetch(request)
+        .then(function(res) {
+            if (res.status === 200) {
+                console.log('past Post deleted')
+                return res.json();
+            } else {
+                console.log('Failed to delete past Post')
+                return null;
+            }
+        }).catch((error) => {
+      console.log(error)
+    });
+	}
+
 	// Actually deletes the post, only the admin can access this function
 	deleteReply(index) {
 		// Data.threadData.get(index).content.body = "[deleted]";
@@ -279,21 +354,25 @@ class Mainpage extends React.Component {
 			},
 		});
 		console.log(this.state.threadDisplay);
+		const component = this;
 		// Send the request with fetch()
 		fetch(request)
 			.then(res => {
 				// Handle response we get from the API.
 				if (res.status === 200) {
-					console.log('thread deleted')
-					this.setState({threadDisplay: this.getThreadDisplay()}, () => {
-						window.location.reload(true)
-					})
-
+					return res.json();
 				} else {
 					console.log('Failed to delete thread with index:' + index)
+					return null;
 				}
-			})
-			.catch((error) => {
+			}).then(res => {
+			    if (res == null) { return; }
+			    this.deletePastPost(res.author, res._id);
+                console.log('thread deleted')
+				this.setState({threadDisplay: this.getThreadDisplay()}, () => {
+				    window.location.reload(true)
+				})
+			}).catch((error) => {
 			console.log(error)
 		})
 	}

@@ -172,22 +172,58 @@ class Inbox extends React.Component {
         this.updateInbox();
     }
 
+    removeActivity(hash, delUrl){
+        const data = {
+            userName: this.state.userName,
+            pastPosts: hash
+        }
+
+        const request = new Request(delUrl, {
+            method: 'PATCH',
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        // Send the request with fetch()
+        fetch(request)
+        .then(function(res) {
+            if (res.status === 200) {
+                console.log('activity deleted')
+                return res.json();
+            } else {
+                console.log('Failed to delete activity')
+                return null;
+            }
+        }).catch((error) => {
+            console.log(error)
+        });
+	}
+
     removeThread(activity, idx, type){
         switch (type){
-            case actType.NEW:
+            case actType.NEW:{
                 const n1 = this.state.newActivity;
-                n1.splice(idx,1);
+                const targetAct = n1.splice(idx,1);
+                this.removeActivity(targetAct.activityID, url + '/delete_newActivity');
                 this.setState({newActivity:n1});
+                }
                 break;
-            case actType.OLD:
+            case actType.OLD:{
                 const o1 = this.state.oldActivity;
-                o1.splice(idx,1);
+                const targetAct = o1.splice(idx,1);
+                this.removeActivity(targetAct.activityID, url + '/delete_oldActivity');
                 this.setState({oldActivity:o1});
+                }
                 break;
-            case actType.PAST:
+            case actType.PAST:{
                 const p1 = this.state.pastPosts;
-                p1.splice(idx,1);
+                const targetAct = p1.splice(idx,1);
+                this.removeActivity(targetAct.activityID, url + '/delete_pastPosts');
                 this.setState({pastPosts:p1});
+                }
                 break;
             default:
                 break;
@@ -282,11 +318,11 @@ class Inbox extends React.Component {
     renderOneActivity(activity, idx, aType) {
         //const refContent = Data.threadData.get(activity);
 
-        const actName = "Anonymous";
+        const actName = (aType === actType.PAST)? "" : "Anonymous";
         // back-end set content
         this.getThread(activity, idx, aType);
 
-        const msg = (aType === actType.PAST)? " created thread: " : " replies to your thread:";
+        const msg = (aType === actType.PAST)? "Posted: " : " replies to your thread:";
 
         return (
             <div className='activity' key={idx} atype={aType}>
@@ -294,7 +330,7 @@ class Inbox extends React.Component {
                     onClick={ () => this.read(idx,aType)}>
                     <p>
                     <span className='actauthor'> {actName} </span> {msg}
-                    <span className='acttitle'></span>.
+                    <span className='acttitle'>Post Content Deleted</span>.
                     </p>
                 </Link>
                 <button className='pull-right' onClick={() => this.removeThread(activity,idx,aType)}> delete </button>

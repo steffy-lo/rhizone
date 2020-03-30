@@ -60,6 +60,41 @@ class Login extends React.Component {
         });
   }
 
+  addInbox(user){
+    console.log("adding inbox data");
+    const url = '/inboxes';
+    const data = {
+        userName: user,
+        newActivity: new Array(),
+        oldActivity: new Array(),
+        pastPosts: new Array()
+    }
+    const request = new Request( url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+    });
+
+    // Send the request with fetch()
+    fetch(request)
+    .then( res => {
+        // Handle response we get from the API.
+        if (res.status === 200) {
+            // user found
+            console.log('user inbox added')
+            return res.json();
+        } else {
+            console.log('Failed to add user inbox')
+            return null;
+        }
+    }).catch((error) => {
+        console.log(error)
+    })
+  }
+
   // A function to send a POST request to add a new user
   addUser(username, password) {
     // the URL for the request
@@ -82,6 +117,8 @@ class Login extends React.Component {
       },
     });
 
+    const component = this;
+
     // Send the request with fetch()
     fetch(request)
         .then(function(res) {
@@ -92,6 +129,7 @@ class Login extends React.Component {
           const createMsg = document.createElement('p');
           createMsg.className = 'createMsg';
           if (res.status === 200) {
+            component.addInbox(data.username);
             createMsg.appendChild(document.createTextNode('Account successfully created!'));
             createMsg.style.color = "green";
             form.appendChild(createMsg);

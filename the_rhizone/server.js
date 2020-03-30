@@ -349,6 +349,81 @@ app.post('/inboxes', (req, res) => {
 	})
 })
 
+app.patch('/inboxes/add_newActivity', (req, res) => {
+    const user = req.body.userName;
+    const newA = req.body.newActivity;
+
+    inboxDataModel.findOneAndUpdate({userName: user}, {$push: {newActivity: newA}}, {new: true, omitUndefined: true}).then((inbox) => {
+		if (!inbox) {
+			res.status(404).send()
+		} else {
+			res.send(inbox)
+		}
+	}).catch((error) => {
+		res.status(400).send() // bad request
+	})
+})
+
+app.patch('/inboxes/delete_newActivity', (req, res) => {
+    const user = req.body.userName;
+    const newA = req.body.newActivity;
+
+    inboxDataModel.findOneAndUpdate({userName: user}, {$pull: {newActivity: {activityID: newA}}}, {new: true}).then((inbox) => {
+		if (!inbox) {
+			res.status(404).send()
+		} else {
+			res.send(inbox)
+		}
+	}).catch((error) => {
+		res.status(400).send() // bad request
+	})
+})
+
+app.patch('/inboxes/add_pastPosts', (req, res) => {
+    const user = req.body.userName;
+    const pastP = req.body.pastPosts;
+
+    inboxDataModel.findOneAndUpdate({userName: user}, {$push: {pastPosts: pastP}}, {new: true, omitUndefined: true}).then((inbox) => {
+		if (!inbox) {
+			res.status(404).send()
+		} else {
+			res.send(inbox)
+		}
+	}).catch((error) => {
+		res.status(400).send() // bad request
+	})
+})
+
+app.patch('/inboxes/delete_pastPosts', (req, res) => {
+    const user = req.body.userName;
+    const pastP = req.body.pastPosts;
+
+    inboxDataModel.findOneAndUpdate({userName: user}, {$pull: {pastPosts: {activityID:pastP}}}, {new: true}).then((inbox) => {
+		if (!inbox) {
+			res.status(404).send()
+		} else {
+			res.send(inbox)
+		}
+	}).catch((error) => {
+		res.status(400).send() // bad request
+	})
+})
+
+app.patch('/inboxes/delete_oldActivity', (req, res) => {
+    const user = req.body.userName;
+    const oldA = req.body.oldActivity;
+
+    inboxDataModel.findOneAndUpdate({userName: user}, {$pull: {oldActivity: {activityID:oldA}}}, {new: true}).then((inbox) => {
+		if (!inbox) {
+			res.status(404).send()
+		} else {
+			res.send(inbox)
+		}
+	}).catch((error) => {
+		res.status(400).send() // bad request
+	})
+})
+
 // a GET route to get a resource
 // app.get()
 app.get('/inboxes', (req, res) => {
