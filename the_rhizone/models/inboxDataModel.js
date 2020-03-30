@@ -19,9 +19,15 @@ const inboxDataModel = mongoose.model('Inbox', new mongoose.Schema({
     	minlegth: 1,
     	trim: true
     },
-    newActivity: [activitySchema],
-    oldActivity: [activitySchema],
-    pastPosts: [activitySchema]
+    newActivity: {
+        type: Array
+    },
+    oldActivity: {
+        type: Array
+    },
+    pastPosts: {
+        type: Array
+    }
 }));
 
 module.exports = { inboxDataModel }

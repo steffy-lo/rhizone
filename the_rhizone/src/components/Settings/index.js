@@ -29,6 +29,34 @@ class Settings extends React.Component {
     }
   }
 
+    deleteInbox(user) {
+        console.log('deleting inbox data');
+        const customUrl = '/inboxes/?userName=' + user
+        // Create our request constructor with all the parameters we need
+        const request = new Request( customUrl, {
+            method: 'delete',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        // Send the request with fetch()
+        fetch(request)
+        .then( res => {
+            // Handle response we get from the API.
+            if (res.status === 200) {
+                // user found
+                console.log('user inbox deleted')
+            } else {
+                console.log('Failed to delete inbox data with userName:' + user)
+                return null;
+            }
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
   deleteAccount(e) {
     const username = document.querySelector('#usernameDel').value;
     const del = document.querySelector('.deleteAccount');
@@ -44,12 +72,15 @@ class Settings extends React.Component {
       },
     });
 
+    const component = this;
+
     fetch(request)
         .then(res => {
           if (del.lastChild.className === "msg") {
             del.removeChild(del.lastChild)
           }
           if (res.status === 200) {
+            component.deleteInbox(username);
             msg.appendChild(document.createTextNode("Account has been successfully deleted!"));
             msg.style.color = "green";
             del.appendChild(msg);
@@ -61,6 +92,42 @@ class Settings extends React.Component {
         }).catch((error) => {
       console.log(error)
     });
+
+  }
+
+  addInbox(user){
+    console.log("adding inbox data");
+    const url = '/inboxes';
+    const data = {
+        userName: user,
+        newActivity: new Array(),
+        oldActivity: new Array(),
+        pastPosts: new Array()
+    }
+    const request = new Request( url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+    });
+
+    // Send the request with fetch()
+    fetch(request)
+    .then( res => {
+        // Handle response we get from the API.
+        if (res.status === 200) {
+            // user found
+            console.log('user inbox added')
+            return res.json();
+        } else {
+            console.log('Failed to add user inbox')
+            return null;
+        }
+    }).catch((error) => {
+        console.log(error)
+    })
 
   }
 
@@ -85,6 +152,8 @@ class Settings extends React.Component {
       },
     });
 
+    const component = this;
+
     // Send the request with fetch()
     fetch(request)
         .then(function(res) {
@@ -99,6 +168,7 @@ class Settings extends React.Component {
           }
           if (res.status === 200) {
             console.log(res);
+            component.addInbox(data.username);
             msg.appendChild(document.createTextNode('Account successfully created!'));
             msg.style.color = "green";
             create.appendChild(msg);

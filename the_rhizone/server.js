@@ -328,14 +328,17 @@ app.post('/users/login', (req, res) => {
 });
 
 app.post('/inboxes', (req, res) => {
-	log(req.body)
+
+	const newA = Array.from(req.body.newActivity);
+	const oldA = Array.from(req.body.oldActivity);
+	const pastP = Array.from(req.body.pastPosts);
 
 	// Create a new student using the Student mongoose model
 	const inbox = new inboxDataModel({
-		userName: req.body.username,
-		newActivity: Array.from(req.body.newActivity),
-		oldActivity: Array.from(req.body.oldActivity),
-		pastPosts: Array.from(req.body.pastPosts)
+		userName: req.body.userName,
+		newActivity: newA,
+		oldActivity: oldA,
+		pastPosts: pastP
 	})
 
 	// Save inbox to the database
@@ -365,7 +368,7 @@ app.get('/inboxes', (req, res) => {
 })
 
 app.delete('/inboxes', (req, res) => {
-	// log(req.query)
+	log(req.query)
 
 	// Delete a inbox by userName
 	const query = {userName: req.query.userName}

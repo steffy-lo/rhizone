@@ -53,7 +53,7 @@ class Inbox extends React.Component {
         }).then (
             res => {
             if (res === null) { return; }
-            this.setStateWithQueryData(res)
+            this.setStateWithQueryData(res);
         })
     }
 
@@ -61,9 +61,9 @@ class Inbox extends React.Component {
         log(queryData)
         this.setState({
             userName: queryData.userName,
-            newActivity: queryData.newActivity,
-            oldActivity: queryData.oldActivity,
-            pastPosts: queryData.pastPosts,
+            newActivity: Array.from(queryData.newActivity),
+            oldActivity: Array.from(queryData.oldActivity),
+            pastPosts: Array.from(queryData.pastPosts),
         })
     }
 
@@ -73,7 +73,6 @@ class Inbox extends React.Component {
             const user = this.props.state.user.userName;
             this.getInbox(user);
             this.setState({
-                userName: user,
                 loggedIn: ls.get('loggedIn')
             })
         } else {
@@ -145,8 +144,8 @@ class Inbox extends React.Component {
         })
     }
 
-    updateInbox(user) {
-        this.deleteInbox(user);
+    updateInbox() {
+        this.deleteInbox(this.state.userName);
         this.addInbox();
     }
 
@@ -170,7 +169,7 @@ class Inbox extends React.Component {
             pastPosts: this.state.pastPosts
         }
         this.setState(newStates);
-        this.updateInbox(this.state.userName);
+        this.updateInbox();
     }
 
     removeThread(activity, idx, type){
@@ -193,7 +192,7 @@ class Inbox extends React.Component {
             default:
                 break;
         }
-        this.updateInbox(this.state.userName);
+        this.updateInbox();
     }
 
     setPostAuthor(user, idx, aType, author) {
