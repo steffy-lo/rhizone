@@ -270,7 +270,6 @@ class Thread extends React.Component {
       const component = this;
       const data = {
           id: thread._id,
-          pid: thread.pid,
           reply: reply._id
       }
 

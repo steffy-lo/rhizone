@@ -3,7 +3,7 @@
 
 const log = console.log
 
-const  PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 const express = require('express')
 // starting the express server
@@ -95,7 +95,9 @@ app.use(session({
 
 /*** API Routes below ************************************/
 
-app.post('/create_thread', (req, res, next) => {	
+//==================================== Thread-Related Routes ===========================================================
+
+app.post('/create_thread', (req, res) => {
 	const thread = new threadDataModel({
 		id: 0,
 		pid: req.body.pid,
@@ -111,27 +113,13 @@ app.post('/create_thread', (req, res, next) => {
 			thread.id = count + 1;
 		}).then(data =>{
 		thread.save().then(result => {
-			res.send(result)})
+			res.send(result)
+		})
 	}).catch(err => {
 		//handle possible errors
+		res.status(500).send()
 	})
 })
-
-// app.patch('/cascade_del/:id', (req, res) => {
-//     const id = req.params.id
-//     threadDataModel.find({replies: { $in: [id] } }).then(threads => {
-//         console.log(threads);
-//         threads.map(thread =>
-//             thread.findByIdAndUpdate(
-//                 thread._id,
-//                 { $pull: { replies: id } },
-//                 { new: true, omitUndefined: true }
-//             )
-//         )
-//     }).catch((error) => {
-//         res.status(500).send()
-//     })
-// })
 
 app.delete('/del_thread', (req, res) => {
 	const query = {_id: req.query.tid}
@@ -223,42 +211,8 @@ app.get('/threads/:id', (req, res) => {
 
 })
 
-function updateParent(id, res, pres) {
-	threadDataModel.findById(id).then((thread) => {
-		if (!thread) {
-			pres.status(404).send()
-		} else {
-			if (thread.pid != -1) {
-				threadDataModel.findByIdAndUpdate(
-					{_id: id},
-					{
-						replies: res
-					},
-					{new: true, omitUndefined: true},
-					(err, res) => {
-						if (err) return;
-						// call the function recursively with the new parent
-						updateParent(res.pid, res, pres);
-					}).then((thread) => {
-					if (!thread) {
-						pres.status(404).send()
-					} else {
-						pres.send(thread)
-					}
-				})
-			} else {
-				thread.replies.push(res);
-				thread.save();
-			}
-		}
-	}).catch((error) => {
-		pres.status(500).send()  // server error
-	})
-}
-
 app.patch('/threads', (req, res) => {
 	const id = req.body.id
-	const pid = req.body.pid
 	const reply = req.body.reply
 
 	if (!ObjectID.isValid(id)) {
@@ -277,6 +231,8 @@ app.patch('/threads', (req, res) => {
 
 })
 
+//========================================= User-Related Routes =======================================================
+
 app.post('/add_user', (req, res) => {
 	const user = new User({
 		userName: req.body.username,
@@ -291,6 +247,25 @@ app.post('/add_user', (req, res) => {
 		res.status(400).send(error)
 	})
 })
+
+app.post('/users/login', (req, res) => {
+	const userName = req.body.userName;
+	const password = req.body.password;
+
+	// Use the static method on the User model to find a user
+	// by their email and password
+	User.findByUserPassword(userName, password).then((user) => {
+		if (user) {
+			res.send(user);
+			req.session.user = user._id;
+			req.session.userName = user.userName;
+			//res.redirect('/home');
+		}
+	}).catch((error) => {
+		console.log(error);
+		res.status(400).send();
+	})
+});
 
 app.get('/users', (req, res) => {
     //log(req.query.userName);
@@ -307,25 +282,53 @@ app.get('/users', (req, res) => {
 	})
 });
 
-// a POST route to create a resource
-app.post('/users/login', (req, res) => {
-	const userName = req.body.userName;
-    const password = req.body.password;
+app.patch('/users', (req, res) => {
+	const username = req.body.username;
+	const password = req.body.password;
 
-    // Use the static method on the User model to find a user
-    // by their email and password
-	User.findByUserPassword(userName, password).then((user) => {
-	    if (user) {
-			res.send(user);
-            req.session.user = user._id;
-            req.session.userName = user.userName;
-            //res.redirect('/home');
-        }
-    }).catch((error) => {
-    	console.log(error);
-		res.status(400).send();
-    })
-});
+	User.findOneAndUpdate({userName: username}, {password: password}, {new: true, omitUndefined: true}).then((user) => {
+		if (!user) {
+			res.status(404).send()
+		} else {
+			res.send(user)
+		}
+	}).catch((error) => {
+		res.status(400).send() // bad request for changing the user.
+	})
+
+})
+
+app.patch('/users/privileges/:username', (req, res) => {
+	const username = req.params.username
+
+	// Update the user by their id.
+	User.findOneAndUpdate({userName: username}, {isAdmin: true}, {new: true, omitUndefined: true}).then((user) => {
+		if (!user) {
+			res.status(404).send()
+		} else {
+			res.send(user)
+		}
+	}).catch((error) => {
+		res.status(400).send() // bad request for changing the user.
+	})
+})
+
+app.delete('/users/delete/:username', (req, res) => {
+	const username = req.params.username
+
+	// Delete a student by their id
+	User.findOneAndDelete({userName: username}).then((user) => {
+		if (!user) {
+			res.status(404).send()
+		} else {
+			res.send(user)
+		}
+	}).catch((error) => {
+		res.status(500).send() // server error, could not delete.
+	})
+})
+
+//==================================== Inbox-Related Routes ============================================================
 
 app.post('/inboxes', (req, res) => {
 
@@ -346,6 +349,38 @@ app.post('/inboxes', (req, res) => {
 		res.send(result)
 	}, (error) => {
 		res.status(400).send(error) // 400 for bad request
+	})
+})
+
+app.get('/inboxes', (req, res) => {
+	//log(req.query)
+
+	const query = {userName: req.query.userName}
+	inboxDataModel.findOne(query).then((inbox) => {
+		//log(inbox)
+		if (!inbox) {
+			res.status(404).send();  // could not find this user
+		} else {
+			res.send(inbox);
+		}
+	}).catch((error) => {
+		res.status(500).send()  // server error
+	})
+})
+
+app.delete('/inboxes', (req, res) => {
+	log(req.query)
+
+	// Delete a inbox by userName
+	const query = {userName: req.query.userName}
+	inboxDataModel.findOneAndRemove(query).then((inbox) => {
+		if (!inbox) {
+			res.status(404).send();  // could not find this user
+		} else {
+			res.send(inbox);
+		}
+	}).catch((error) => {
+		res.status(500).send()  // server error
 	})
 })
 
@@ -423,90 +458,6 @@ app.patch('/inboxes/delete_oldActivity', (req, res) => {
 		res.status(400).send() // bad request
 	})
 })
-
-// a GET route to get a resource
-// app.get()
-app.get('/inboxes', (req, res) => {
-    //log(req.query)
-
-    const query = {userName: req.query.userName}
-    inboxDataModel.findOne(query).then((inbox) => {
-        //log(inbox)
-        if (!inbox) {
-            res.status(404).send();  // could not find this user
-        } else {
-            res.send(inbox);
-        }
-    }).catch((error) => {
-      	res.status(500).send()  // server error
-    })
-})
-
-app.delete('/inboxes', (req, res) => {
-	log(req.query)
-
-	// Delete a inbox by userName
-	const query = {userName: req.query.userName}
-    inboxDataModel.findOneAndRemove(query).then((inbox) => {
-        if (!inbox) {
-            res.status(404).send();  // could not find this user
-        } else {
-            res.send(inbox);
-        }
-    }).catch((error) => {
-      	res.status(500).send()  // server error
-    })
-})
-
-// a PATCH route for changing properties of a resource.
-// (alternatively, a PUT is used more often for replacing entire resources).
-app.patch('/users', (req, res) => {
-	const username = req.body.username;
-	const password = req.body.password;
-
-	User.findOneAndUpdate({userName: username}, {password: password}, {new: true, omitUndefined: true}).then((user) => {
-		if (!user) {
-			res.status(404).send()
-		} else {   
-			res.send(user)
-		}
-	}).catch((error) => {
-		res.status(400).send() // bad request for changing the user.
-	})
-
-})
-
-app.delete('/users/delete/:username', (req, res) => {
-	const username = req.params.username
-
-	// Delete a student by their id
-	User.findOneAndDelete({userName: username}).then((user) => {
-		if (!user) {
-			res.status(404).send()
-		} else {
-			res.send(user)
-		}
-	}).catch((error) => {
-		res.status(500).send() // server error, could not delete.
-	})
-})
-
-app.patch('/users/privileges/:username', (req, res) => {
-	const username = req.params.username
-
-	// Update the user by their id.
-	User.findOneAndUpdate({userName: username}, {isAdmin: true}, {new: true, omitUndefined: true}).then((user) => {
-		if (!user) {
-			res.status(404).send()
-		} else {
-			res.send(user)
-		}
-	}).catch((error) => {
-		res.status(400).send() // bad request for changing the user.
-	})
-})
-
-//Serving?
 
 app.use(express.static(__dirname + "/build"));
 
