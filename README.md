@@ -12,6 +12,24 @@ npm install
 npm start
 ```
 
+'''
+To access our site on heroku do the following:
+Go to the root directory:
+cd /team50
+then run heroku with heroku open
+you will find it open @
+In the case that the heroku site is down (this happens when there is no activity for 30 minutes, you will have to start up with heroku open again--for security reasons, I will not put
+my heroku login creditions here, but I will email them to you)
+
+To check information on the database, go to mongodb and log in to see our collection. Again, for security reasons, I will not put my creditionals on this readme, but I will email them to you.
+
+Otherwise, you should be able to access the app on this url:
+
+https://rhizones.herokuapp.com/
+
+'''
+
+
 ### Login Credentials
 For a regular user
 ```
