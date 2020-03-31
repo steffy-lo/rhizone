@@ -34,3 +34,30 @@ Users are also able to change their passwords if they wish to.
 
 ### Features for Admins
 Admins are able to perform any actions that a regular user is able to do in addition to deleting posts/threads, remove and add user accounts
+
+### Overview of Our Routes
+#### Thread-Related Routes
+- POST /create_thread
+- DEL /del_thread
+- GET /threads
+- GET /replies
+- GET /threads/:id
+- PATCH /threads
+
+#### User-Related Routes
+- POST /add_user
+- POST /users/login
+- GET /users
+- PATCH /users
+- PATCH /users/privileges/:username
+- DEL /users/delete/:username
+
+#### Inbox-Related Routes
+- POST /inboxes
+- GET /inboxes
+- DEL /inboxes
+- PATCH /inboxes/add_newActivity
+- PATCH /inboxes/delete_newActivity
+- PATCH /inboxes/add_pastPosts
+- PATCH /inboxes/delete_pastPosts
+- PATCH /inboxes/delete_oldActivity
