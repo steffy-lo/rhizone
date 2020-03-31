@@ -340,9 +340,6 @@ class Mainpage extends React.Component {
 
 	// Actually deletes the post, only the admin can access this function
 	deleteReply(index) {
-		// Data.threadData.get(index).content.body = "[deleted]";
-		// Data.threadData.get(index).content.imgRef = "";
-		// Data.threadData.get(index).content.title = "[deleted]";
 		const threadToDel = this.state.threads[index]
 		const url = "/del_thread/?tid=" + threadToDel._id
 		// Create our request constructor with all the parameters we need

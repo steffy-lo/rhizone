@@ -15,16 +15,9 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: null,
-      loggedIn: false
-    }
-  }
-
-  componentDidMount() {
-    this.setState({
       user: ls.get('user'),
       loggedIn: ls.get('loggedIn')
-    });
+    }
   }
   
   login = (val, user) => {

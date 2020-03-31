@@ -150,7 +150,7 @@ class Thread extends React.Component {
 
   getReplies(thread) {
       const component = this;
-      if (thread.replies.toString() === '') return;
+      if (thread.replies.toString() == null) return;
       const url = "/replies/?ids=" + thread.replies.toString();
       // Create our request constructor with all the parameters we need
       const request = new Request(url, {
