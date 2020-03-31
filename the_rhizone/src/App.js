@@ -33,6 +33,12 @@ class App extends React.Component {
         <BrowserRouter>
             <Switch> { /* Similar to a switch statement - shows the component depending on the URL path */ }
               { /* Each Route below shows a different component depending on the exact path in the URL  */ }
+              <Route path='/404' render={() => (
+                  <div>
+                      <h1>404 Error</h1>
+                      <p>The page you've requested could not be found. The resource may have been deleted.</p>
+                  </div>
+              )}/>
               <Route exact path='/login' render={() =>
                               (<Login state={this.state} login={this.login}/>)}/>
 			  <Route exact path='/' render={() =>

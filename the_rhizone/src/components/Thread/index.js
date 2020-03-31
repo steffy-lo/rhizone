@@ -44,6 +44,9 @@ class Thread extends React.Component {
     // Send the request with fetch()
     fetch(url)
         .then(res => {
+            if (res.status === 404) {
+                window.location.replace('/404')
+            }
           return res.json();
         }).then (
         res => {
