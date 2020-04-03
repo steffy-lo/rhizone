@@ -56,19 +56,57 @@ Admins are able to perform any actions that a regular user is able to do in addi
 ### Overview of Our Routes
 #### Thread-Related Routes
 - POST /create_thread
+Creates a new thread in the database. It receives a json request body with the following keys
+-- pid: the parent thread id; if the thread doesn't have a parent, then it will be -1
+-- author: the username of the user who created the thread
+-- content: an object containing the thread's title, body, and imgRef
+The resulting saved thread will be sent back as a response.
+
+Example request body:
+```
+{
+	pid: -1,
+	author: "user",
+	content: {
+		title: "Hello World!"
+		body: "Hope everyone is doing fine."
+		imgRef: ""
+	}
+}
+```
 - DEL /del_thread
+Removes a thread from the database given the thread id passed in as an argument through the url, and updates any parent thread accordingly by removing the given thread id from its parent thread replies attribute.
+Sends back the deleted thread object as a response.
+
 - GET /threads
 - GET /replies
+Retrieves the threads that are replies (as a list) to the given list of thread ids passed in as a string argument from the url.
+
 - GET /threads/:id
+Gets a thread object with the given id.
+
 - PATCH /threads
+Expects a json request body with two thread ids, where the second thread id is a reply to the thread with the first id. Note: replies are threads without title.
+Updates the first thread by pushing the second thread id onto its list of replies.
+The updated thread is then sent back as a response.
 
 #### User-Related Routes
 - POST /add_user
+Expects a json request body with the new user's username, password, and a boolean that indicates whether this new user is an admin or not. The newly created and saved user object will then be send back as a response.
+
 - POST /users/login
+Logs in a user by validating if the given username exists and that the corresponding password is valid.
+
 - GET /users
+
 - PATCH /users
+Expects a json request body with username and password as its keys and the user's username and new password as its value. This route updates the user with the given username's password with the new password that was passed in. The updated new user object is then sent back as a response.
+
 - PATCH /users/privileges/:username
+Updates the user with the given username passed in to have admin privileges. The updated user object is then sent back as a response.
+
 - DEL /users/delete/:username
+Removes the user with the given username from the database. The removed user is then sent back as a response.
 
 #### Inbox-Related Routes
 - POST /inboxes
