@@ -80,7 +80,7 @@ Sends back the deleted thread object as a response.
 
 - GET /threads
 - GET /replies
-Retrieves the threads that are replies (as a list) to the given list of thread ids passed in as a string argument from the url.
+Retrieves the threads (as a list) that are replies to the given list of thread ids passed in as a string argument separated by commas from the url.
 
 - GET /threads/:id
 Gets a thread object with the given id.
