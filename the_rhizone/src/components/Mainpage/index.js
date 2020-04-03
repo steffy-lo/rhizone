@@ -36,34 +36,42 @@ class Mainpage extends React.Component {
 		.catch(err => {
 			//handle possible errors
 	})}*/
-	
+
 	  // A function to send a POST request to add a new user
   addThread(author, postTitle, postBody, imgReference) {
     // the URL for the request
-	
+
     const url = '/create_thread';
     // The data we are going to send in our request
 	const title = postTitle;
 	const body = postBody;
-	const imgRef = imgReference;
-	const threadContent = {title, body, imgRef}	
-	
-    let data = {
+	const imgRef = imgReference.name;
+	const threadContent = {title, body, imgRef}
+
+	const formData = new FormData();
+	formData.append("author", author);
+	formData.append("replies", []);
+	formData.append("content", threadContent);
+	formData.append("imgFile", imgReference);
+
+    /*let data = {
 		author: author,
 		replies: [],
-		content: threadContent
-    }
-	
+		content: threadContent,
+		imgFile: imgReference,
+		formData: formData
+	}*/
+
     // Create our request constructor with all the parameters we need
     const request = new Request(url, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: formData, //JSON.stringify(data),
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       },
     });
-	
+
 	console.log(request)
 
 	const component = this;
@@ -126,7 +134,9 @@ class Mainpage extends React.Component {
 
     // Function to add posts (i.e threads)
 	addPost(newPostBody, newImage, postTitle) {
-		
+		console.log(newImage);
+		console.log(newImage.name);
+
 		// Makes a state which will be set to the new post data
 		const newState = Object.assign({}, this.state);
 		newState.posts.push(newPostBody);
@@ -139,20 +149,20 @@ class Mainpage extends React.Component {
 			// File Upload not supported yet because we need a database to access such files. We only have hardcoded files.
 			var new_file = new File([newImage], newState.threadNumber + '.jpg', {type: 'image/jpeg'});
 		}
-		
+
 		// Regardless, push the image in the current state
 		newState.images.push(new_file);
 		this.setState(newState);
-		
+
 		// add Post to archive
 		let imageReference = "";
-		
+
 		// Name the image
 		if (newImage == null){
 		}else {
 				imageReference = new_file.name;
 		}
-		
+
 		// set the data in hardcoded.js to what the post contents are. Because we have not done a back-end, this data will not save on reload.
 		/*Data.threadData.set(Data.threadData.size, {pid:-1, author: component.props.state.user.username, replies: [],
         content:{
@@ -165,7 +175,7 @@ class Mainpage extends React.Component {
 		fetch(url)
         .then(function(res) {
 			console.log(res)
-			component.addThread(component.props.state.user.userName, postTitle, newPostBody, imageReference)
+			component.addThread(component.props.state.user.userName, postTitle, newPostBody, newImage)
         }).then( data => {
 			// Hide add thread button
 			component.displayAddPost();
@@ -173,11 +183,11 @@ class Mainpage extends React.Component {
 		}).catch((error) => {
           console.log(error)
         });
-		
 
-		
+
+
 	}
-	
+
 	// This function displays or hides the Add Thread section based off whether or not it is clicked or not
 	displayAddPost(){
 		if(this.props.state.loggedIn){
@@ -188,25 +198,25 @@ class Mainpage extends React.Component {
 		} else {
 			window.location.replace('/login');
 		}
-		
+
 	}
-	
+
 	// Shows archived threads, corresponds with -> arrow
 	threadMore() {
 		return this.setState((state) => ({
 			threadNumber: state.threadNumber + 9,
 		}));
 	}
-	
+
 	// Shows more current threads, corresponds with <- arrow
 	threadLess() {
 		if (this.state.threadNumber >= 9) {
 			return this.setState((state) => ({
 			threadNumber: state.threadNumber - 9,
 		}));
-		}	
+		}
 	}
-	
+
 	// gets current thread display state
 	getThreadDisplay(){
 		let threadDisplayState = [];
@@ -220,7 +230,7 @@ class Mainpage extends React.Component {
 		}
 		return threadDisplayState
 	}
-	
+
 	// // makes all threads appear. Call this method whenever we need to reload the page.
 	// // Essentially, it goes through all the threadData again and sets which IDs should show
 	// // in which column
@@ -237,24 +247,23 @@ class Mainpage extends React.Component {
 	// 		threadDisplay: threadDisplayState,
 	// 	}));
 	// }
-	
+
 	// Loads Image in card
 	imageLoad(index) {
-		// null evaluates false 
+		// null evaluates false
 		if(this.state.threads[index] === null) {
 			return (<div></div>);
 		} else if (this.state.threads[index].content.imgRef === "") {
 			return (<div></div>);
 		} else {
-			/*/ IMAGE LOADING DOES NOT WORK ANYMORE BECAUSE WE HAVEN'T GOTTEN THAT TO WORK SO IMAGES ARE JUST STUFF IN THE BACKEND
 			return (
 			<div className = "img-sub overlay zoom view">
-			<img className="card-img-top img-fluid" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
+			<img className="card-img-top img-fluid" src={this.state.threads[index].content.imgRef}alt="Card image" />
 			</div>
 			);
-		*/}
+		}
 	}
-	
+
 	// Loads content (title and body) in card
 	contentLoad(index) {
 		return(
@@ -268,7 +277,7 @@ class Mainpage extends React.Component {
 			</Link>
 		);
 	}
-	
+
 	// Loads delete button in card if user is admin
 	adminDelete(index) {
         const userData = this.props.state.user;
@@ -373,7 +382,7 @@ class Mainpage extends React.Component {
 			console.log(error)
 		})
 	}
-	
+
 	// Loads content, image, and delete (if admin) into the card
 	columnLoad(index) {
 		if(index == null){
@@ -387,7 +396,7 @@ class Mainpage extends React.Component {
 		);
 		}
 	}
-	
+
     render() {
 		if (this.state.loaded) {
 			let logButton = "Login"

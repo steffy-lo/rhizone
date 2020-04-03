@@ -21,6 +21,16 @@ const { inboxDataModel } = require('./models/inboxDataModel')
 // to validate object IDs
 const { ObjectID } = require('mongodb')
 
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart();
+
+const cloudinary = require('cloudinary');
+cloudinary.config({
+    cloud_name: 'dmfkdoa7q',
+    api_key: '287396748669694',
+    api_secret: 'OX_IzFyX22ksHz-JXQRTQeQYK04'
+});
+
 // body-parser: middleware for parsing HTTP JSON body into a usable object
 const bodyParser = require('body-parser')
 
@@ -34,7 +44,7 @@ const session = require('express-session')
 app.use(bodyParser.urlencoded({ extended: true }));
 
 var cleanser = require('profanity-cleanser');
-cleanser.setLocale(); 
+cleanser.setLocale();
 // Some words which are ok to say--we nee
 cleanser.removeWords("ass");
 cleanser.removeWords("asshole");
@@ -97,7 +107,14 @@ app.use(session({
 
 //==================================== Thread-Related Routes ===========================================================
 
-app.post('/create_thread', (req, res) => {
+app.post('/create_thread', multipartMiddleware, (req, res) => {
+  console.log("1: ", req.body.content.imgRef.name);
+  console.log("2: ", req.body.imgFile);
+  cloudinary.uploader.upload(
+    req.body.content.imgRef.name, // req.files contains uploaded files
+    function (result) {
+      console.log(result);
+  });
 	const thread = new threadDataModel({
 		id: 0,
 		pid: req.body.pid,
@@ -109,7 +126,10 @@ app.post('/create_thread', (req, res) => {
 	threadDataModel.estimatedDocumentCount()
 		.then(count => {
 			thread.content.title = grawlix(cleanser.replace(thread.content.title, 'word', 'QT3.14'));
-			thread.content.body = grawlix(cleanser.replace(thread.content.body, 'word', 'QT3.14'));
+			thread.content.body = grawlix(cleanser.replace(thread.content.bod, 'word', 'QT3.14'));
+
+      //thread.content.imgRef = thread.content.imgRef;
+      //console.log(req.files.image.path);
 			thread.id = count + 1;
 		}).then(data =>{
 		thread.save().then(result => {
