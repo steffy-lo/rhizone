@@ -90,9 +90,26 @@ Expects a json request body with two thread ids, where the second thread id is a
 Updates the first thread by pushing the second thread id onto its list of replies.
 The updated thread is then sent back as a response.
 
+Example request body:
+```
+{
+	"id": <first thread id>,
+	"reply": <second thread id>
+}
+```
+
 #### User-Related Routes
 - POST /add_user
 Expects a json request body with the new user's username, password, and a boolean that indicates whether this new user is an admin or not. The newly created and saved user object will then be send back as a response.
+
+Example request body:
+```
+{
+	"username": "user",
+	"password": "user",
+	"isAdmin: false
+}
+```
 
 - POST /users/login
 Logs in a user by validating if the given username exists and that the corresponding password is valid.
@@ -101,6 +118,14 @@ Logs in a user by validating if the given username exists and that the correspon
 
 - PATCH /users
 Expects a json request body with username and password as its keys and the user's username and new password as its value. This route updates the user with the given username's password with the new password that was passed in. The updated new user object is then sent back as a response.
+
+Example request body:
+```
+{
+	"username": "user",
+	"password": "password"
+}
+```
 
 - PATCH /users/privileges/:username
 Updates the user with the given username passed in to have admin privileges. The updated user object is then sent back as a response.
