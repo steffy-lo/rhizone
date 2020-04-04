@@ -44,3 +44,11 @@ button.MuiButtonBase-root {
 .replyButton {
 	word-break: keep-all;
 }
+
+.media-body {
+  white-space: pre-wrap;
+}
+
+div {
+  white-space: pre-wrap;
+}
