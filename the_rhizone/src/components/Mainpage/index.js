@@ -2,9 +2,10 @@ import React from 'react';
 import './style.css';
 import PostEditor from './../PostEditor/PostEditor';
 import { Link } from 'react-router-dom';
-import * as Data from './../../data/hardcoded.js';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
 import Button from "@material-ui/core/Button";
-//const { threadDataModel } = require('./models/threadDataModel')
 
 class Mainpage extends React.Component {
 	constructor (props) {
@@ -23,36 +24,20 @@ class Mainpage extends React.Component {
 	componentDidMount() {
 		this.getThreads();
 	}
-
-	/*
-	getThreadCount(){
-		threadDataModel
-		.estimatedDocumentCount()
-		.then(count => {
-			console.log(count)
-			return count;
-			//and do one super neat trick
-		})
-		.catch(err => {
-			//handle possible errors
-	})}*/
 	
 	  // A function to send a POST request to add a new user
   addThread(author, postTitle, postBody, imgReference) {
     // the URL for the request
 	
     const url = '/create_thread';
-    // The data we are going to send in our request
-	const title = postTitle;
-	const body = postBody;
-	const imgRef = imgReference;
-	const threadContent = {title, body, imgRef}	
+
+    const threadContent = {title: postTitle, body: postBody, imgRef: imgReference};
 	
     let data = {
 		author: author,
 		replies: [],
 		content: threadContent
-    }
+    };
 	
     // Create our request constructor with all the parameters we need
     const request = new Request(url, {
@@ -82,6 +67,7 @@ class Mainpage extends React.Component {
           }
         }).then((res) => {
             if (res == null) { return; }
+			component.displayAddPost();
             component.addPastPost(author, res._id);
             window.location.reload(true);
         }).catch((error) => {
@@ -125,56 +111,51 @@ class Mainpage extends React.Component {
   }
 
     // Function to add posts (i.e threads)
-	addPost(newPostBody, newImage, postTitle) {
-		
-		// Makes a state which will be set to the new post data
-		const newState = Object.assign({}, this.state);
-		newState.posts.push(newPostBody);
+	addPost(postEditor, newPostBody, newImage, postTitle, thread) {
 		const component = this;
-
-		// If there is no image attached to the post do nothing
-		if(newImage == null){
-		}else {
-			// rename newImage to be threadNumber
-			// File Upload not supported yet because we need a database to access such files. We only have hardcoded files.
-			var new_file = new File([newImage], newState.threadNumber + '.jpg', {type: 'image/jpeg'});
-		}
-		
-		// Regardless, push the image in the current state
-		newState.images.push(new_file);
-		this.setState(newState);
-		
-		// add Post to archive
 		let imageReference = "";
-		
-		// Name the image
-		if (newImage == null){
-		}else {
-				imageReference = new_file.name;
-		}
-		
-		// set the data in hardcoded.js to what the post contents are. Because we have not done a back-end, this data will not save on reload.
-		/*Data.threadData.set(Data.threadData.size, {pid:-1, author: component.props.state.user.username, replies: [],
-        content:{
-            title: postTitle,
-            body: newPostBody,
-			imgRef: imageReference,
-        }
-		});*/
-		const url =  '/create_thread';
-		fetch(url)
-        .then(function(res) {
-			console.log(res)
-			component.addThread(component.props.state.user.userName, postTitle, newPostBody, imageReference)
-        }).then( data => {
-			// Hide add thread button
-			component.displayAddPost();
-			console.log(data)
-		}).catch((error) => {
-          console.log(error)
-        });
-		
+		// the URL for the request
 
+		if (newImage != null) {
+			const url = "/images";
+			// Create our request constructor with all the parameters we need
+			const request = new Request(url, {
+				method: "post",
+				body: newImage,
+			});
+
+			// Send the request with fetch()
+			fetch(request)
+				.then(function (res) {
+					// Handle response we get from the API.
+					// Usually check the error codes to see what happened.
+					if (res.status === 200) {
+						// If image was added successfully, tell the user.
+						postEditor.setState({
+							message: "Success: Uploaded an image."
+						});
+						return res.json();
+					} else {
+						// If server couldn't add the image, tell the user.
+						// Here we are adding a generic message, but you could be more specific in your app.
+						postEditor.setState({
+							message: "Error: Could not add image."
+						});
+					}
+				})
+				.then(res => {
+					if (res == null) {
+						return;
+					}
+					imageReference = res;
+					component.addThread(component.props.state.user.userName, postTitle, newPostBody, imageReference)
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		} else {
+			component.addThread(component.props.state.user.userName, postTitle, newPostBody, imageReference)
+		}
 		
 	}
 	
@@ -220,39 +201,22 @@ class Mainpage extends React.Component {
 		}
 		return threadDisplayState
 	}
-	
-	// // makes all threads appear. Call this method whenever we need to reload the page.
-	// // Essentially, it goes through all the threadData again and sets which IDs should show
-	// // in which column
-	// setThreadDisplayState(){
-	// 	let threadDisplayState = [];
-	// 	let count = 0;
-	// 	for(let i = Data.threadData.size - 1; i >= 0 ; i--){
-	// 		if(Data.threadData.get(i).pid === -1){
-	// 			threadDisplayState[count] = i;
-	// 			count++;
-	// 		}
-	// 	}
-	// 	return this.setState((state) => ({
-	// 		threadDisplay: threadDisplayState,
-	// 	}));
-	// }
+
 	
 	// Loads Image in card
 	imageLoad(index) {
 		// null evaluates false 
 		if(this.state.threads[index] === null) {
 			return (<div></div>);
-		} else if (this.state.threads[index].content.imgRef === "") {
+		} else if (this.state.threads[index].content.imgRef == null) {
 			return (<div></div>);
 		} else {
-			/*/ IMAGE LOADING DOES NOT WORK ANYMORE BECAUSE WE HAVEN'T GOTTEN THAT TO WORK SO IMAGES ARE JUST STUFF IN THE BACKEND
 			return (
 			<div className = "img-sub overlay zoom view">
-			<img className="card-img-top img-fluid" src={require('./../../images/' + Data.threadData.get(index).content.imgRef)}	 alt="Card image" />
+			<img className="card-img-top img-fluid" src={this.state.threads[index].content.imgRef.image_url} alt="Card image" />
 			</div>
 			);
-		*/}
+		}
 	}
 	
 	// Loads content (title and body) in card
@@ -372,6 +336,33 @@ class Mainpage extends React.Component {
 			}).catch((error) => {
 			console.log(error)
 		})
+
+		if (threadToDel.content.imgRef != null) { // then delete image too
+			// the URL for the request
+			const url = `/images/${threadToDel.content.imgRef.image_id}`;
+
+			// Create our request constructor with all the parameters we need
+			const request = new Request(url, {
+				method: "delete",
+			});
+
+			// Send the request with fetch()
+			fetch(request)
+				.then(function (res) {
+					if (res.status === 200) {
+						console.log("Image deleted")
+						return res.json()
+					} else {
+						console.log("An error occurred when trying to delete image.")
+					}
+				})
+				.then(res => {
+					console.log(res)
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		}
 	}
 	
 	// Loads content, image, and delete (if admin) into the card

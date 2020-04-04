@@ -15,6 +15,7 @@ class PostEditor extends React.Component {
 			selectedFile: null,
 			postTitle: '',
 			hidden: '',
+			message: ''
 		};
 
 		this.handlePostEditorInputChange = this.handlePostEditorInputChange.bind(this);
@@ -25,9 +26,13 @@ class PostEditor extends React.Component {
 
 	// To create a post, we check if it is a valid post first (i.e if it is over 150 characters)
 	// Then we set the states the the post's body, title and selected image
-	createPost() {
+	createPost(form) {
 		 if (this.validator.fieldValid('NewPostBody')) {
-				 this.props.addPost(this.state.newPostBody, this.state.selectedFile, this.state.postTitle, this.props.thread);
+		 	let imageData = new FormData(form);
+		 	if (this.state.selectedFile == null) {
+		 		imageData = null;
+			}
+		 	this.props.addPost(this, this.state.newPostBody, imageData, this.state.postTitle, this.props.thread);
 			this.setState({
 				newPostBody: '',
 				selectedFile: null,
@@ -36,6 +41,10 @@ class PostEditor extends React.Component {
 			if (typeof this.props.thread != "undefined" && this.props.thread.pid != -1) {
 				this.setState({hidden: "hidden"})
 			}
+			if (this.state.selectedFile != null) {
+				this.setState({message: "Uploading image... Please wait."})
+			}
+
 		} else {
 		this.validator.showMessages();
 		this.forceUpdate();
@@ -76,8 +85,14 @@ class PostEditor extends React.Component {
 					 <input type="text" className={hideTitle} value={this.state.postTitle} onChange={this.handlePostEditorInputTitleChange} placeholder="Thread Title"/>
 					<textarea id ='const'className = "form-control" value={this.state.newPostBody} onChange={this.handlePostEditorInputChange} placeholder="Type your thoughts here..."/>
 					 {this.validator.message('NewPostBody', this.state.newPostBody, 'required|min:150|max:4000')}
-					 <button className = "btn btn-success post-editor-button" onClick={this.createPost}>Post</button>
+					<form className="image-form" onSubmit={(e) => {
+						e.preventDefault();
+						this.createPost(e.target);
+					}}>
+					 <button className = "btn btn-success post-editor-button" type="submit">Post</button>
 					<input type="file" name="file" className = "center-block" onChange={this.fileChangedHandler} />
+					</form>
+					<h3>{this.state.message}</h3>
 				</div>
 			</div>
 		</div>

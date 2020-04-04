@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 
+const imageSchema = mongoose.Schema({
+    image_id: {
+        type: String,
+        required: true
+    },
+    image_url: {
+        type: String,
+        required: true
+    },
+    created_at: String
+});
+
 const threadContentSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -11,8 +23,8 @@ const threadContentSchema = new mongoose.Schema({
         minlegth: 150
     },
     imgRef: {
-        type: String,
-        default: ""
+        type: imageSchema,
+        default: null
     }
 });
 
@@ -25,10 +37,6 @@ const threadDataSchema = new mongoose.Schema({
         type: String,
         default: -1
     },
-	pid_num: {
-		type: Number,
-		required: false
-	},
     author: {
         type: String,
         required: true,
