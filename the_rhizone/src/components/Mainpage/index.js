@@ -113,7 +113,7 @@ class Mainpage extends React.Component {
     // Function to add posts (i.e threads)
 	addPost(postEditor, newPostBody, newImage, postTitle, thread) {
 		const component = this;
-		let imageReference = "";
+		let imageReference = null;
 		// the URL for the request
 
 		if (newImage != null) {
@@ -174,9 +174,11 @@ class Mainpage extends React.Component {
 	
 	// Shows archived threads, corresponds with -> arrow
 	threadMore() {
-		return this.setState((state) => ({
-			threadNumber: state.threadNumber + 9,
-		}));
+		if (this.state.threadDisplay[this.state.threadNumber + 9]) {
+			return this.setState((state) => ({
+				threadNumber: state.threadNumber + 9,
+			}));
+		}
 	}
 	
 	// Shows more current threads, corresponds with <- arrow
@@ -263,7 +265,6 @@ class Mainpage extends React.Component {
 				return res.json();
 			}).then (
 			res => {
-				console.log("response" + res);
 				this.setState({threads: res},
 					() => this.setState({threadDisplay: this.getThreadDisplay()},
 						() => this.setState({loaded: true})));
@@ -436,7 +437,7 @@ class Mainpage extends React.Component {
 						<div className="postingForm">
 			<span className="navButton"><Button className="btn-default btn-sm"
 												onClick={() => this.threadLess()}> ←Recent </Button>
-			<Button className="btn-default btn-sm" onClick={() => this.threadMore()}> Previous→ </Button></span>
+			<Button className="btn-default btn-sm" onClick={() => this.threadMore()}> Older→ </Button></span>
 						</div>
 					</div>
 				</div>

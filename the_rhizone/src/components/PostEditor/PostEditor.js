@@ -8,7 +8,6 @@ class PostEditor extends React.Component {
 		super(props);
 
 		this.validator = new SimpleReactValidator();
-		console.log("props", props);
 
 		this.state = {
 			newPostBody: '',

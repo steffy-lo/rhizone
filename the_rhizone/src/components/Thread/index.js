@@ -2,9 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap/dist/css/bootstrap.css';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
 import PostEditor from './../PostEditor/PostEditor';
 import * as Data from './../../data/hardcoded.js';
 import './style.css';
@@ -441,7 +438,7 @@ class Thread extends React.Component {
   addReply(postEditor, newPostBody, newImage, postTitle, thread) {
     console.log("parent thread", thread);
     this.setState({hidden: "hidden"});
-    let imageReference = "";
+    let imageReference = null;
     const component = this;
 
       if (newImage != null) {
