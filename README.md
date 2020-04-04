@@ -79,6 +79,10 @@ Removes a thread from the database given the thread id passed in as an argument 
 Sends back the deleted thread object as a response.
 
 - GET /threads
+Retrieves a thread with the provided thread id (from url) or all the threads if no thread id is provided.
+Request url format: '/threads/?id=<thread id>'
+
+
 - GET /replies
 Retrieves the threads (as a list) that are replies to the given list of thread ids passed in as a string argument separated by commas from the url.
 
@@ -115,6 +119,8 @@ Example request body:
 Logs in a user by validating if the given username exists and that the corresponding password is valid.
 
 - GET /users
+Expects a username passed in from the url and finds the user with the username that was provided. The user object is sent back as a response.
+Example request url: '/users/?userName=user
 
 - PATCH /users
 Expects a json request body with username and password as its keys and the user's username and new password as its value. This route updates the user with the given username's password with the new password that was passed in. The updated new user object is then sent back as a response.
