@@ -166,7 +166,6 @@ app.get('/threads', (req, res) => {
     } else {
         const query = {id: req.query.id}
         threadDataModel.findOne(query).then((thread) => {
-            //log(inbox)
             if (!thread) {
                 res.status(404).send();  // could not find this user
             } else {
@@ -270,16 +269,14 @@ app.post('/users/login', (req, res) => {
 			res.send(user);
 			req.session.user = user._id;
 			req.session.userName = user.userName;
-			//res.redirect('/home');
 		}
 	}).catch((error) => {
-		console.log(error);
 		res.status(400).send();
 	})
 });
 
 app.get('/users', (req, res) => {
-    //log(req.query.userName);
+
     const query = {userName: req.query.userName}
 	// Otherwise, find by the id and creator
 	User.findOne(query).then((user) => {
@@ -364,11 +361,10 @@ app.post('/inboxes', (req, res) => {
 })
 
 app.get('/inboxes', (req, res) => {
-	//log(req.query)
 
 	const query = {userName: req.query.userName}
 	inboxDataModel.findOne(query).then((inbox) => {
-		//log(inbox)
+
 		if (!inbox) {
 			res.status(404).send();  // could not find this user
 		} else {
@@ -380,8 +376,6 @@ app.get('/inboxes', (req, res) => {
 })
 
 app.delete('/inboxes', (req, res) => {
-	log(req.query)
-
 	// Delete a inbox by userName
 	const query = {userName: req.query.userName}
 	inboxDataModel.findOneAndRemove(query).then((inbox) => {
