@@ -182,3 +182,10 @@ Similar to delete_newActivity, except the target array is pastPosts within the i
 
 - PATCH /inboxes/delete_oldActivity
 Similar to delete_newActivity, except the target array is oldActivity within the inbox data.
+
+#### Image-Related Routes
+- POST /images
+Creates an image and saves it into the database. Expects image data in its request body.
+
+- DEL /images/:imageId
+Deletes the image from cloudinary server and the database. Sends back the deleted image as a response.
