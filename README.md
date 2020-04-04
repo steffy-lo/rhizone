@@ -141,10 +141,44 @@ Removes the user with the given username from the database. The removed user is 
 
 #### Inbox-Related Routes
 - POST /inboxes
+Create new inbox data when a new user is created. Expects:
+-- userName of type string
+-- newActivity/oldActivity/pastPosts of type Array
+If above format is not followed, will return 400 Bad Request.
+
 - GET /inboxes
+Retrieves user inbox data based on userName query. If userName is not found in the database, 404 error code will be returned.
+
 - DEL /inboxes
+Removes user inbox data based on userName query. If userName is not found in the database, 404 error code will be returned.
+
 - PATCH /inboxes/add_newActivity
+Retrieves inbox data with userName, and pushes an object element, containing rootID for thread page linking and activityID for current thread identification, into the newActivity array of the inbox data.  
+
+Example request body:
+```
+{
+    "userName": "user",
+    "newActivity": {rootID:<parent thread id>, activityID:<current thread id>}
+}
+```
+
 - PATCH /inboxes/delete_newActivity
+Deletes an object element in the newActivity array, if the userName of inbox data matches and acitvityID of that object matches the "newActivity" thread id provided in the request body.
+
+Example request body:
+```
+{
+    "userName": "user",
+    "newActivity": "thread id"
+}
+```
+
 - PATCH /inboxes/add_pastPosts
+Similar to add_newActivity, except the target array is pastPosts within the inbox data.
+
 - PATCH /inboxes/delete_pastPosts
+Similar to delete_newActivity, except the target array is pastPosts within the inbox data.
+
 - PATCH /inboxes/delete_oldActivity
+Similar to delete_newActivity, except the target array is oldActivity within the inbox data.
