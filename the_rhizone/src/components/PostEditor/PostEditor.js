@@ -31,7 +31,7 @@ class PostEditor extends React.Component {
 		 	if (this.state.selectedFile == null) {
 		 		imageData = null;
 			}
-		 	this.props.addPost(this, this.state.newPostBody, imageData, this.state.postTitle, this.props.thread);
+		 	this.props.addPost(this, this.state.newPostBody.replace(/n /g, "<br>"), imageData, this.state.postTitle, this.props.thread);
 			this.setState({
 				newPostBody: '',
 				selectedFile: null,

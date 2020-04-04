@@ -228,9 +228,9 @@ class Mainpage extends React.Component {
 			<h5 className = "card-title previewtitle">
 			{this.state.threads[index].content.title}
 			</h5>
-			<p className="card-img-overlay d-flex flex-column preview">
+			<div className="card-img-overlay d-flex flex-column preview">
 			{this.state.threads[index].content.body}
-			</p>
+			</div>
 			</Link>
 		);
 	}

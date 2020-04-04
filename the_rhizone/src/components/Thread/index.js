@@ -158,9 +158,9 @@ class Thread extends React.Component {
     return(
       <div className='rootPost'>
         <h2>{this.state.mainThread.content.title}</h2>
-        <p>
+        <div>
           {this.state.mainThread.content.body}
-        </p>
+        </div>
         {this.loadImage(this.state.mainThread)}
       </div>
     );
