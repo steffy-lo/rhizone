@@ -2,7 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap/dist/css/bootstrap.css';
-import ls from 'local-storage';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
 import PostEditor from './../PostEditor/PostEditor';
 import * as Data from './../../data/hardcoded.js';
 import './style.css';
@@ -90,6 +92,33 @@ class Thread extends React.Component {
           console.log(error)
         })
 
+      if (threadToDel.content.imgRef != null) { // then delete image too
+          // the URL for the request
+          const url = `/images/${threadToDel.content.imgRef.image_id}`;
+
+          // Create our request constructor with all the parameters we need
+          const request = new Request(url, {
+              method: "delete",
+          });
+
+          // Send the request with fetch()
+          fetch(request)
+              .then(function (res) {
+                  if (res.status === 200) {
+                      console.log("Image deleted")
+                      return res.json()
+                  } else {
+                    console.log("An error occurred when trying to delete image.")
+                  }
+              })
+              .then(res => {
+                  console.log(res)
+              })
+              .catch(error => {
+                  console.log(error);
+              });
+      }
+
   }
 
   renderAdminMainThreadInfo() {
@@ -141,12 +170,12 @@ class Thread extends React.Component {
   }
 
   loadImage(thread) {
-    if (thread.content.imgRef === "")
+    if (thread.content.imgRef == null)
     {
       return (<img/>);
     } else {
       return (
-        <img className="threadImage" src={require('./../../images/' + thread.content.imgRef)}	 alt="Thread Image" />
+        <img className="threadImage" src={thread.content.imgRef.image_url}	 alt="Thread Image" />
       );
     }
   }
@@ -371,56 +400,92 @@ class Thread extends React.Component {
         })
     }
 
-  addReply(newPostBody, newImage, postTitle, thread) {
-    console.log("parent thread", thread);
-    this.setState({hidden: "hidden"})
-    const component = this;
-      // add Post to archive
-      let imageReference = "";
+    addThread(thread, postTitle, newPostBody, imageReference) {
+      const component = this;
+        const reply = {
+            pid: thread._id,
+            author: this.props.state.user.userName,
+            content: {
+                title: postTitle,
+                body: newPostBody,
+                imgRef: imageReference,
+            }
+        };
 
-      if (newImage == null){
-      } else {
-              imageReference = newImage.name;
-      }
+        // the URL for the request
+        const url2 = '/create_thread';
 
-    const reply = {
-        pid: thread._id,
-        author: this.props.state.user.userName,
-        replies: [],
-        content: {
-            title: postTitle,
-            body: newPostBody,
-            imgRef: imageReference,
-        }
-    };
+        // Create our request constructor with all the parameters we need
+        const request2 = new Request(url2, {
+            method: 'POST',
+            body: JSON.stringify(reply),
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+        });
 
-      // the URL for the request
-      const url = '/create_thread';
-
-      // Create our request constructor with all the parameters we need
-      const request = new Request(url, {
-        method: 'POST',
-        body: JSON.stringify(reply),
-        headers: {
-          'Accept': 'application/json, text/plain, */*',
-          'Content-Type': 'application/json'
-        },
-      });
-
-      // Send the request with fetch()
-      fetch(request)
-        .then(res => {
-          return res.json();
-        }).then (res => {
-          console.log(res);
-          component.addReplyToThread(thread, res);
-          component.addInbox('/inboxes/add_pastPosts', reply.author, reply.pid, res._id);
-          component.getThreadAndAddToInbox(reply.author, reply.pid, res._id);
+        // Send the request with fetch()
+        fetch(request2)
+            .then(res => {
+                return res.json();
+            }).then(res => {
+            console.log(res);
+            component.addReplyToThread(thread, res);
+            component.addInbox('/inboxes/add_pastPosts', reply.author, reply.pid, res._id);
+            component.getThreadAndAddToInbox(reply.author, reply.pid, res._id);
         })
-          .catch((error) => {
-            console.log(error)
-      });
+
+    }
+
+  addReply(postEditor, newPostBody, newImage, postTitle, thread) {
+    console.log("parent thread", thread);
+    this.setState({hidden: "hidden"});
+    let imageReference = "";
+    const component = this;
+
+      if (newImage != null) {
+          // the URL for the request
+          const url1 = "/images";
+
+          // Create our request constructor with all the parameters we need
+          const request1 = new Request(url1, {
+              method: "post",
+              body: newImage,
+          });
+
+          // Send the request with fetch()
+          fetch(request1)
+              .then(function (res) {
+                  // Handle response we get from the API.
+                  // Usually check the error codes to see what happened.
+                  if (res.status === 200) {
+                      // If image was added successfully, tell the user.
+                      postEditor.setState({
+                          message: "Success: Uploaded an image."
+                      });
+                      return res.json();
+                  } else {
+                      // If server couldn't add the image, tell the user.
+                      // Here we are adding a generic message, but you could be more specific in your app.
+                      postEditor.setState({
+                          message: "Error: Could not add image."
+                      });
+                  }
+              })
+              .then(res => {
+                  imageReference = res;
+                  component.addThread(thread, postTitle, newPostBody, imageReference);
+              })
+              .catch((error) => {
+                  console.log(error)
+              });
+
+      } else {
+          component.addThread(thread, postTitle, newPostBody, imageReference);
+      }
   }
+
 
   render () {
     if (this.state.loaded) {

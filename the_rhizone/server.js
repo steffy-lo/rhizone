@@ -17,6 +17,18 @@ mongoose.set('useFindAndModify', false); // for some deprecation issues
 const { threadDataModel } = require('./models/threadDataModel')
 const { User } = require('./models/userDataModel')
 const { inboxDataModel } = require('./models/inboxDataModel')
+const { Image } = require("./models/image");
+
+// multipart middleware: allows you to access uploaded file from req.file
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart();
+
+const cloudinary = require('cloudinary');
+cloudinary.config({
+	cloud_name: 'dx0ws0ikf',
+	api_key: '472166537945459',
+	api_secret: 'jgDZccV6xrVMoxHoNOGaVbnrW5A'
+});
 
 // to validate object IDs
 const { ObjectID } = require('mongodb')
@@ -101,7 +113,6 @@ app.post('/create_thread', (req, res) => {
 	const thread = new threadDataModel({
 		id: 0,
 		pid: req.body.pid,
-		pid_num: req.body.pid_num,
 		author: req.body.author,
 		replies: [],
 		content: req.body.content
@@ -458,6 +469,83 @@ app.patch('/inboxes/delete_oldActivity', (req, res) => {
 		res.status(400).send() // bad request
 	})
 })
+
+//============================================= Image-Related Routes ===================================================
+/*** Image API Routes below ************************************/
+
+// a POST route to *create* an image
+app.post("/images", multipartMiddleware, (req, res) => {
+
+	// Use uploader.upload API to upload image to cloudinary server.
+	cloudinary.uploader.upload(
+		req.files.file.path, // req.files contains uploaded files
+		function (result) {
+
+			// Create a new image using the Image mongoose model
+			const img = new Image({
+				image_id: result.public_id, // image id on cloudinary server
+				image_url: result.url, // image url on cloudinary server
+				created_at: new Date(),
+			});
+
+			// Save image to the database
+			img.save().then(
+				saveRes => {
+					res.send(saveRes);
+				},
+				error => {
+					res.status(400).send(error); // 400 for bad request
+				}
+			);
+		});
+});
+
+// a GET route to get all images
+app.get("/images", (req, res) => {
+	Image.find().then(
+		images => {
+			res.send({ images });
+		},
+		error => {
+			res.status(500).send(error); // server error
+		}
+	);
+});
+
+app.get("/images/:imageId", (req, res) => {
+	const imageId = req.params.imageId;
+	Image.findOne({ image_id: imageId }).then(
+		image => {
+			res.send(image);
+		},
+		error => {
+			res.status(500).send(error); // server error
+		}
+	);
+});
+
+/// a DELETE route to remove an image by its id.
+app.delete("/images/:imageId", (req, res) => {
+	const imageId = req.params.imageId;
+
+	// Delete an image by its id (NOT the database ID, but its id on the cloudinary server)
+	// on the cloudinary server
+	cloudinary.uploader.destroy(imageId, function (result) {
+
+		// Delete the image from the database
+		Image.findOneAndRemove({ image_id: imageId })
+			.then(img => {
+				if (!img) {
+					res.status(404).send();
+				} else {
+					res.send(img);
+				}
+			})
+			.catch(error => {
+				res.status(500).send(); // server error, could not delete.
+			});
+	});
+});
 
 app.use(express.static(__dirname + "/build"));
 

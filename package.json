@@ -6,12 +6,12 @@
     "node": "10.x"
   },
   "scripts": {
-        "setup": "cd the_rhizone && npm install && cd ..",
-        "build-run": "cd the_rhizone && npm run build && node server.js",
-        "start": "node the_rhizone/server.js",
-        "heroku-postbuild": "cd the_rhizone && npm install && npm run build",
-        "test": "echo \"Error: no test specified\" && exit 1"
-	},
+    "setup": "cd the_rhizone && npm install && cd ..",
+    "build-run": "cd the_rhizone && npm run build && node server.js",
+    "start": "node the_rhizone/server.js",
+    "heroku-postbuild": "cd the_rhizone && npm install && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "cacheDirectories": [
     "node_modules",
     "react-ui/node_modules"
