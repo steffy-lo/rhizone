@@ -254,7 +254,7 @@ class Thread extends React.Component {
         <li className="media" id={this.state.threads[reply].id}>
             <div className="media-body">
 				Post ID: #{this.state.threads[reply].id}<br/>
-                {this.state.threads[reply].content.body.split('\n').map((item, i) => <p key={i}>{item}</p>)};
+                {this.state.threads[reply].content.body.split('\n').map((item, i) => <p key={i}>{item}</p>)}
 				 <br/>
                 {this.loadImage(this.state.threads[reply])} <br/>
                 <div>
